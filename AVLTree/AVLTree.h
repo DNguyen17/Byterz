@@ -9,19 +9,19 @@ using namespace std;
 
 template<typename Type> class AVLTree
 {
-    private:
-        AVLNode<Type>* root;
-        void insert (int val, AVLNode<Type>*& t);
+private:
+    AVLNode<Type>* root;
 
-        int height(AVLNode<Type>* t)
-        {
-            return (t == nullptr? -1 : t->height);
-        }
+    int height(AVLNode<Type>* t)
+    {
+        return (t == nullptr? -1 : t->height);
+    }
 
-    public:
-        void insert(int);
+public:
+    void insert(int);
 
 //begin private insert method
+private:
     void insert(int val, AVLNode<Type> *&t)
     {
         if (t == nullptr)
@@ -64,7 +64,7 @@ template<typename Type> class AVLTree
 
     void rotateWithLeftChild(AVLNode<Type>*& k1) //k1 is a reference variable for the pointer to the parent of alpha. k1 is alpha, k2 is the child?
     {
-        AVLNode* k2 = k1->left; //bad line of code
+        AVLNode<Type>* k2 = k1->left; //bad line of code
         k1->left = k2->right;	//bad line of code
         k2->right = k1;
         k1->height = max(height(k1->left), height(k1->right) + 1);
