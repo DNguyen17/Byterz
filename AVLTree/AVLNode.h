@@ -9,7 +9,7 @@ template <typename Type> class AVLNode
     int height;
     AVLNode<Type>* left;
     AVLNode<Type>* right;
-    AVLNode (int theElem, AVLNode* l, AVLNode* r, int h = 0): element(theElem), left(l), right(r), height(h){}
+    AVLNode (Type theElem, AVLNode* l, AVLNode* r, int h = 0): element(theElem), left(l), right(r), height(h){}
 
     friend class AVLTree;
 };

@@ -1,8 +1,10 @@
 #ifndef AVLTREE_H
 #define AVLTREE_H
 
-using namespace std;
 #include "AVLNode.h"
+#include <cmath>
+#include <iostream>
+using namespace std;
 
 #endif // AVLTREE_H
 
@@ -18,7 +20,20 @@ private:
     }
 
 public:
-    void insert(int);
+    AVLTree()
+    {
+        root = nullptr;
+    }
+
+    ~AVLTree()
+    {
+
+    }
+
+    void insert(Type element)
+    {
+        insert(element, root);
+    }
 
 //begin private insert method
 private:
