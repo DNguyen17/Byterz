@@ -1,7 +1,7 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
-class HashTable
+class HashTable:public Index
 {
 public:
     HashTable();

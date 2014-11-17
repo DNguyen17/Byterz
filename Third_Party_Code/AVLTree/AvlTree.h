@@ -1,7 +1,7 @@
 #ifndef AVL_TREE_H
 #define AVL_TREE_H
 
-//#include "dsexceptions.h"
+#include "dsexceptions.h"
 #include <iostream>    // For NULL
 using namespace std;
 
@@ -37,9 +37,10 @@ class AvlTree
         makeEmpty( );
     }
 
-/*    /**
+    /**
      * Find the smallest item in the tree.
      * Throw UnderflowException if empty.
+     */
     const Comparable & findMin( ) const
     {
         if( isEmpty( ) )
@@ -50,6 +51,7 @@ class AvlTree
     /**
      * Find the largest item in the tree.
      * Throw UnderflowException if empty.
+     */
     const Comparable & findMax( ) const
     {
         if( isEmpty( ) )
@@ -59,7 +61,7 @@ class AvlTree
 
     /**
      * Returns true if x is found in the tree.
- */
+     */
     bool contains( const Comparable & x ) const
     {
         return contains( x, root );
@@ -99,6 +101,15 @@ class AvlTree
     void insert( const Comparable & x )
     {
         insert( x, root );
+    }
+     
+    /**
+     * Remove x from the tree. Nothing is done if x is not found.
+     */
+    void remove( const Comparable & x )
+    {
+        cout << "Sorry, remove unimplemented; " << x <<
+                " still present" << endl;
     }
 
     /**
@@ -162,10 +173,11 @@ class AvlTree
             ;  // Duplicate; do nothing
         t->height = max( height( t->left ), height( t->right ) ) + 1;
     }
-/*
+
     /**
      * Internal method to find the smallest item in a subtree t.
      * Return node containing the smallest item.
+     */
     AvlNode * findMin( AvlNode *t ) const
     {
         if( t == NULL )
@@ -174,9 +186,11 @@ class AvlTree
             return t;
         return findMin( t->left );
     }
+
     /**
      * Internal method to find the largest item in a subtree t.
      * Return node containing the largest item.
+     */
     AvlNode * findMax( AvlNode *t ) const
     {
         if( t != NULL )
@@ -185,7 +199,7 @@ class AvlTree
         return t;
     }
 
-*/
+
     /**
      * Internal method to test if an item is in a subtree.
      * x is item to search for.

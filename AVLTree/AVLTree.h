@@ -9,34 +9,104 @@ using namespace std;
 #endif // AVLTREE_H
 
 
-template<typename Type> class AVLTree
+template<typename Type>
+class AVLTree
 {
 private:
     AVLNode<Type>* root;
 
-    int height(AVLNode<Type>* t)
+    int getHeight(AVLNode<Type>* t)
     {
         return (t == nullptr? -1 : t->height);
     }
 
 public:
+    //constructor
     AVLTree()
     {
         root = nullptr;
     }
 
+    //destructor
     ~AVLTree()
     {
-
+        makeEmpty();   //cycle thorugh and delete all nodes?
     }
 
+    //public interface
     void insert(Type element)
     {
         insert(element, root);
     }
 
+    /**
+     * Test if the tree is logically empty.
+     * Return true if empty, false otherwise.
+     */
+    bool isEmpty( ) const
+    {
+        return root == NULL;
+    }
+
+    /**
+     * Print the tree contents in sorted order.
+     */
+    void printTree( ) const
+    {
+        if( isEmpty( ) )
+            cout << "Empty tree" << endl;
+        else
+            printTree( root );
+    }
+
+    /**
+     * Make the tree logically empty.
+     */
+    void makeEmpty( )
+    {
+        makeEmpty( root );
+    }
+
+//Already have insert method
+ /*
+    /**
+      * Insert x into the tree; duplicates are ignored.
+
+     void insert( const Comparable & x )
+     {
+         insert( x, root );
+     }
+
+     /**
+      * Deep copy.
+
+ */
+     const AvlTree & operator=( const AvlTree & rhs )
+     {
+         if( this != &rhs )
+         {
+             makeEmpty( );
+             root = clone( rhs.root );
+         }
+         return *this;
+     }
+
+
+
+
+/***********Code used from weiss*************/
+/****http://users.cis.fiu.edu/~weiss/dsaa_c++3/code/********/
+    /**
+     * Returns true if x is found in the tree.
+     */
+    bool contains( const Comparable & x ) const
+    {
+        return contains( x, root );
+    }
+
 //begin private insert method
 private:
+
     void insert(int val, AVLNode<Type> *&t)
     {
         if (t == nullptr)
