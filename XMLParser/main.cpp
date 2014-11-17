@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <fstream>
 #include "rapidxml.hpp"
 #include "rapidxml_print.hpp"
 
@@ -9,16 +10,42 @@ using namespace rapidxml;
 
 int main()
 {
-    string test = "<page>1234\n\t<title>cat and dog</title>\n</page>";
-    char* buffer = new char[test.length()+1];
-    strcpy(buffer,test.c_str());
+    //reading in file
+    //http://stackoverflow.com/questions/2912520/read-file-contents-into-a-string-in-c
+    //http://www.cplusplus.com/reference/istream/istream/read/
+
+    ifstream ifs("WikiDumpPart1.xml");
+    ifs.seekg(0, ifs.end);
+    int length = ifs.tellg();
+    ifs.seekg(0, ifs.beg);
+
+    char * buffer = new char[length];
+
+    ifs.read (buffer,length);
+
+    if (ifs)
+        std::cout << "all characters read successfully." << endl;
+    else
+        std::cout << "error: only " << ifs.gcount() << " could be read" << endl;
+    ifs.close();
+
+    //parsing
     xml_document<> doc;
     doc.parse<0>(buffer);
-    xml_node<>* pageNode = doc.first_node("page");
-    cout << "page: " << pageNode->value() << endl;
-    cout << "title: " << pageNode->first_node("title")->value() << endl;
-    /*xml_node<>* titleNode = doc.first_node("title");
-    cout << "title: " << titleNode->value() << endl;*/
+    xml_node<>* node = doc.first_node("mediawiki");
+    cout << "find page: " << node->first_node("page") << endl;
+    xml_node<>* pageNode = node->first_node("page");
+    pageNode = pageNode->next_sibling("page");
+    pageNode = pageNode->next_sibling("page");
+    cout << "node name: " << pageNode->name() << endl;
+    xml_node<>* titleNode = pageNode->first_node("title");
+    xml_node<>* idNode = pageNode->first_node("id");
+    xml_node<>* textNode = pageNode->first_node("revision")->first_node("text");
+    cout << "title: " << titleNode->value() << endl;
+    cout << "page id: " << idNode->value() << endl;
+    cout << "Text Body:\n" << textNode->value() << endl;
+
+    delete[] buffer;
     return 0;
 }
 
