@@ -30,6 +30,7 @@ private:
     xml_document<> doc;
     xml_node<>* docNode;
 
+
 public:
     //Constructor, Destructor
     XMLParser();

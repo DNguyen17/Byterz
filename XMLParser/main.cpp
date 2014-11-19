@@ -19,7 +19,6 @@ int main()
     //parser.setXMLDumpFile("WikiDumpPart1.xml");
     parser.storeOffXMLData("output.txt");
 
-
     return 0;
 }
 

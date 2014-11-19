@@ -12,9 +12,9 @@ XMLParser::~XMLParser(){
 
     if (XMLDumpFile != nullptr)
         delete[] XMLDumpFile;
-
     XMLDumpFile = nullptr;
 
+    doc.clear(); //deallocate memory pool of rapidxml class
 }
 
 //http://www.cplusplus.com/reference/istream/istream/read/
@@ -22,6 +22,7 @@ void XMLParser::setXMLDumpFile(string passedFile){
 
     if (XMLDumpFile != nullptr){
         delete[] XMLDumpFile;
+        XMLDumpFile = nullptr;
     }
 
     ifstream ifs(passedFile);
@@ -49,6 +50,10 @@ void XMLParser::storeOffXMLData(const char * DumpName){
     ofstream ofs(DumpName);
     int i = 1;
 
+    char* title = nullptr;
+    int id = 0;
+    char* text = nullptr;
+
     while (i <= 3){
 
         string fileName = "WikiDumpPart";
@@ -68,16 +73,27 @@ void XMLParser::storeOffXMLData(const char * DumpName){
 
             pageNode = pageNode->next_sibling("page");
             myParser.setNodes(pageNode);
-            ofs << "title: " << myParser.findTitle() << "\t";
-            ofs << "id: " << myParser.findPageID() << endl;
+
+            title = new char[strlen(myParser.findTitle())+1];
+            strcpy(title, myParser.findTitle());
+            ofs << "title: " << title << "\t";
+
+            id = atoi(myParser.findPageID());
+            ofs << "id: " << id << endl;
+
+
             //ofs << myParser.findBodyText() << "\n" << endl;
+
+            delete[] title;
+            title = nullptr;
+
         }
 
         ++i;
     }
 
 }
-//will store off author, titl, ID, and XML file name in hard memory
+//will store off author, title, ID, and XML file name in hard memory
 
 void XMLParser::addPagesToLookup(){
 
