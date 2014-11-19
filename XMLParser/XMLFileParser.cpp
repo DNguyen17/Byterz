@@ -17,7 +17,7 @@ XMLFileParser::~XMLFileParser(){
 
 }
 
-void XMLFileParser::setNodes(xml_node<>*& node){
+void XMLFileParser::setNodes(xml_node<>* node){
 
     pageNode = node;
 }

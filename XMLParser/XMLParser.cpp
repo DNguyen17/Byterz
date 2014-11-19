@@ -20,6 +20,10 @@ XMLParser::~XMLParser(){
 //http://www.cplusplus.com/reference/istream/istream/read/
 void XMLParser::setXMLDumpFile(string passedFile){
 
+    if (XMLDumpFile != nullptr){
+        delete[] XMLDumpFile;
+    }
+
     ifstream ifs(passedFile);
 
     if (!ifs){
@@ -43,23 +47,34 @@ void XMLParser::setXMLDumpFile(string passedFile){
 void XMLParser::storeOffXMLData(const char * DumpName){
 
     ofstream ofs(DumpName);
+    int i = 1;
 
-    doc.parse<0>(XMLDumpFile);
-    docNode = doc.first_node("mediawiki");
-    xml_node<>* pageNode = docNode->first_node("page");
-    myParser.setNodes(pageNode);
-    ofs << "title: " << myParser.findTitle() << "\t";
-    ofs << "id: " << myParser.findPageID() << endl;
+    while (i <= 3){
 
-    while(pageNode->next_sibling("page") !=0 )
-    {
-        pageNode = pageNode->next_sibling("page");
+        string fileName = "WikiDumpPart";
+        fileName += to_string(i);
+        fileName += ".xml";
+
+        setXMLDumpFile(fileName);
+        doc.parse<0>(XMLDumpFile);
+        docNode = doc.first_node("mediawiki");
+        xml_node<>* pageNode = docNode->first_node("page");
         myParser.setNodes(pageNode);
         ofs << "title: " << myParser.findTitle() << "\t";
         ofs << "id: " << myParser.findPageID() << endl;
+        //ofs << myParser.findBodyText() << "\n" << endl;
+
+        while(pageNode->next_sibling("page") !=0 ){
+
+            pageNode = pageNode->next_sibling("page");
+            myParser.setNodes(pageNode);
+            ofs << "title: " << myParser.findTitle() << "\t";
+            ofs << "id: " << myParser.findPageID() << endl;
+            //ofs << myParser.findBodyText() << "\n" << endl;
+        }
+
+        ++i;
     }
-
-
 
 }
 //will store off author, titl, ID, and XML file name in hard memory

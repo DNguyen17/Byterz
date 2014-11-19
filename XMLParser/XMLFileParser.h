@@ -25,7 +25,7 @@ private:
 public:
     XMLFileParser();
     ~XMLFileParser();
-    void setNodes(xml_node<> *&node);
+    void setNodes(xml_node<> *node);
     char *findPageID();
     char *findTitle();
     char *findBodyText();
