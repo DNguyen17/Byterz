@@ -16,13 +16,6 @@ using namespace rapidxml;
 
 class XMLParser
 {
-public:
-    //Constructor, Destructor
-    XMLParser();
-    ~XMLParser();
-
-    void storeOffXMLData(char * DumpName);
-    void  setXMLDumpFile(string);
 
 private:
     //private helper function
@@ -35,7 +28,16 @@ private:
     char* XMLDumpFile;
     XMLFileParser myParser;
     xml_document<> doc;
-    xml_node<> docNode;
+    xml_node<>* docNode;
+
+public:
+    //Constructor, Destructor
+    XMLParser();
+    ~XMLParser();
+
+    void storeOffXMLData(const char *DumpName);
+    void  setXMLDumpFile(string);
+
 };
 
 #endif // XMLPARSER_H

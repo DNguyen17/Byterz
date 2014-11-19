@@ -1,0 +1,9 @@
+title: User:Toby Bartels	id: 3
+title: User:Schewek	id: 4
+title: Organic Chemistry/Cover	id: 5
+title: Organic Chemistry/Foundational concepts of organic chemistry	id: 7
+title: Organic Chemistry/Introduction to reactions	id: 9
+title: Organic Chemistry/Alkenes	id: 10
+title: Organic Chemistry/Chirality	id: 12
+title: Organic Chemistry/Dienes	id: 13
+title: Organic Chemistry/External links	id: 17

@@ -4,6 +4,8 @@
 #include <fstream>
 #include "rapidxml.hpp"
 #include "rapidxml_print.hpp"
+#include "XMLParser.h"
+#include "XMLFileParser.h"
 
 using namespace std;
 using namespace rapidxml;
@@ -12,9 +14,8 @@ int main()
 {
     //reading in file
     //http://stackoverflow.com/questions/2912520/read-file-contents-into-a-string-in-c
-    //http://www.cplusplus.com/reference/istream/istream/read/
 
-    ifstream ifs("WikiDumpPart1.xml");
+    /*ifstream ifs("WikiDumpPart1.xml");
     ifs.seekg(0, ifs.end);
     int length = ifs.tellg();
     ifs.seekg(0, ifs.beg);
@@ -45,7 +46,13 @@ int main()
     cout << "page id: " << idNode->value() << endl;
     cout << "Text Body:\n" << textNode->value() << endl;
 
-    delete[] buffer;
+    delete[] buffer;*/
+
+    XMLParser parser;
+    parser.setXMLDumpFile("WikiDumpPart1.xml");
+    parser.storeOffXMLData("output.txt");
+
+
     return 0;
 }
 

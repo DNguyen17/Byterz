@@ -1,51 +1,39 @@
 #include "XMLFileParser.h"
 
 
-XMLFileParser::XMLFileParser()
-{
-    docNode = nullptr;
+XMLFileParser::XMLFileParser(){
+
     pageNode = nullptr;
     textNode = nullptr;
     authorNode = nullptr;
 
 }
 
-XMLFileParser::~XMLFileParser()
-{
-    /*if (docNode != nullptr)
-        delete docNode;
-    if (pageNode != nullptr)
-        delete pageNode;
-    if (textNode != nullptr)
-        delete textNode;
-    if (authorNode != nullptr)
-        delete authorNode;*/
+XMLFileParser::~XMLFileParser(){
 
-    docNode = nullptr;
     pageNode = nullptr;
     textNode = nullptr;
     authorNode = nullptr;
 
 }
 
-void XMLFileParser::setNodes(xml_node<>*& node)
-{
-    docNode = node;
-    pageNode = docNode->first_node("page");
+void XMLFileParser::setNodes(xml_node<>*& node){
+
+    pageNode = node;
 }
 
-char* XMLFileParser::findPageID()
-{
+char* XMLFileParser::findPageID(){
+
     return pageNode->first_node("id")->value();
 }
 
-char* XMLFileParser::findTitle()
-{
+char* XMLFileParser::findTitle(){
+
     return pageNode->first_node("title")->value();
 }
 
-char* XMLFileParser::findBodyText()
-{
+char* XMLFileParser::findBodyText(){
+
     textNode = pageNode->first_node("revision")->first_node("text");
     return textNode->value();
 }
