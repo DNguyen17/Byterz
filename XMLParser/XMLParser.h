@@ -30,6 +30,10 @@ private:
     xml_document<> doc;
     xml_node<>* docNode;
 
+    char* title;
+    int id;
+    char* text;
+
 
 public:
     //Constructor, Destructor

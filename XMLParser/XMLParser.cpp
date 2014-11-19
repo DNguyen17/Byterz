@@ -4,6 +4,9 @@ using namespace std;
 XMLParser::XMLParser()
 {
     XMLDumpFile = nullptr;
+    title = nullptr;
+    id = 0;
+    text = nullptr;
 }
 
 XMLParser::~XMLParser(){
@@ -14,6 +17,15 @@ XMLParser::~XMLParser(){
         delete[] XMLDumpFile;
     XMLDumpFile = nullptr;
 
+    if (title != nullptr)
+        delete[] title;
+    title = nullptr;
+
+    if (text != nullptr)
+        delete[] text;
+    text = nullptr;
+
+    myParser.~XMLFileParser();
     doc.clear(); //deallocate memory pool of rapidxml class
 }
 
@@ -40,6 +52,7 @@ void XMLParser::setXMLDumpFile(string passedFile){
     XMLDumpFile = new char[length];
 
     ifs.read (XMLDumpFile,length);
+    ifs.close();
 }
 
 //will cycle through all of XML documents in XML dump and index
@@ -50,9 +63,9 @@ void XMLParser::storeOffXMLData(const char * DumpName){
     ofstream ofs(DumpName);
     int i = 1;
 
-    char* title = nullptr;
+    /*char* title = nullptr;
     int id = 0;
-    char* text = nullptr;
+    char* text = nullptr;*/
 
     while (i <= 3){
 
@@ -91,6 +104,8 @@ void XMLParser::storeOffXMLData(const char * DumpName){
 
         ++i;
     }
+
+    ofs.close();
 
 }
 //will store off author, title, ID, and XML file name in hard memory

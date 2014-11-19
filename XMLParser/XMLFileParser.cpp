@@ -42,7 +42,7 @@ char* XMLFileParser::findAuthor()
 {
     authorNode = pageNode->first_node("contributor")->first_node("username");
     if (authorNode == 0){ //no author specified
-        return nullptr;
+        return 0;
     }
 
     return authorNode->value();
