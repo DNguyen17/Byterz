@@ -1,0 +1,15 @@
+INPUT(
+./debug/main.o
+./debug/XMLParser.o
+./debug/IndexHandler.o
+./debug/XMLFileParser.o
+./debug/Iindex.o
+./debug/LookUpTable.o
+./debug/UserMode.o
+./debug/MaintMode.o
+./debug/InteractiveMode.o
+./debug/StressMode.o
+./debug/wordParser.o
+./debug/HashTable.o
+./debug/AVLTree.o
+);
