@@ -67,7 +67,7 @@ void XMLParser::storeOffXMLData(const char * DumpName){
     int id = 0;
     char* text = nullptr;*/
 
-    while (i <= 3){
+    while (i <= 2){
 
         string fileName = "WikiDumpPart";
         fileName += to_string(i);
