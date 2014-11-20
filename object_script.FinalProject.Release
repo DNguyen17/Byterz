@@ -1,0 +1,15 @@
+INPUT(
+./release/main.o
+./release/XMLParser.o
+./release/IndexHandler.o
+./release/XMLFileParser.o
+./release/Iindex.o
+./release/LookUpTable.o
+./release/UserMode.o
+./release/MaintMode.o
+./release/InteractiveMode.o
+./release/StressMode.o
+./release/wordParser.o
+./release/HashTable.o
+./release/AVLTree.o
+);

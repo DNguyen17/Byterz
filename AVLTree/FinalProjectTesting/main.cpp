@@ -4,6 +4,8 @@
 #include"IndexAVLNode.h"
 #include<vector>
 #include"SeparateChaining.h"
+#include"StopWordsAvlTree.h"
+#include"StopWordsHashTable.h"
 using namespace std;
 
 //Test program for AVL trees with IndexAVLNodes as nodes
@@ -136,10 +138,10 @@ int main(){
         myVec.push_back(myArray[i]);
     }
 
-   HashTable<string> myTable;
+   StopWordsHashTable<string> myTable;
    for(int j = 0;j<myVec.size();j++){
 
-        myTable.insert(myVec.at(j),j);
+        myTable.insert(myVec.at(j));
    }
 
    myTable.print();

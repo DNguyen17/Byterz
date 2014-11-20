@@ -1,4 +1,4 @@
-#include "SeparateChaining.h"
+#include"StopWordsHashTable.h"
 #include <iostream>
 using namespace std;
 
