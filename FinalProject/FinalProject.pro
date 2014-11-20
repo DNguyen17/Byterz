@@ -15,7 +15,8 @@ SOURCES += main.cpp \
     StressMode.cpp \
     wordParser.cpp \
     HashTable.cpp \
-    AVLTree.cpp
+    IndexAVLNode.cpp \
+    StopWordsHashTable.cpp
 
 HEADERS += \
     XMLParser.h \
@@ -29,5 +30,8 @@ HEADERS += \
     StressMode.h \
     wordParser.h \
     HashTable.h \
-    AVLTree.h
+    AvlTree.h \
+    IndexAVLNode.h \
+    StopWordsHashTable.h \
+    StopWordsAvlTree.h
 

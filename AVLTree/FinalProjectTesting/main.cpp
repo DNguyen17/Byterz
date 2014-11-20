@@ -73,7 +73,6 @@ using namespace std;
 //Test program for hash table
 #include <iostream>
 #include "SeparateChaining.h"
-using namespace std;
 
 //Simple main
 /*int main( )
@@ -128,22 +127,59 @@ int hash( const string & key , int size)
     return hashVal;
 }
 
-int main(){
+/*int main(){
 
 
     vector<string> myVec;
-    string myArray[] = {"hey","there","dawg","how","Dawg","Dahn","Basketball","does","mouse","heydur","wasup","idk"};
+    string myArray[] = {"hey","there","dawg","how","Dawg","Dahn","Basketball","does","mouse","heydur","wasup","idk"
+                       "Collete","Elise","Brendan","Irisa","random","word","hello","do","a","b","c","d","e","f","g",
+                       "h","i","J","hola","yo","sup","herro"};
     for(int i = 0;i<sizeof(myArray)/sizeof(myArray[1]);i++){
         cout<<myArray[i]<<endl;
         myVec.push_back(myArray[i]);
     }
 
-   StopWordsHashTable<string> myTable;
+   StopWordsHashTable<string>* myTable =  new StopWordsHashTable<string>(10);
+
    for(int j = 0;j<myVec.size();j++){
 
-        myTable.insert(myVec.at(j));
+        myTable->insert(myVec.at(j));
    }
 
-   myTable.print();
+   myTable->print();
+   cout<<"Contains Elise? "<<myTable->contains("Elise")<<endl;
+
+   cout<<"Contains sup? "<<myTable->contains("sup")<<endl;
+
+   cout<<"Contains notdurr?"<<myTable->contains("notdurr")<<endl;
+
+}
+*/
+
+int main(){
+
+
+    vector<string> myVec;
+    string myArray[] = {"hey","there","dawg","how","Dawg","Dahn","Basketball","does","mouse","heydur","wasup","idk"
+                       "Collete","Elise","Brendan","Irisa","random","word","hello","do","a","b","c","d","e","f","g",
+                       "h","i","J","hola","yo","sup","herro"};
+    for(int i = 0;i<sizeof(myArray)/sizeof(myArray[1]);i++){
+        cout<<myArray[i]<<endl;
+        myVec.push_back(myArray[i]);
+    }
+
+   HashTable<string>* myTable =  new HashTable<string>(10);
+
+   for(int j = 0;j<myVec.size();j++){
+
+        myTable->insert(myVec.at(j),j);
+   }
+
+   myTable->print();
+   cout<<"Contains Elise? "<<myTable->contains("Elise")<<endl;
+
+   cout<<"Contains sup? "<<myTable->contains("sup")<<endl;
+
+   cout<<"Contains notdurr?"<<myTable->contains("notdurr")<<endl;
 
 }

@@ -1,5 +1,5 @@
-#ifndef SEPARATE_CHAINING_H
-#define SEPARATE_CHAINING_H
+#ifndef HASH_TABLE_H
+#define HASH_TABLE_H
 #include<iostream>
 #include <vector>
 #include <list>
@@ -59,7 +59,7 @@ public:
         //creates alias for list that is used as seperate chaining
 
         //const list<HashedObj> & whichList = theLists[ myhash( x ) ];
-        const AvlTree<string>* & whichList = theLists[ myhash(x)];
+        const AvlTree<string>* whichList = theLists[ myhash(x)];
 
         //uses iterator to find --> change to AVL tree
         return whichList->contains(x);
