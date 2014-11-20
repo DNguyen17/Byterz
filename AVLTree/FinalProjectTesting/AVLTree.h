@@ -1,6 +1,8 @@
+/***********Code used from weiss*************/
+/****http://users.cis.fiu.edu/~weiss/dsaa_c++3/code/********/
 #ifndef AVL_TREE_H
 #define AVL_TREE_H
-
+#include"IndexAVLNode.h"
 //#include "dsexceptions.h"
 #include <iostream>    // For NULL
 using namespace std;
@@ -26,16 +28,23 @@ class AvlTree
 {
   public:
     AvlTree( ) : root( NULL )
-      { }
+      {
+        //cout<<"Root = "<<root<<endl;
+    }
+   //copy constructor
+
     AvlTree( const AvlTree & rhs ) : root( NULL )
     {
         *this = rhs;
     }
-
+    //destructor
     ~AvlTree( )
     {
-        makeEmpty( );
+        makeEmpty(1 );
     }
+
+    //return the element and page numbers pointer of the nth
+    //element in the tree where starting numbering from
 
 /*    /**
      * Find the smallest item in the tree.
@@ -59,7 +68,8 @@ class AvlTree
 
     /**
      * Returns true if x is found in the tree.
- */
+     */
+
     bool contains( const Comparable & x ) const
     {
         return contains( x, root );
@@ -79,28 +89,59 @@ class AvlTree
      */
     void printTree( ) const
     {
-        if( isEmpty( ) )
+        if( isEmpty( ) ){
             cout << "Empty tree" << endl;
+            cout<<endl;
+        }
         else
             printTree( root );
     }
 
+    vector<IndexAVLNode*>* giveBackNodes(){
+        if(isEmpty())
+             return NULL;
+        else{
+            vector<IndexAVLNode*>* listOfNodes = new vector<IndexAVLNode*>();
+            giveBackNodes(root, listOfNodes);
+        }
+    }
+
     /**
      * Make the tree logically empty.
+     * int x will signal that it is the destructor that is calling the makeEmpty
+     * So the word lists can be deleted
      */
     void makeEmpty( )
     {
-        makeEmpty( root );
+        makeEmpty( root,0 );
     }
 
     /**
      * Insert x into the tree; duplicates are ignored.
      */
-    void insert( const Comparable & x )
+/*    void insert( const Comparable & x )
     {
         insert( x, root );
     }
+*/
+    void insert(const Comparable &x, int &pages ){
+        //cout<<"X = "<<x<<endl;
+        //cout<<"Pages = "<<pages<<endl;
+        insert( x, pages, root );
 
+    }
+
+    //overloaded insert for rehashing
+    void insert(const Comparable &x, vector<int>* &pages ){
+
+        insert( x, pages, root );
+    }
+
+ /* Code when I thought I needed function that just inserted node
+  *    void insert(const IndexAVLNode* &x){
+        insert(x,root);
+    }
+*/
     /**
      * Deep copy.
      */
@@ -108,27 +149,28 @@ class AvlTree
     {
         if( this != &rhs )
         {
-            makeEmpty( );
+            makeEmpty(1 );
             root = clone( rhs.root );
         }
         return *this;
     }
 
   private:
-    struct AvlNode
+    /*struct IndexAVLNode
     {
         Comparable element;
-        AvlNode   *left;
-        AvlNode   *right;
+        IndexAVLNode   *left;
+        IndexAVLNode   *right;
         int       height;
 
-        AvlNode( const Comparable & theElement, AvlNode *lt,
-                                                AvlNode *rt, int h = 0 )
+        IndexAVLNode( const Comparable & theElement, IndexAVLNode *lt,
+                                                IndexAVLNode *rt, int h = 0 )
           : element( theElement ), left( lt ), right( rt ), height( h ) { }
     };
-
-    AvlNode *root;
-
+*/
+    //only data memober which is root
+    IndexAVLNode *root;
+    int elementCount;
 
     /**
      * Internal method to insert into a subtree.
@@ -136,13 +178,15 @@ class AvlTree
      * t is the node that roots the subtree.
      * Set the new root of the subtree.
      */
-    void insert( const Comparable & x, AvlNode * & t )
+    void insert( const Comparable & x,int& pages, IndexAVLNode * & t )
     {
         if( t == NULL )
-            t = new AvlNode( x, NULL, NULL );
+            //the sent object is now stored in the tree
+            t = new IndexAVLNode(pages, x, NULL, NULL);
         else if( x < t->element )
         {
-            insert( x, t->left );
+            //cout<<x<<" less than = "<<t->element<<endl;
+            insert( x,pages, t->left );
             if( height( t->left ) - height( t->right ) == 2 )
                 if( x < t->left->element )
                     rotateWithLeftChild( t );
@@ -151,22 +195,73 @@ class AvlTree
         }
         else if( t->element < x )
         {
-            insert( x, t->right );
+
+            //cout<<x<<" greater than = "<<t->element;
+            insert( x,pages, t->right );
             if( height( t->right ) - height( t->left ) == 2 )
                 if( t->right->element < x )
                     rotateWithRightChild( t );
                 else
                     doubleWithRightChild( t );
         }
-        else
-            ;  // Duplicate; do nothing
+        else if(t->element == x){
+             // Duplicates, add pageNumbers to list
+             //cout<<"X = "<<x<<endl;
+             //cout<<"The same word was encountered"<<endl;
+             //cout<<"Page Number pushed back:"<<endl;
+             if(t->pageNumbers->at(t->pageNumbers->size()-1) != pages){
+                t->pageNumbers->push_back(pages);
+             }
+        }
+             // Duplicates, add pageNumbers to list
         t->height = max( height( t->left ), height( t->right ) ) + 1;
     }
+
+  //overloaded insert for rehashing
+    void insert( const Comparable & x,vector<int>* pages, IndexAVLNode * & t )
+    {
+        if( t == NULL )
+            //the sent object is now stored in the tree
+            t = new IndexAVLNode( x, NULL, NULL,pages );
+        else if( x < t->element )
+        {
+            //cout<<x<<" less than = "<<t->element<<endl;
+            insert( x,pages, t->left );
+            if( height( t->left ) - height( t->right ) == 2 )
+                if( x < t->left->element )
+                    rotateWithLeftChild( t );
+                else
+                    doubleWithLeftChild( t );
+        }
+        else if( t->element < x )
+        {
+
+            //cout<<x<<" greater than = "<<t->element;
+            insert( x,pages, t->right );
+            if( height( t->right ) - height( t->left ) == 2 )
+                if( t->right->element < x )
+                    rotateWithRightChild( t );
+                else
+                    doubleWithRightChild( t );
+        }
+        else if(t->element == x){
+             // Duplicates, add pageNumbers to list
+             //cout<<"X = "<<x<<endl;
+             //cout<<"The same word was encountered"<<endl;
+             //cout<<"Page Number pushed back:"<<endl;
+             for(int j = 0;j<pages->size();j++){
+                 t->pageNumbers->push_back((*pages)[j]);
+             }
+        }
+             // Duplicates, add pageNumbers to list
+        t->height = max( height( t->left ), height( t->right ) ) + 1;
+    }
+
 /*
     /**
      * Internal method to find the smallest item in a subtree t.
      * Return node containing the smallest item.
-    AvlNode * findMin( AvlNode *t ) const
+    IndexAVLNode * findMin( IndexAVLNode *t ) const
     {
         if( t == NULL )
             return NULL;
@@ -177,7 +272,7 @@ class AvlTree
     /**
      * Internal method to find the largest item in a subtree t.
      * Return node containing the largest item.
-    AvlNode * findMax( AvlNode *t ) const
+    IndexAVLNode * findMax( IndexAVLNode *t ) const
     {
         if( t != NULL )
             while( t->right != NULL )
@@ -191,7 +286,7 @@ class AvlTree
      * x is item to search for.
      * t is the node that roots the tree.
      */
-    bool contains( const Comparable & x, AvlNode *t ) const
+    bool contains( const Comparable & x, IndexAVLNode *t ) const
     {
         if( t == NULL )
             return false;
@@ -203,7 +298,7 @@ class AvlTree
             return true;    // Match
     }
 /****** NONRECURSIVE VERSION*************************
-    bool contains( const Comparable & x, AvlNode *t ) const
+    bool contains( const Comparable & x, IndexAVLNode *t ) const
     {
         while( t != NULL )
             if( x < t->element )
@@ -219,13 +314,23 @@ class AvlTree
 
     /**
      * Internal method to make subtree empty.
+     *  int will tell if the function has been called form the rehashing funtion
+     * which in that case should not delete the vector list
      */
-    void makeEmpty( AvlNode * & t )
+    void makeEmpty( IndexAVLNode * & t, int &x )
     {
         if( t != NULL )
         {
-            makeEmpty( t->left );
-            makeEmpty( t->right );
+            makeEmpty( t->left,x );
+            makeEmpty( t->right,x );
+            //release dynmaic memory allocated to vector
+            //but if for the rehashing don't want to free memory of vecotrs
+            //because reuse that dynamically allocated memory on the new nodes
+            //in the new hash table
+            if(x!=0 ){
+                delete[] t->pageNumbers;
+            }
+
             delete t;
         }
         t = NULL;
@@ -234,12 +339,29 @@ class AvlTree
     /**
      * Internal method to print a subtree rooted at t in sorted order.
      */
-    void printTree( AvlNode *t ) const
+    void printTree( IndexAVLNode *t ) const
     {
         if( t != NULL )
         {
             printTree( t->left );
             cout << t->element << endl;
+            //print out all page numbers
+            cout<<"Page Numbers:"<<endl;
+            for(int j = 0;j<t->pageNumbers->size();j++){
+                cout<<t->pageNumbers->at(j)<<endl;
+            }
+            cout<<endl;
+
+            printTree( t->right );
+        }
+    }
+
+    void giveBackNodes(IndexAVLNode *t, vector<IndexAVLNode* >* list ){
+         if( t != NULL )
+        {
+            giveBackNodes( t->left );
+            list->push_back(t);
+
             printTree( t->right );
         }
     }
@@ -247,23 +369,24 @@ class AvlTree
     /**
      * Internal method to clone subtree.
      */
-    AvlNode * clone( AvlNode *t ) const
+    IndexAVLNode * clone( IndexAVLNode *t ) const
     {
         if( t == NULL )
             return NULL;
         else
-            return new AvlNode( t->element, clone( t->left ), clone( t->right ), t->height );
+            return new IndexAVLNode( t->element, clone( t->left ), clone( t->right )
+                                     ,t->pageNumbers,t->height );
     }
         // Avl manipulations
     /**
      * Return the height of node t or -1 if NULL.
      */
-    int height( AvlNode *t ) const
+    int height( IndexAVLNode *t ) const
     {
         return t == NULL ? -1 : t->height;
     }
 
-    int max( int lhs, int rhs ) const
+    int max( int lhs, int rhs )
     {
         return lhs > rhs ? lhs : rhs;
     }
@@ -273,9 +396,9 @@ class AvlTree
      * For AVL trees, this is a single rotation for case 1.
      * Update heights, then set new root.
      */
-    void rotateWithLeftChild( AvlNode * & k2 )
+    void rotateWithLeftChild( IndexAVLNode * & k2 )
     {
-        AvlNode *k1 = k2->left;
+        IndexAVLNode *k1 = k2->left;
         k2->left = k1->right;
         k1->right = k2;
         k2->height = max( height( k2->left ), height( k2->right ) ) + 1;
@@ -288,9 +411,9 @@ class AvlTree
      * For AVL trees, this is a single rotation for case 4.
      * Update heights, then set new root.
      */
-    void rotateWithRightChild( AvlNode * & k1 )
+    void rotateWithRightChild( IndexAVLNode * & k1 )
     {
-        AvlNode *k2 = k1->right;
+        IndexAVLNode *k2 = k1->right;
         k1->right = k2->left;
         k2->left = k1;
         k1->height = max( height( k1->left ), height( k1->right ) ) + 1;
@@ -304,7 +427,7 @@ class AvlTree
      * For AVL trees, this is a double rotation for case 2.
      * Update heights, then set new root.
      */
-    void doubleWithLeftChild( AvlNode * & k3 )
+    void doubleWithLeftChild( IndexAVLNode * & k3 )
     {
         rotateWithRightChild( k3->left );
         rotateWithLeftChild( k3 );
@@ -316,7 +439,7 @@ class AvlTree
      * For AVL trees, this is a double rotation for case 3.
      * Update heights, then set new root.
      */
-    void doubleWithRightChild( AvlNode * & k1 )
+    void doubleWithRightChild( IndexAVLNode * & k1 )
     {
         rotateWithLeftChild( k1->right );
         rotateWithRightChild( k1 );
