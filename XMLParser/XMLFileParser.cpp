@@ -22,9 +22,9 @@ void XMLFileParser::setNodes(xml_node<>* node){
     pageNode = node;
 }
 
-char* XMLFileParser::findPageID(){
+int XMLFileParser::findPageID(){
 
-    return pageNode->first_node("id")->value();
+    return atoi(pageNode->first_node("id")->value());
 }
 
 char* XMLFileParser::findTitle(){

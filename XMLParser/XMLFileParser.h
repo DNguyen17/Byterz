@@ -26,7 +26,7 @@ public:
     XMLFileParser();
     ~XMLFileParser();
     void setNodes(xml_node<> *node);
-    char *findPageID();
+    int findPageID();
     char *findTitle();
     char *findBodyText();
     char *findAuthor();

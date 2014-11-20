@@ -63,10 +63,7 @@ void XMLParser::storeOffXMLData(const char * DumpName){
     ofstream ofs(DumpName);
     int i = 1;
 
-    /*char* title = nullptr;
-    int id = 0;
-    char* text = nullptr;*/
-
+    //loop through all files
     while (i <= 2){
 
         string fileName = "WikiDumpPart";
@@ -74,31 +71,34 @@ void XMLParser::storeOffXMLData(const char * DumpName){
         fileName += ".xml";
 
         setXMLDumpFile(fileName);
+        doc.clear();
         doc.parse<0>(XMLDumpFile);
         docNode = doc.first_node("mediawiki");
         xml_node<>* pageNode = docNode->first_node("page");
-        myParser.setNodes(pageNode);
-        ofs << "title: " << myParser.findTitle() << "\t";
-        ofs << "id: " << myParser.findPageID() << endl;
-        //ofs << myParser.findBodyText() << "\n" << endl;
 
-        while(pageNode->next_sibling("page") !=0 ){
+        //loop through all pages in one file
+        while(pageNode !=0 ){
 
-            pageNode = pageNode->next_sibling("page");
             myParser.setNodes(pageNode);
 
             title = new char[strlen(myParser.findTitle())+1];
             strcpy(title, myParser.findTitle());
             ofs << "title: " << title << "\t";
 
-            id = atoi(myParser.findPageID());
+            id = myParser.findPageID();
             ofs << "id: " << id << endl;
 
-
+            text = new char[strlen(myParser.findBodyText())+1];
+            strcpy(text, myParser.findBodyText());
             //ofs << myParser.findBodyText() << "\n" << endl;
+
+            pageNode = pageNode->next_sibling("page");
 
             delete[] title;
             title = nullptr;
+
+            delete[] text;
+            text = nullptr;
 
         }
 
