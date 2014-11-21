@@ -64,10 +64,10 @@ void XMLParser::storeOffXMLData(const char * DumpName){
     ofstream fout("splitWords.txt");
 
     //loop through all files
-    //while (i <= 2){
+    while (i <= 1){
 
         string fileName = "WikiDumpPart";
-        fileName += to_string(1);
+        fileName += to_string(i);
         fileName += ".xml";
 
         setXMLDumpFile(fileName);
@@ -110,7 +110,7 @@ void XMLParser::storeOffXMLData(const char * DumpName){
         }
 
         ++i;
-    //}
+    }
 
     ofs.close();
     fout.close();
