@@ -19,8 +19,9 @@ public:
     void  buildIndexFromMemory(int choice);
     void  storeOffIndexToMemory(void);
 
-    void  addWord(std::string* singleWord, int pageID);
-    void  addWords(std::string* words, int pageID);
+    void indexBodyOfText(char *body, int pageID);
+    void  addWord(std::string singleWord, int pageID);
+    //void  addWords(std::string* words, int pageID);
     std::vector<int>*  findWord(std::string* passedWord);
     void clearIndex(void);
 

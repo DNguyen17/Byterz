@@ -1,10 +1,13 @@
 #include <iostream>
+#include"XMLParser.h"
 
 using namespace std;
 
 int main()
 {
-    cout << "Hello World!" << endl;
-    return 0;
+    XMLParser myXMLParser;
+    myXMLParser.loadStopTable();
+    myXMLParser.storeOffXMLData();
+    myXMLParser.findUserWords();
 }
 

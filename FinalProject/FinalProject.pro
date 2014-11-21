@@ -7,7 +7,6 @@ SOURCES += main.cpp \
     XMLParser.cpp \
     IndexHandler.cpp \
     XMLFileParser.cpp \
-    Iindex.cpp \
     LookUpTable.cpp \
     UserMode.cpp \
     MaintMode.cpp \
@@ -16,7 +15,8 @@ SOURCES += main.cpp \
     wordParser.cpp \
     HashTable.cpp \
     IndexAVLNode.cpp \
-    StopWordsHashTable.cpp
+    StopWordsHashTable.cpp \
+    Index.cpp
 
 HEADERS += \
     XMLParser.h \

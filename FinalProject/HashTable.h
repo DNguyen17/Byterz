@@ -8,6 +8,7 @@
 #include<iterator>
 #include"IndexAVLNode.h"
 #include"AvlTree.h"
+#include"Index.h"
 
 using namespace std;
 
@@ -28,9 +29,16 @@ int nextPrime( int n );
 // int hash( string str ) --> Global method to hash strings
 
 template <typename HashedObj>
-class HashTable
+class HashTable:public Index
 {
 public:
+    vector<int>* findWord(HashedObj & word){
+        const AvlTree<HashedObj>* whichList = theLists[ myhash(word)];
+
+        //uses iterator to find --> change to AVL tree
+        return whichList->findWord(x);
+    }
+
     void print(void){
         for(int u = 0;u<theLists.size();u++){
             cout<<"Tree "<<u<<endl;
@@ -50,7 +58,7 @@ public:
         cout<<"TheLists constructor called"<<endl;
         //initialize tree objects
         for(int i = 0;i<theLists.size();i++){
-            theLists[i] = new AvlTree<string>();
+            theLists[i] = new AvlTree<HashedObj>();
         }
       }
 
@@ -59,7 +67,7 @@ public:
         //creates alias for list that is used as seperate chaining
 
         //const list<HashedObj> & whichList = theLists[ myhash( x ) ];
-        const AvlTree<string>* whichList = theLists[ myhash(x)];
+        const AvlTree<HashedObj>* whichList = theLists[ myhash(x)];
 
         //uses iterator to find --> change to AVL tree
         return whichList->contains(x);
@@ -86,7 +94,7 @@ public:
         //cout<<"Size = "<<theLists.size()<<endl;
         cout<<x<<" Hashed to "<<myhash(x)<<endl;
         //list<HashedObj> & whichList = theLists[ myhash( x ) ];
-        AvlTree<string>* & whichList = theLists[myhash(x)];
+        AvlTree<HashedObj>* & whichList = theLists[myhash(x)];
         /*if( find( whichList.begin( ), whichList.end( ), x ) != whichList.end( ) )
             return false;*/
         whichList->insert(x, page);
@@ -103,7 +111,7 @@ public:
 
     //overloaded insert function for rehashing
     bool insert( IndexAVLNode* & node){
-        AvlTree<string>* & whichList = theLists[myhash(node->element)];
+        AvlTree<HashedObj>* & whichList = theLists[myhash(node->element)];
 
         whichList->insert(node->element,node->pageNumbers);
         //inserting in linked list-->change to AVL tree insert(x)
@@ -139,14 +147,14 @@ public:
 
   private:
 
-    vector< AvlTree<string>* > theLists;
+    vector< AvlTree<HashedObj>* > theLists;
     //vector<list<HashedObj> > theLists;   // The array of Lists
     int  currentSize;
 
     void rehash( )
     {
         //stores off old hash table in vector
-        vector< AvlTree<string>* > oldList = theLists;
+        vector< AvlTree<HashedObj>* > oldList = theLists;
         //vector<list<HashedObj> > oldLists = theLists;
 
         // Create new double-sized, empty table using resize and size function

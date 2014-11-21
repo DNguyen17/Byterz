@@ -146,7 +146,11 @@ void XMLParser::indexBodyOfText(char *body, int pageID, ofstream &fout){
 
         else {
             ss >> buffer;
-            fout << buffer << endl;
+            //fout << buffer << endl;
+            string stemmed = myWordParser.stopAndStem(buffer);
+            if(stemmed != ""){
+
+            }
         }
     }
     /*char* first = body;

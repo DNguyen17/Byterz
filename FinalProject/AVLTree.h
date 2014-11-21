@@ -43,6 +43,10 @@ class AvlTree
         makeEmpty(1 );
     }
 
+    vector<int>* findWord(Comparable & word){
+        return find(x,root);
+    }
+
     //return the element and page numbers pointer of the nth
     //element in the tree where starting numbering from
 
@@ -296,6 +300,18 @@ class AvlTree
             return contains( x, t->right );
         else
             return true;    // Match
+    }
+
+    vector<int>* findWord( const Comparable & x, IndexAVLNode *t ) const
+    {
+        if( t == NULL )
+            return NULL;
+        else if( x < t->element )
+            return findWord( x, t->left );
+        else if( t->element < x )
+            return findWord( x, t->right );
+        else
+            return t->pageNumbers; // Match
     }
 /****** NONRECURSIVE VERSION*************************
     bool contains( const Comparable & x, IndexAVLNode *t ) const
