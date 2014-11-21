@@ -8,6 +8,7 @@
 #include <string>
 #include <cstring>
 #include <fstream>
+#include <sstream>
 #include "rapidxml.hpp"
 #include "rapidxml_print.hpp"
 
@@ -19,7 +20,7 @@ class XMLParser
 
 private:
     //private helper function
-    void indexBodyOfText(std::string* body, std::string pageID);
+    void indexBodyOfText(char *body, int pageID, ofstream& fout);
     void  addPagesToLookup();
     void  addSinglePageToLookup();
 
