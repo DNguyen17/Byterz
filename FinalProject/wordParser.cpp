@@ -35,14 +35,28 @@ bool wordParser::isStopWord(string* word){
     return result;
 }
 
-//function returns word after stemming
-string* stemWord(string*){
+//stemms word
+strint* stemmer(string*){
+
+
+    return ;
+}
+
+//function returns word after stemming or null if it is a stop word
+string* stopAndStem(string* preStemmed){
     string* stemmedString  = new string();
+
+    stremmedString = stemmer(preStemmed);
     //stem the string using 3rd part
     /*
-
+    
     */
-    return stemmedString;
+    //if the stemmed word is a stop word return null
+    if(isStopWord(stemmedString))
+        return null;
+    //otherwise return the stemmed word
+    else 
+        return stemmedString;
 
 }
 
