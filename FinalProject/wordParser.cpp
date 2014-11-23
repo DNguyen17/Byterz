@@ -46,7 +46,7 @@ string* stemmer(string*){
 string* stopAndStem(string* preStemmed){
     string* stemmedString  = new string();
 
-    stremmedString = stemmer(preStemmed);
+    stemmedString = stemmer(preStemmed);
     //stem the string using 3rd part
     /*
     
