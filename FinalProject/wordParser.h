@@ -16,6 +16,9 @@ public:
     bool wordParser::isStopWord(string* word);
     //stems words
     bool wordParser::isStopWord(string* word);
+
+    string* stemWord(string*);
+    
 private:
 
     Index* stopWordsList;
