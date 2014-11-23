@@ -90,59 +90,30 @@ void IndexHandler::findUserWords(void){
 void IndexHandler::indexBodyOfText(char *body, int pageID){
 
     stringstream ss;
-    ss << body;
     string buffer;
-    //char* buffer = new char[strlen(body)]; //to be passed elsewhere, probably should not delete
+    int length = strlen(body);
+
+    //change punctuation to whitspace
+    for (int i = 0; i < length; ++i){
+
+        if ( (body[i]!=39) && !(body[i]>=48 && body[i]<=57) //if character is not ', 0-9, A-Z, or a-z
+             && !(body[i]>=65 && body[i]<=90) && !(body[i]>=97 && body[i]<=122))
+            body[i] = ' '; //change to whitespace
+    }
+
+    ss << body;
     while (ss.peek() != EOF ){
+        ss >> buffer;
+        string stemmed = myWordParser.stopAndStem(buffer);
 
-
-        if (ss.peek() == '<'){ //get rid of XML nodes
-            ss.ignore(strlen(body), '>');
+        //if did not send empty string then insert in index
+        if(!stemmed.empty()){
+            myIndex.insert(stemmed,pageID);
         }
 
-        else if ((ss.peek() < 48) || (ss.peek() >= 60 && ss.peek() < 65)
-                 || (ss.peek() >= 91 && ss.peek() < 97) || ss.peek() >= 123){
-            ss.ignore();
-        }
-
-        else {
-            ss >> buffer;
-            string stemmed = myWordParser.stopAndStem(buffer);
-            //if did not send empty string then insert in index
-            if(!stemmed.empty()){
-                //fout << buffer << endl;
-                myIndex.insert(stemmed,pageID);
-            }
-        }
-    }
-    /*char* first = body;
-    char* space = strchr(first, ' ');
-    char* newline = strchr(first,'\n');
-    char* tab = strchr(first, '\t');
-    char* split = nullptr;
-
-    while (space != nullptr){
-
-        split = space;
-        if ((newline < space) && newline != nullptr)
-            split = newline;
-        if ((tab < split) && tab != nullptr)
-            split = tab;
-
-        split[0] = '\0';
-
-        fout << first << endl;
-
-        first = split+1;
-        newline = strchr(first, '\n');
-        space = strchr(first, ' ');
-        tab = strchr(first, '\t');
     }
 
-    fout << first << endl;*/
     ss.flush();
-    //delete[] buffer;
-
 }
 
 

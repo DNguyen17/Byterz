@@ -4,6 +4,7 @@
 #include"Index.h"
 #include<string>
 #include<vector>
+#include<sstream>
 
 class IndexHandler
 {
