@@ -36,7 +36,7 @@ bool wordParser::isStopWord(string* word){
 }
 
 //stemms word
-strint* stemmer(string*){
+string* stemmer(string*){
 
 
     return ;
