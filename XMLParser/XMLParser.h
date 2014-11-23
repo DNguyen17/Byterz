@@ -11,6 +11,7 @@
 #include <sstream>
 #include "rapidxml.hpp"
 #include "rapidxml_print.hpp"
+#include <algorithm>
 
 using namespace std;
 using namespace rapidxml;

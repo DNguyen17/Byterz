@@ -35,6 +35,7 @@ char* XMLFileParser::findTitle(){
 char* XMLFileParser::findBodyText(){
 
     textNode = pageNode->first_node("revision")->first_node("text");
+    //textNode->remove_all_nodes();
     return textNode->value();
 }
 

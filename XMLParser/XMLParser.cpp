@@ -129,13 +129,25 @@ void XMLParser::addSinglePageToLookup(){
 void XMLParser::indexBodyOfText(char *body, int pageID, ofstream &fout){
 
     stringstream ss;
-    ss << body;
     string buffer;
     //char* buffer = new char[strlen(body)]; //to be passed elsewhere, probably should not delete
+
+    int length = strlen(body);
+    for (int i = 0; i < length; ++i){
+        //if (body[i] < 48 || (body[i] >= 58 && body[i] < 65)
+        //        || (body[i] >= 91 && body[i] < 97) || body[i] >= 123)
+
+        if ( (body[i]!=39) && !(body[i]>=48 && body[i]<=57) //if character is not ', 0-9, A-Z, or a-z
+             && !(body[i]>=65 && body[i]<=90) && !(body[i]>=97 && body[i]<=122))
+            body[i] = ' '; //change to whitespace
+    }
+
+    ss << body;
     while (ss.peek() != EOF ){
+        ss >> buffer;
+        fout << buffer << endl;
 
-
-        if (ss.peek() == '<'){ //get rid of XML nodes
+        /*if (ss.peek() == '<'){ //get rid of XML nodes
             ss.ignore(strlen(body), '>');
         }
 
@@ -146,12 +158,17 @@ void XMLParser::indexBodyOfText(char *body, int pageID, ofstream &fout){
 
         else {
             ss >> buffer;
-            //fout << buffer << endl;
-            string stemmed = myWordParser.stopAndStem(buffer);
+
+            //remove punctuation in buffer? code from
+            //http://stackoverflow.com/questions/19138983/c-remove-punctuation-from-string
+            //remove_if(buffer.begin(), buffer.end(), std::ptr_fun<int, int>(&std::ispunct));
+
+            fout << buffer << endl;
+            //string stemmed = myWordParser.stopAndStem(buffer);
             if(stemmed != ""){
 
-            }
-        }
+            }*/
+        //}
     }
     /*char* first = body;
     char* space = strchr(first, ' ');
