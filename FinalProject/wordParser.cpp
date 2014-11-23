@@ -53,7 +53,7 @@ string* stopAndStem(string* preStemmed){
     */
     //if the stemmed word is a stop word return null
     if(isStopWord(stemmedString))
-        return null;
+        return "";
     //otherwise return the stemmed word
     else 
         return stemmedString;
