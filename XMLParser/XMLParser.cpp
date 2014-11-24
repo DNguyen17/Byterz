@@ -90,8 +90,6 @@ void XMLParser::storeOffXMLData(const char * DumpName){
 
             text = new char[strlen(myParser.findBodyText())+1];
             strcpy(text, myParser.findBodyText());
-            //ofs << text << "\n" << endl;
-
 
             indexBodyOfText(text, id, fout);
 
@@ -102,11 +100,8 @@ void XMLParser::storeOffXMLData(const char * DumpName){
             delete[] title;
             title = nullptr;
 
-            //will not delete text once passed on to index functions
             delete[] text;
             text = nullptr;
-            // // // // //
-
         }
 
         ++i;
@@ -137,14 +132,15 @@ void XMLParser::indexBodyOfText(char *body, int pageID, ofstream &fout){
         //if (body[i] < 48 || (body[i] >= 58 && body[i] < 65)
         //        || (body[i] >= 91 && body[i] < 97) || body[i] >= 123)
 
-        if ( (body[i]!=39) && !(body[i]>=48 && body[i]<=57) //if character is not ', 0-9, A-Z, or a-z
+        if (!(body[i]>=48 && body[i]<=57) //if character is not ', 0-9, A-Z, or a-z
              && !(body[i]>=65 && body[i]<=90) && !(body[i]>=97 && body[i]<=122))
             body[i] = ' '; //change to whitespace
     }
 
     ss << body;
-    while (ss.peek() != EOF ){
-        ss >> buffer;
+    while (ss >> buffer){
+
+        //ss >> buffer;
         fout << buffer << endl;
 
         /*if (ss.peek() == '<'){ //get rid of XML nodes
@@ -195,7 +191,7 @@ void XMLParser::indexBodyOfText(char *body, int pageID, ofstream &fout){
     }
 
     fout << first << endl;*/
-    ss.flush();
+    //ss.flush();
     //delete[] buffer;
 
 }

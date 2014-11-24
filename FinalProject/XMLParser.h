@@ -4,7 +4,17 @@
 #include"IndexHandler.h"
 #include"LookUpTable.h"
 #include"XMLFileParser.h"
-#include<string>
+#include"XMLFileParser.h"
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <fstream>
+#include <sstream>
+#include "rapidxml.hpp"
+#include "rapidxml_print.hpp"
+
+using namespace std;
+using namespace rapidxml;
 
 class XMLParser
 {
@@ -27,6 +37,13 @@ private:
     LookUpTable* myLookUpTable;
     char* XMLDumpFile;
     XMLFileParser myParser;
+    xml_document<> doc;
+    xml_node<>* docNode;
+
+    char* title;
+    int id;
+    char* text;
+
 };
 
 #endif // XMLPARSER_H

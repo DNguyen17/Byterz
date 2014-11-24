@@ -5,22 +5,56 @@ XMLParser::XMLParser()
 {
     myHandler = new IndexHandler();
     myLookUpTable = new LookUpTable();
-    myParser = new XMLFileParser();
 
-    XMLDumpFile = new char[80];
-    //default input file
-    strcpy(XMLDumpFile,"XMLDump.xml");
+    XMLDumpFile = nullptr;
+    title = nullptr;
+    id = 0;
+    text = nullptr;
 }
 
 XMLParser::~XMLParser(){
     delete myHandler;
     delete myLookUpTable;
-    delete[] XMLDumpFile;
+
+    if (XMLDumpFile != nullptr)
+        delete[] XMLDumpFile;
+    XMLDumpFile = nullptr;
+
+    if (title != nullptr)
+        delete[] title;
+    title = nullptr;
+
+    if (text != nullptr)
+        delete[] text;
+    text = nullptr;
+
+    myParser.~XMLFileParser();
+    doc.clear(); //deallocate memory pool of rapidxml class
 
 }
 
 void XMLParser::setXMLDumpFile(char* passedFile){
-    XMLDumpFile = passedFile;
+    if (XMLDumpFile != nullptr){
+        delete[] XMLDumpFile;
+        XMLDumpFile = nullptr;
+    }
+
+    ifstream ifs(passedFile);
+
+    if (!ifs){
+
+        cerr << "unable to open dump file" << endl;
+        exit(1);
+    }
+
+    ifs.seekg(0, ifs.end);
+    int length = ifs.tellg();
+    ifs.seekg(0, ifs.beg);
+
+    XMLDumpFile = new char[length];
+
+    ifs.read (XMLDumpFile,length);
+    ifs.close();
 }
 
 //will cycle through all of XML documents in XML dump and index
@@ -29,43 +63,63 @@ void XMLParser::setXMLDumpFile(char* passedFile){
 void XMLParser::storeOffXMLData(char * DumpName){
    //open XML file from XMLDumpFile
 
-    char* fileName = new char[80];
-    while(/*not reached end of XML Dump*/){
-        //get new XML file name fileName
-        strcpy(fileName,/*somehow get fileName of XML */);
+    ofstream ofs(DumpName);
+    int i = 1;
+    ofstream fout("splitWords.txt");
 
-        //uses XMLFileParserObject ot retrive all desired informatoin
-        //from XML file and then stores off information in data structure
-        //or lookup table
+    //loop through all files
+    while (i <= 179){
 
-        string* bodyAndID = myParser->getBodyandID(fileName);
-        addBodyTextToIndex(bodyAndID[0], bodyAndID[1]);
+        string fileName = "WikiDumpPart";
+        fileName += to_string(i);
+        fileName += ".xml";
 
-        //store off information for lookup Table (Not included 24th Demo
-        string author = myParser->getAuthor(fileName);
-        string title = myParser->getTitle(fileName);
-        string date = myParser->getDate(fileName);
+        setXMLDumpFile(fileName);
+        doc.clear();
+        doc.parse<0>(XMLDumpFile);
+        docNode = doc.first_node("mediawiki");
+        xml_node<>* pageNode = docNode->first_node("page");
+
+        //loop through all pages in one file
+        while(pageNode !=0 ){
+
+            myParser.setNodes(pageNode);
+
+            title = new char[strlen(myParser.findTitle())+1];
+            strcpy(title, myParser.findTitle());
+            //ofs << "title: " << title << "\t";
+
+            id = myParser.findPageID();
+            //ofs << "id: " << id << endl;
+
+            text = new char[strlen(myParser.findBodyText())+1];
+            strcpy(text, myParser.findBodyText());
+
+            indexBodyOfText(text, id, fout);
+
+            pageNode = pageNode->next_sibling("page");
+
+
+
+            delete[] title;
+            title = nullptr;
+
+            delete[] text;
+            text = nullptr;
+        }
+
+        ++i;
     }
 
-    //processed all XML files
-    myHandler->storeOffIndexMemory();
+    ofs.close();
+    fout.close();
 
 
 }
 
 //function stores all words in page into data structure index
-void XMLParser::indexBodyOfText(string* body, string pageID){
-    //loop through every word and send it to be indexed
-    //************could be optimized somehow by analyzing
-    //if word is stop word before sending to be indexed??*******//
 
-    //Loop that will go through and send each word and page to
-    //index handler to be inserted into data structure
-    myHandler->addWord(word,pageID);
-
-}
-
-//will store off authro, titl, ID, and XML file name in hard memory
+//will store off author, title, ID, and XML file name in hard memory
 //Not for 24th Due date
 void XMLParser::addPagesToLookup(){
 

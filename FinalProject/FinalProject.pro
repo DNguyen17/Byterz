@@ -19,6 +19,10 @@ SOURCES += main.cpp \
     Index.cpp
 
 HEADERS += \
+    rapidxml.hpp\
+    rapidxml_print.hpp\
+    rapidxml_utils.hpp\
+    rapidxml_iterators.hpp\
     XMLParser.h \
     IndexHandler.h \
     XMLFileParser.h \
