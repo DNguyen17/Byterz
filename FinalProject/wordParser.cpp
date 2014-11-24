@@ -36,7 +36,7 @@ bool wordParser::isStopWord(string* word){
 }
 
 //stemms word
-strint* stemmer(string*){
+string* stemmer(string*){
 
 
     return ;
@@ -46,14 +46,14 @@ strint* stemmer(string*){
 string* stopAndStem(string* preStemmed){
     string* stemmedString  = new string();
 
-    stremmedString = stemmer(preStemmed);
+    stemmedString = stemmer(preStemmed);
     //stem the string using 3rd part
     /*
     
     */
     //if the stemmed word is a stop word return null
     if(isStopWord(stemmedString))
-        return null;
+        return "";
     //otherwise return the stemmed word
     else 
         return stemmedString;
