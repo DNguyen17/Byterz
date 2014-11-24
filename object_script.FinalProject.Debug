@@ -3,7 +3,6 @@ INPUT(
 ./debug/XMLParser.o
 ./debug/IndexHandler.o
 ./debug/XMLFileParser.o
-./debug/Iindex.o
 ./debug/LookUpTable.o
 ./debug/UserMode.o
 ./debug/MaintMode.o
@@ -11,5 +10,7 @@ INPUT(
 ./debug/StressMode.o
 ./debug/wordParser.o
 ./debug/HashTable.o
-./debug/AVLTree.o
+./debug/IndexAVLNode.o
+./debug/StopWordsHashTable.o
+./debug/Index.o
 );

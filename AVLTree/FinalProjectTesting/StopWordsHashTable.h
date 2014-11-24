@@ -1,6 +1,6 @@
 #ifndef STOP_WORDS_HASH_TABLE_H
 #define STOP_WORDS_HASH_TABLE_H
-
+#include<fstream>
 #include <vector>
 #include <list>
 #include <string>
@@ -33,6 +33,16 @@ class StopWordsHashTable
             cout<<endl;
         }
     }
+
+  public:
+    void print(ofstream& file){
+        for(int u = 0;u<theLists.size();u++){
+            file<<"Tree "<<u<<endl;
+            theLists[u]->printTree(file);
+            file<<endl;
+        }
+    }
+
 
 
     explicit StopWordsHashTable( int size = 101 )

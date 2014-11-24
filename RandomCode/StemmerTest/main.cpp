@@ -1,10 +1,14 @@
+#include<string>
+#include<cstring>
+#include<iostream>
+using namespace std;
 //Datastructres project:
 /*
-xml dumps: 
+xml dumps:
 Important things to keep in mind:
 
 xml files go through parser (2 min). inverted file indexing: gets author, get date
-	eliminate stop words, stemming, fluff
+    eliminate stop words, stemming, fluff
 
 
 
@@ -13,63 +17,63 @@ Research and Find Stemmer and Stop Word Filter: Shawlol
 -DON'T ACTUALLY LOOK AT WHAT WAS STEMMED
 stem before inserting and searching
 
-Due: Saturday 
+Due: Saturday
 
 2) Term Frequency Calculator: Shawlol
 
 Due Saturday
 
 bool operator>(const T& rhs) {
-	return !*this<rhs;
-			!*this==rhs;
+    return !*this<rhs;
+            !*this==rhs;
 }
 
 //What to implement in the final project:
-Parser: 
-	fake parser class (extends parser) that has the same list of functions, e.g. string getnextword()
-	to generate fake data. 
+Parser:
+    fake parser class (extends parser) that has the same list of functions, e.g. string getnextword()
+    to generate fake data.
 Index:
-	-AVL
-	-Hash
+    -AVL
+    -Hash
 
 Index *idx=new hashindex;
 parser*p=new Fakeparser
 string x=p.getnextword()
 idx.addword(x, pg#)
 
-Collision Resolution Strategy. 
-	-Separate Chaining:
-	-Probing (aka closed hashing aka open addressing)
-		*hash function needs good distribution over the range of hash functions
+Collision Resolution Strategy.
+    -Separate Chaining:
+    -Probing (aka closed hashing aka open addressing)
+        *hash function needs good distribution over the range of hash functions
 
-		load factor: # of items in hash table vs # of spots in the table. 
+        load factor: # of items in hash table vs # of spots in the table.
 
-		******MAKE/FIND STEMMER and TERM FREQUENCY CALCULATOR
+        ******MAKE/FIND STEMMER and TERM FREQUENCY CALCULATOR
 
 STEMMER
 
 prepare stop table
-	-open original stop words file
-	-loop through
-		-stem
-		-write to file2
+    -open original stop words file
+    -loop through
+        -stem
+        -write to file2
 
 load stop table:
-	-open file
-	-loop through words
-		*store in hashtable:
-			Hashtable<string> insert();
+    -open file
+    -loop through words
+        *store in hashtable:
+            Hashtable<string> insert();
 
 -make a filter function (StopAndStem)
-	-stop words
-	-strange characters
-	-etc
+    -stop words
+    -strange characters
+    -etc
 -find a stemmer function
 -stem stop words and then put stop words in Brendan's 'hashtable
-//-bool contains() shows if the word is a stop or not. 
+//-bool contains() shows if the word is a stop or not.
 -StopAndStem(char*)
-	-if its not a stop word/once stemmed, return char*
-	-if it's a stop word, return null
+    -if its not a stop word/once stemmed, return char*
+    -if it's a stop word, return null
 -prepareStopList()
 -loadStopList()
 
@@ -440,31 +444,38 @@ static void stemfile(string f)
          while(TRUE)
          {  if (i == i_max) increase_s();
 
-            ch = tolower(ch); /* forces lower case 
+            ch = tolower(ch); /* forces lower case
 
             s[i] = ch; i++;
             ch = getc(f);
             if (!LETTER(ch)) { ungetc(ch,f); break; }
          }*/
-         char* word = c_str(f);
-         s[stem(word,0,f.size())+1] = 0;
-        
+         char* word  = new char[f.size()+1];
+         strcpy(word,f.c_str());
+         strcpy(s,word);
+         cout<<"S is "<<s;
+         cout<<word<<endl;
+         cout<<(word[7]=='\0'?"null term":"not null")<<endl;
+         s[stem(s,0,f.size())+1] = 0;
+
          /* the previous line calls the stemmer and uses its result to
             zero-terminate the string in s */
          printf("%s",s);
-      }
-      else putchar(ch);
-   }
+         cout<<s;
 }
+      //else putchar(ch);
 
 int main(int argc, char * argv[])
 {  int i;
    s = (char *) malloc(i_max+1);
-   for (i = 1; i < argc; i++)
-   {  FILE * f = fopen(argv[i],"r");
-      if (f == 0) { fprintf(stderr,"File %s not found\n",argv[i]); exit(1); }
-      stemfile(f);
-   }
+        stemfile("again");
+        cout<<endl;
+        stemfile("HeyThur");
+        stemfile("Danh");
+        stemfile("Brendan");
+        stemfile("hitting");
+        stemfile("meetings");
+        stemfile("disabled");
    free(s);
    return 0;
 }
