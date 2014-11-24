@@ -1,6 +1,6 @@
 #ifndef STOP_WORDS_AVL_TREE_H
 #define STOP_WORDS_AVL_TREE_H
-
+#include<fstream>;
 //#include "dsexceptions.h"
 #include <iostream>    // For NULL
 using namespace std;
@@ -87,6 +87,13 @@ class StopWordsAvlTree
             printTree( root );
     }
 
+    void printTree(ofstream& myfile ) const
+    {
+        if( isEmpty( ) )
+            cout << "Empty tree" << endl;
+        else
+            printTree( root,myfile );
+    }
     /**
      * Make the tree logically empty.
      */
@@ -248,13 +255,13 @@ class StopWordsAvlTree
     /**
      * Internal method to print a subtree rooted at t in sorted order.
      */
-    void printTree( AvlNode *t ) const
+    void printTree( AvlNode *t,ofstream& file ) const
     {
         if( t != NULL )
         {
-            printTree( t->left );
-            cout << t->element << endl;
-            printTree( t->right );
+            printTree( t->left,file );
+            file << t->element << endl;
+            printTree( t->right,file );
         }
     }
 

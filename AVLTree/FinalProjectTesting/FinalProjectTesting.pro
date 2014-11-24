@@ -6,7 +6,8 @@ CONFIG -= qt
 SOURCES += main.cpp \
     SeparateChaining.cpp \
     IndexAVLNode.cpp \
-    StopWordsHashTable.cpp
+    StopWordsHashTable.cpp \
+    Stemmer.cpp
 
 HEADERS += \
     SeparateChaining.h \

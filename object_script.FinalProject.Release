@@ -3,7 +3,6 @@ INPUT(
 ./release/XMLParser.o
 ./release/IndexHandler.o
 ./release/XMLFileParser.o
-./release/Iindex.o
 ./release/LookUpTable.o
 ./release/UserMode.o
 ./release/MaintMode.o
@@ -11,5 +10,7 @@ INPUT(
 ./release/StressMode.o
 ./release/wordParser.o
 ./release/HashTable.o
-./release/AVLTree.o
+./release/IndexAVLNode.o
+./release/StopWordsHashTable.o
+./release/Index.o
 );
