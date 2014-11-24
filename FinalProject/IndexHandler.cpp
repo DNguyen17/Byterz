@@ -102,8 +102,8 @@ void IndexHandler::indexBodyOfText(char *body, int pageID){
     }
 
     ss << body;
-    while (ss.peek() != EOF ){
-        ss >> buffer;
+    while (ss >> buffer ){
+
         string stemmed = myWordParser.stopAndStem(buffer);
 
         //if did not send empty string then insert in index
