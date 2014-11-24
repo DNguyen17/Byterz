@@ -1,11 +1,11 @@
 #ifndef INDEXHANDLER_H
 #define INDEXHANDLER_H
-#include"wordParser.h"
+#include"WordParser2.h"
 #include"Index.h"
 #include<string>
 #include<vector>
 #include<sstream>
-
+#include"HashTable.h"
 class IndexHandler
 {
 public:
@@ -23,12 +23,16 @@ public:
     void indexBodyOfText(char *body, int pageID);
     void  addWord(std::string singleWord, int pageID);
     //void  addWords(std::string* words, int pageID);
-    std::vector<int>*  findWord(std::string* passedWord);
+    std::vector<int>*  findWord(std::string & passedWord);
     void clearIndex(void);
 
+    void findUserWords(void);
+
+    void loadStopTable();
+
 private:
-    wordParser myWordParser;
-    Index myIndex;
+    WordParser2* myWordParser;
+    HashTable<string>* myIndex;
     char* memoryInputFile;
     char* memoryOutputFile;
 };

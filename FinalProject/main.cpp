@@ -7,7 +7,7 @@ int main()
 {
     XMLParser myXMLParser;
     myXMLParser.loadStopTable();
-    myXMLParser.storeOffXMLData();
+    myXMLParser.storeOffXMLData("output.txt");
     myXMLParser.findUserWords();
 }
 

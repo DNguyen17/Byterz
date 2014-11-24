@@ -1,5 +1,5 @@
 #include "LookUpTable.h"
-
+#include<string>
 LookUpTable::LookUpTable()
 {
 }
@@ -26,22 +26,22 @@ void LookUpTable::setTableFile(char* passedFile){
 }
 
 //will add XML page just processed to external lookup table in memory
-void LookUpTable::addPage(string* author, string* title,
+/*void LookUpTable::addPage(string* author, string* title,
                string* fileName, int ID){
 
-}
+}*/
 //add multiple XML pages to external lookup table in memory
-void LookUpTable::addMultiplePages(string** author, string** title,
+/*void LookUpTable::addMultiplePages(string** author, string** title,
                         string** fileName, int* ID){
 
-}
+}*/
 
 //functions to retrieve info from table based on ID of page
-string* LookUpTable::getAuthor(int ID){
+/*string* LookUpTable::getAuthor(int ID){
 
-}
+}*/
 
-string* LookUpTable::getTitle(int ID){
+/*string* LookUpTable::getTitle(int ID){
 
 }
 
@@ -49,5 +49,5 @@ char* LookUpTable::getFileName(int ID){
 
 }
 
-
+*/
 

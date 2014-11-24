@@ -1,62 +1,74 @@
-#include "wordParser.h"
+/*#include "WordParser.h"
 #include<fstream>
-#include<iostream>
+#include<string>
+#include<cstring>
+
 using namespace std;
 
+string stemWord(string w){
+    return w;
+}
 
-wordParser::wordParser()
+static string s;
+
+WordParser::WordParser(int length)
 {
-    stopWordsList = new HashTable<string>();
-    //read in all of the stop words and store in HashTable
-    ifstream stopWordFile;
-    char* inputFile = new char[80];
-    strcpy(inputFile,"StopWords.txt");
-    stopWordFile.open(inputFile);
+    stopWordList = new StopWordsHashTable<string>(length);
+    char* sourceFile = new char[80];
+    strcpy(sourceFile,"StopWordsStemmed.txt");
 
-    if(!stopWordFile.is_open()){
-        cerr<<"Stop Words File could not be opened"<<endl;
 
+}
+
+WordParser::~WordParser(){
+   delete stopWordList;
+}
+
+void WordParser::setSourceFile(char* file){
+    strcpy(sourceFile,"");
+    strcpy(sourceFile,file);
+}
+
+string WordParser::stopAndStem(string& word){
+    int length = word.size();
+    string stemmed;
+    if(length > 70){
+        stemmed = "";
+        return stemmed;
     }
 
-    //loop that will go through and populate HashTable with all
-    //stop words
+    //if it is not longer than 70 characters check and see if
+    //stop word
+    if(stopWordList->contains(word)){
+        stemmed = "";
+        return stemmed;
+    }
+
+    //if not stop word then return stemmed word;
+    return stemWord(word);
+
+
+
+}
+
+void WordParser::loadStopList(){
+    s = new char[71];
+    ifstream inputFile;
+    inputFile.open(sourceFile);
 
     string buffer;
-    while(stopWordFile>>buffer){
-       stopWordsList->addWord(buffer);
+    inputFile>>buffer;
+    if(!inputFile){
+        cout<<"file did not open"<<endl;
+        exit(1);
     }
 
-}
+    while(inputFile ){
+       stopWordList->insert(buffer);
+       cout<<buffer<<endl;
+       inputFile>>buffer;
+    }
 
-//function checks if stop word, returns true if stop word
-bool wordParser::isStopWord(string* word){
-    bool result = stopWordList->findInList(word);
-
-    return result;
-}
-
-//stemms word
-string* stemmer(string*){
-
-
-    return ;
-}
-
-//function returns word after stemming or null if it is a stop word
-string* stopAndStem(string* preStemmed){
-    string* stemmedString  = new string();
-
-    stemmedString = stemmer(preStemmed);
-    //stem the string using 3rd part
-    /*
-    
-    */
-    //if the stemmed word is a stop word return null
-    if(isStopWord(stemmedString))
-        return "";
-    //otherwise return the stemmed word
-    else 
-        return stemmedString;
 
 }
-
+*/

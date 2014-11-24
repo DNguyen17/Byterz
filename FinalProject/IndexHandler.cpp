@@ -1,10 +1,13 @@
 #include "IndexHandler.h"
+#include "index.h"
+#include"HashTable.h"
+#include<cstring>
 using namespace std;
 
 
 IndexHandler::IndexHandler()
 {
-    myWordParser = new wordParser();
+    myWordParser = new WordParser2();
     myIndex = new HashTable<string>();
     //Want default data structure
     //Index* myIndex = new AVLTree();
@@ -17,7 +20,7 @@ IndexHandler::IndexHandler()
     strcpy(memoryOutputFile,"output.txt");
 }
 
-IndexHandler::~Indexhandler(){
+IndexHandler::~IndexHandler(){
     delete myWordParser;
     delete myIndex;
     delete[] memoryInputFile;
@@ -63,7 +66,8 @@ void IndexHandler::findUserWords(void){
     cout<<endl;
     cout<<"Pages with "<<userWord<<":"<<endl;
 
-    vector<int>* userWordPages = myIndex.findWord(userWord);
+    vector<int>* userWordPages = myIndex->findWord(userWord);
+    cout<<"userWordPages is "<<(userWordPages == NULL? "is null": "is not null")<<endl;
     //cycle through vector and print out all words
     for(int i = 0;userWordPages->size();i++){
         cout<<userWordPages->at(i)<<endl;
@@ -71,7 +75,7 @@ void IndexHandler::findUserWords(void){
 
     //Ask user if wants to keep searching for word
     int choice;
-    cout<<"Enter 1 to continue or 0 to exit:"<<;
+    cout<<"Enter 1 to continue or 0 to exit:";
     cin>>choice;
     if(choice==0){
         break;
@@ -104,11 +108,11 @@ void IndexHandler::indexBodyOfText(char *body, int pageID){
     ss << body;
     while (ss >> buffer ){
 
-        string stemmed = myWordParser.stopAndStem(buffer);
+        string stemmed = myWordParser->stopAndStem(buffer);
 
         //if did not send empty string then insert in index
         if(!stemmed.empty()){
-            myIndex.insert(stemmed,pageID);
+            myIndex->insert(stemmed,pageID);
         }
 
     }
@@ -132,14 +136,15 @@ void IndexHandler::indexBodyOfText(char *body, int pageID){
 }*/
 
 //same as addWord except for array of strings all on the same page
-void IndexHandler::addWords(string word, int pageID){
+/*void IndexHandler::addWords(string word, int pageID){
     //myIndex->insert(word,pageID);
-}
+}*/
 
 //returns all page numbers that word appeared on as stored in
 //index
-std::vector<int>* IndexHandler::findWord(string* passedWord){
-    myIndex->findWord(passedWord);
+std::vector<int>* IndexHandler::findWord(string& passedWord){
+    cout<<"Index Handler Find Word"<<endl;
+    return myIndex->findWord(passedWord);
 }
 
 //function used by MaintMode to clear entire index
@@ -147,4 +152,6 @@ void IndexHandler::clearIndex(void){
     myIndex->makeEmpty();
 }
 
-
+void IndexHandler::loadStopTable(){
+   myWordParser->loadStopList();
+}

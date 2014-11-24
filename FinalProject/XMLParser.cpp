@@ -33,7 +33,7 @@ XMLParser::~XMLParser(){
 
 }
 
-void XMLParser::setXMLDumpFile(char* passedFile){
+void XMLParser::setXMLDumpFile(string& passedFile){
     if (XMLDumpFile != nullptr){
         delete[] XMLDumpFile;
         XMLDumpFile = nullptr;
@@ -43,7 +43,7 @@ void XMLParser::setXMLDumpFile(char* passedFile){
 
     if (!ifs){
 
-        cerr << "unable to open dump file" << endl;
+        cerr << "unable to open dump file " << passedFile << " " << endl;
         exit(1);
     }
 
@@ -65,10 +65,10 @@ void XMLParser::storeOffXMLData(char * DumpName){
 
     ofstream ofs(DumpName);
     int i = 1;
-    ofstream fout("splitWords.txt");
+    //ofstream fout("splitWords.txt");
 
     //loop through all files
-    while (i <= 179){
+    while (i <= 1){
 
         string fileName = "WikiDumpPart";
         fileName += to_string(i);
@@ -95,7 +95,7 @@ void XMLParser::storeOffXMLData(char * DumpName){
             text = new char[strlen(myParser.findBodyText())+1];
             strcpy(text, myParser.findBodyText());
 
-            indexBodyOfText(text, id, fout);
+            myHandler->indexBodyOfText(text, id);
 
             pageNode = pageNode->next_sibling("page");
 
@@ -112,7 +112,7 @@ void XMLParser::storeOffXMLData(char * DumpName){
     }
 
     ofs.close();
-    fout.close();
+    //fout.close();
 
 
 }
@@ -127,4 +127,12 @@ void XMLParser::addPagesToLookup(){
 
 void XMLParser::addSinglePageToLookup(){
 
+}
+
+void XMLParser::loadStopTable(){
+    myHandler->loadStopTable();
+}
+
+void XMLParser::findUserWords(){
+    myHandler->findUserWords();
 }

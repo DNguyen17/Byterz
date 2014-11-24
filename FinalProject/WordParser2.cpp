@@ -1,19 +1,10 @@
-#include <iostream>
-#include<string>
-#include "AvlTree.h"
-#include"IndexAVLNode.h"
-#include<vector>
-#include"SeparateChaining.h"
-#include"StopWordsAvlTree.h"
-#include"StopWordsHashTable.h"
+#include "WordParser2.h"
 
-
-//Code From Stemmer
+#include<fstream>
 #include<string>
 #include<cstring>
-#include<iostream>
+
 using namespace std;
-//Datastructres project:
 
 /*
 xml dumps:
@@ -410,7 +401,7 @@ static void step5()
    file.
 */
 
-int stem(char * p, int i, int j)
+int stemTheWord(char * p, int i, int j)
 {  b = p; k = j; k0 = i; /* copy the parameters into statics */
    if (k <= k0+1) return k; /*-DEPARTURE-*/
 
@@ -462,24 +453,23 @@ string stemWord(string f)
             ch = getc(f);
             if (!LETTER(ch)) { ungetc(ch,f); break; }
          }*/
-        cout<<f<<endl;
-        cout<<f.c_str()<<endl;
+        ////cout<<f<<endl;
+        ////cout<<f.c_str()<<endl;
          char* word  = new char[f.size()+1];
          strcpy(word,f.c_str());
          strcpy(s,word);
-         cout<<word<<endl;
-         cout<<s<<endl;
-         s[stem(s,0,f.size()-1)+1] = 0;
+         //cout<<word<<endl;
+         //cout<<s<<endl;
+         s[stemTheWord(s,0,f.size()-1)+1] = 0;
 
          /* the previous line calls the stemmer and uses its result to
             zero-terminate the string in s */
          //printf("%s",s);
          string BrendanString = s;
-         cout<<s;
+         //cout<<s;
          return s;
 
 }
-
 
 
 
@@ -487,222 +477,73 @@ string stemWord(string f)
 
 
 
-//Test program for AVL trees with IndexAVLNodes as nodes
-/*int main(){
-    AvlTree<string> t;
-    vector<int>* myVector = new vector<int>;
-    for(int i = 0;i<10;i++){
-        myVector->push_back(i);
-    }
 
 
-    vector<int>* myVector1 = new vector<int>;
-    myVector1->push_back(42);
-
-    vector<int>* myVector2 = new vector<int>;
-    myVector2->push_back(80);
-
-    t.insert("dog",myVector);
-    t.insert("aa",myVector1);
-    t.insert("yo",myVector2);
-
-    vector<int>* newVector = new vector<int>;
-    newVector->push_back(14);
-    newVector->push_back(20);
-    t.insert("dog",newVector);
-
-    t.printTree();
-}*/
-    // Test program for AVL tree
-/*int main( )
+WordParser2::WordParser2(int length)
 {
-    AvlTree<int> t, t2;
-    int NUMS = 20;
-    const int GAP  =   37;
-    int i;
-    int myArray[] = {1, 3, 6, 9, 11, 17, 18, 45, 24, 19, 18, 22, 20};
-    int size = 13;
+    stopWordList = new StopWordsHashTable<string>(length);
+    char* sourceFile = new char[80];
+    strcpy(sourceFile,"StopWordsStemmed.txt");
 
-    cout << "Checking... (no more output means success)" << endl;
 
-    /*for( i = GAP; i != 0; i = ( i + GAP ) % NUMS )
-        t.insert( i );*/
-/*
-    for(i = 0;i<size;i++){
-        t.insert(myArray[i]);
-    }
-
-    t.printTree( );
-/*    if( t.findMin( ) != 1 || t.findMax( ) != NUMS - 1 )
-        cout << "FindMin or FindMax error!" << endl;
-
-    t2 = t;
-
-    for( i = 1; i < NUMS; i++ )
-        if( !t2.contains( i ) )
-            cout << "Find error1!" << endl;
-    if( t2.contains( 0 ) )
-        cout << "ITEM_NOT_FOUND failed!" << endl;
-*/
- /*   cout << "Test finished" << endl;
-    return 0;
-}
-*/
-
-//Test program for hash table
-#include <iostream>
-#include "SeparateChaining.h"
-
-//Simple main
-/*int main( )
-{
-    HashTable<string>* H = new HashTable<string>(6);
-
-    const int NUMS = 4000;
-    const int GAP  =   37;
-    int i;
-
-    string myArray[] =
-    {"hey","there","dawg","how","Dawg","Dahn","Basketball","does","mouse","heydur","wasup","idk"};
-    for(int i = 0;i<6;i++){
-        H->insert(myArray[i]);
-    }
-
-    for(int i = 1;i<H->getSize();i++){
-        cout<<(H->getList())[i].front()<<endl;
-    }
-*//*
-    for( i = GAP; i != 0; i = ( i + GAP ) % NUMS )
-        H.insert( i );
-    for( i = 1; i < NUMS; i += 2 )
-        H.remove( i );
-
-    for( i = 2; i < NUMS; i += 2 )
-        if( !H.contains( i ) )
-            cout << "Contains fails " << i << endl;
-
-    for( i = 1; i < NUMS; i += 2 )
-    {
-        if( H.contains( i ) )
-            cout << "OOPS!!! " <<  i << endl;
-    }
-
-}*/
-
-/**
- * A hash routine for string objects.
- */
-int hash( const string & key , int size)
-{
-    int hashVal = 0;
-
-    for( int i = 0; i < key.length( ); i++ )
-        hashVal = 37 * hashVal + key[ i ];
-
-    hashVal %= size;
-    if( hashVal < 0 )
-        hashVal += size;
-
-    return hashVal;
 }
 
-/*int main(){
+WordParser2::~WordParser2(){
+   delete stopWordList;
+}
 
+void WordParser2::setSourceFile(char* file){
+    strcpy(sourceFile,"");
+    strcpy(sourceFile,file);
+}
 
-    vector<string> myVec;
-    string myArray[] = {"hey","there","dawg","how","Dawg","Dahn","Basketball","does","mouse","heydur","wasup","idk"
-                       "Collete","Elise","Brendan","Irisa","random","word","hello","do","a","b","c","d","e","f","g",
-                       "h","i","J","hola","yo","sup","herro"};
-    for(int i = 0;i<sizeof(myArray)/sizeof(myArray[1]);i++){
-        cout<<myArray[i]<<endl;
-        myVec.push_back(myArray[i]);
+string WordParser2::stopAndStem(string& word){
+    int length = word.size();
+    string stemmed;
+    if(length > 70){
+        stemmed = "";
+        return stemmed;
     }
 
-   StopWordsHashTable<string>* myTable =  new StopWordsHashTable<string>(10);
-
-   for(int j = 0;j<myVec.size();j++){
-
-        myTable->insert(myVec.at(j));
-   }
-
-   myTable->print();
-   cout<<"Contains Elise? "<<myTable->contains("Elise")<<endl;
-
-   cout<<"Contains sup? "<<myTable->contains("sup")<<endl;
-
-   cout<<"Contains notdurr?"<<myTable->contains("notdurr")<<endl;
-
-}
-*/
-//Testing hashtable Friday 11/21/14
-/*int main(){
-
-
-    vector<string> myVec;
-    string myArray[] = {"hey","there","dawg","how","Dawg","Dahn","Basketball","does","mouse","heydur","wasup","idk"
-                       "Collete","Elise","Brendan","Irisa","random","word","hello","do","a","b","c","d","e","f","g",
-                       "h","i","J","hola","yo","sup","herro"};
-    for(int i = 0;i<sizeof(myArray)/sizeof(myArray[1]);i++){
-        cout<<myArray[i]<<endl;
-        myVec.push_back(myArray[i]);
+    //if it is not longer than 70 characters check and see if
+    //stop word
+    if(stopWordList->contains(word)){
+        stemmed = "";
+        return stemmed;
     }
 
-   HashTable<string>* myTable =  new HashTable<string>(10);
+    //if not stop word then return stemmed word;
+    return stemWord(word);
 
-   for(int j = 0;j<myVec.size();j++){
 
-        myTable->insert(myVec.at(j),j);
-   }
-
-   myTable->print();
-   cout<<"Contains Elise? "<<myTable->contains("Elise")<<endl;
-
-   cout<<"Contains sup? "<<myTable->contains("sup")<<endl;
-
-   cout<<"Contains notdurr?"<<myTable->contains("notdurr")<<endl;
 
 }
-*/
 
-string stemWord(string f);
-
-int main(){
-
-    s = new char[80];
+void WordParser2::loadStopList(){
+    s = new char[71];
     ifstream inputFile;
     inputFile.open("StopWordsStemmed.txt");
+    ////cout<<inputFile.<<endl;
+    ifstream otherFile;
+/*    otherFile.open("Hello.txt");
+    if(!otherFile){
+        //cout<<"other words list file did not open"<<endl;
+        exit(1);
+    }
+*/
 
-    vector<string> myVec;
-    /*string myArray[] = {"hey","there","dawg","how","Dawg","Dahn","Basketball","does","mouse","heydur","wasup","idk"
-                       "Collete","Elise","Brendan","Irisa","random","word","hello","do","a","b","c","d","e","f","g",
-                       "h","i","J","hola","yo","sup","herro"};*/
-    /*for(int i = 0;i<sizeof(myArray)/sizeof(myArray[1]);i++){
-        cout<<myArray[i]<<endl;
-        myVec.push_back(myArray[i]);
-    }*/
-    //get all words from input file
     string buffer;
     inputFile>>buffer;
     if(!inputFile){
-        cout<<"file did not open"<<endl;
+        //cout<<"stop words list file did not open"<<endl;
         exit(1);
     }
-    ofstream output;
-   StopWordsHashTable<string>* myTable =  new StopWordsHashTable<string>(509);
+
     while(inputFile ){
-       myTable->insert(buffer);
-       cout<<buffer<<endl;
+       stopWordList->insert(buffer);
+       //cout<<buffer<<endl;
        inputFile>>buffer;
     }
 
-   output.open("StopWordsHashTable.txt");
-   myTable->print(output);
-   cout<<stemWord("again")<<endl;
-   cout<<"Contains again? "<<myTable->contains(stemWord("again"))<<endl;
-    cout<<stemWord("anything");
-   cout<<"Contains anything? "<<myTable->contains(stemWord("anything"))<<endl;
 
-   cout<<"Contains sure? "<<myTable->contains(stemWord("sure"))<<endl;
-
-   cout<<"Contains subway? "<<myTable->contains(stemWord("subway"))<<endl;
 }

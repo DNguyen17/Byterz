@@ -1,15 +1,15 @@
-/*#ifndef WORDPARSER_H
-#define WORDPARSER_H
+#ifndef WORDPARSER2_H
+#define WORDPARSER2_H
 #include"StopWordsHashTable.h"
 
-class WordParser
+class WordParser2
 {
 public:
-    //WordParser();
-    WordParser(int length = 500);
-    ~WordParser();
+    //WordParser2();
+    WordParser2(int length = 500);
+    ~WordParser2();
 
-   // WordParser(int length = 500);
+   // WordParser2(int length = 500);
     string stopAndStem(string&);
    // void prepareStopList(void);
     void loadStopList(void);
@@ -23,5 +23,4 @@ private:
 
 };
 
-#endif // WORDPARSER_H
-*/
+#endif // WORDPARSER2_H

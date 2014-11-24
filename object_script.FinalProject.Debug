@@ -8,9 +8,11 @@ INPUT(
 ./debug/MaintMode.o
 ./debug/InteractiveMode.o
 ./debug/StressMode.o
-./debug/wordParser.o
 ./debug/HashTable.o
 ./debug/IndexAVLNode.o
 ./debug/StopWordsHashTable.o
 ./debug/Index.o
+./debug/WordParser.o
+./debug/WordParser.o
+./debug/WordParser2.o
 );

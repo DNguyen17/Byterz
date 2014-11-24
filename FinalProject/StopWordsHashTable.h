@@ -50,9 +50,9 @@ class StopWordsHashTable
     }
 
 
-    bool contains( const HashedObj & x ) const
+    bool contains(  HashedObj & x )
     {
-        const StopWordsAvlTree<HashedObj>* whichList = theLists[ myhash( x ) ];
+         StopWordsAvlTree<HashedObj>* whichList = theLists[ myhash( x ) ];
 
         return whichList->contains(x);
     }
@@ -69,7 +69,7 @@ class StopWordsHashTable
     }
 
 
-    bool insert( const HashedObj & x )
+    bool insert(  HashedObj & x )
     {
         StopWordsAvlTree<HashedObj>* & whichList = theLists[ myhash( x ) ];
 
@@ -81,7 +81,7 @@ class StopWordsHashTable
         return true;
     }
 /*
-    bool remove( const HashedObj & x )
+    bool remove(  HashedObj & x )
     {
         list<HashedObj> & whichList = theLists[ myhash( x ) ];
         typename list<HashedObj>::iterator itr = find( whichList.begin( ), whichList.end( ), x );
@@ -117,7 +117,7 @@ class StopWordsHashTable
         }*/
     }
 
-    int myhash( const HashedObj & x ) const
+    int myhash(  HashedObj & x )
     {
         int hashVal = hash( x );
 
@@ -127,9 +127,22 @@ class StopWordsHashTable
 
         return hashVal;
     }
+    /**
+    * A hash routine for string objects.
+    */
+
+    int hash(  string & key )
+    {
+        int hashVal = 0;
+
+        for( int i = 0; i < key.length( ); i++ )
+            hashVal = 37 * hashVal + key[ i ];
+
+        return hashVal;
+    }
 };
 
-int hash( const string & key );
-int hash( int key );
+//int hash(  string & key );
+//int hash( int key );
 
 #endif //STOP_WORDS_HASH_TABLE_H
