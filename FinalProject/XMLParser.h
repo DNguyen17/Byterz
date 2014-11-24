@@ -23,9 +23,10 @@ public:
     XMLParser();
     ~XMLParser();
 
-
+    void loadStopTable();
     void storeOffXMLData(char * DumpName);
-    void  setXMLDumpFile(char *);
+    void  setXMLDumpFile(string&);
+    void findUserWords();
 
 private:
     //private helper function

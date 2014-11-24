@@ -1,4 +1,4 @@
-#include "InteractiveMode.h"
+/*#include "InteractiveMode.h"
 using namespace std;
 #include<vector>
 
@@ -16,3 +16,4 @@ void InteractiveMode::printPages(string word){
     }
 
 }
+*/

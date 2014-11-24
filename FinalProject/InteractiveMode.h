@@ -3,6 +3,7 @@
 #include"IndexHandler.h"
 #include<string>
 #include<vector>
+#include<iostream>
 
 class InteractiveMode
 {

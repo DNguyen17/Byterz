@@ -8,9 +8,11 @@ INPUT(
 ./release/MaintMode.o
 ./release/InteractiveMode.o
 ./release/StressMode.o
-./release/wordParser.o
 ./release/HashTable.o
 ./release/IndexAVLNode.o
 ./release/StopWordsHashTable.o
 ./release/Index.o
+./release/WordParser.o
+./release/WordParser.o
+./release/WordParser2.o
 );

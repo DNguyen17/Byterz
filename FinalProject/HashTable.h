@@ -13,8 +13,6 @@
 using namespace std;
 
 
-int hash( const string & key );
-int hash( int key );
 int nextPrime( int n );
 
 // SeparateChaining Hash table class
@@ -29,21 +27,22 @@ int nextPrime( int n );
 // int hash( string str ) --> Global method to hash strings
 
 template <typename HashedObj>
-class HashTable:public Index
+class HashTable
 {
 public:
-    vector<int>* findWord(HashedObj & word){
-        const AvlTree<HashedObj>* whichList = theLists[ myhash(word)];
-
+    vector<int>* findWord(HashedObj & word)  {
+        AvlTree<HashedObj>* whichList = theLists[ myhash(word)];
+        cout<<"HashTable find word function"<<endl;
         //uses iterator to find --> change to AVL tree
-        return whichList->findWord(x);
+        return whichList->findWord(word);
+
     }
 
     void print(void){
         for(int u = 0;u<theLists.size();u++){
-            cout<<"Tree "<<u<<endl;
+            //cout<<"Tree "<<u<<endl;
             theLists[u]->printTree();
-            cout<<endl;
+            //cout<<endl;
         }
     }
 
@@ -51,23 +50,23 @@ public:
         return currentSize;
     }
 
-    //constructor that sets initial size to 101 by default
+    //ructor that sets initial size to 101 by default
     explicit HashTable( int size = 10 )
-      : currentSize( 0 )
+      :currentSize( 0 )
       { theLists.resize( size );
-        cout<<"TheLists constructor called"<<endl;
+        //cout<<"TheLists ructor called"<<endl;
         //initialize tree objects
         for(int i = 0;i<theLists.size();i++){
             theLists[i] = new AvlTree<HashedObj>();
         }
       }
 
-    bool contains( const HashedObj & x ) const
+    bool contains(  HashedObj & x )
     {
         //creates alias for list that is used as seperate chaining
 
-        //const list<HashedObj> & whichList = theLists[ myhash( x ) ];
-        const AvlTree<HashedObj>* whichList = theLists[ myhash(x)];
+        // list<HashedObj> & whichList = theLists[ myhash( x ) ];
+         AvlTree<HashedObj>* whichList = theLists[ myhash(x)];
 
         //uses iterator to find --> change to AVL tree
         return whichList->contains(x);
@@ -89,10 +88,10 @@ public:
     //finds hashing index and then checks that the value is not already in the list
     //If it is not hten it adds it to the list, increments, and then rehashes if
     //size is too large
-    bool insert( const HashedObj & x , int &page)
+    bool insert( HashedObj & x , int &page)
     {
-        //cout<<"Size = "<<theLists.size()<<endl;
-        cout<<x<<" Hashed to "<<myhash(x)<<endl;
+        ////cout<<"Size = "<<theLists.size()<<endl;
+        ////cout<<x<<" Hashed to "<<myhash(x)<<endl;
         //list<HashedObj> & whichList = theLists[ myhash( x ) ];
         AvlTree<HashedObj>* & whichList = theLists[myhash(x)];
         /*if( find( whichList.begin( ), whichList.end( ), x ) != whichList.end( ) )
@@ -124,7 +123,7 @@ public:
     }
 
     //don't need this function because won't remove any items
-    /*bool remove( const HashedObj & x )
+    /*bool remove(  HashedObj & x )
     {
         list<HashedObj> & whichList = theLists[ myhash( x ) ];
         typename list<HashedObj>::iterator itr = find( whichList.begin( ), whichList.end( ), x );
@@ -188,13 +187,23 @@ public:
         }
     }
 
-    int myhash( const HashedObj & x ) const
+    int myhash( HashedObj & x )
     {
         int hashVal = hash( x );
 
         hashVal %= theLists.size( );
         if( hashVal < 0 )
             hashVal += theLists.size( );
+
+        return hashVal;
+    }
+
+    int hash(  HashedObj & key )
+    {
+        int hashVal = 0;
+
+        for( int i = 0; i < key.length( ); i++ )
+            hashVal = 37 * hashVal + key[ i ];
 
         return hashVal;
     }

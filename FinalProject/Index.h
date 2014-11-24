@@ -14,11 +14,11 @@ public:
     void setWordCount(int);
     void incrementWordCount(void);
 
-    virtual std::vector<int>* findWord(std::string*)=0;
-    virtual void makeEmpty() = 0;
-    virtual void insert(std::string&,int&)= 0;
-    //virtual void addWords(std::string*, int*) = 0;
-    virtual bool contains(std::string);
+    virtual std::vector<int>* findWord(std::string&);
+    virtual void makeEmpty();
+    virtual bool insert(std::string&,int&);
+    //virtual void addWords(std::string*, int*);
+    virtual bool contains(std::string&);
 
 private:
     int wordCount;

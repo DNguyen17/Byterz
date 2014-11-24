@@ -40,11 +40,11 @@ class AvlTree
     //destructor
     ~AvlTree( )
     {
-        makeEmpty(1 );
+        makeEmpty(1);
     }
 
     vector<int>* findWord(Comparable & word){
-        return find(x,root);
+        return findWord(word,root);
     }
 
     //return the element and page numbers pointer of the nth
@@ -110,14 +110,15 @@ class AvlTree
         }
     }
 
-    /**
+    /*,*
      * Make the tree logically empty.
      * int x will signal that it is the destructor that is calling the makeEmpty
      * So the word lists can be deleted
      */
     void makeEmpty( )
     {
-        makeEmpty( root,0 );
+        int x = 0;
+        makeEmpty(root,x );
     }
 
     /**
@@ -129,8 +130,8 @@ class AvlTree
     }
 */
     void insert(const Comparable &x, int &pages ){
-        //cout<<"X = "<<x<<endl;
-        //cout<<"Pages = "<<pages<<endl;
+        cout<<"X = "<<x<<endl;
+        cout<<"Pages = "<<pages<<endl;
         insert( x, pages, root );
 
     }
@@ -153,7 +154,8 @@ class AvlTree
     {
         if( this != &rhs )
         {
-            makeEmpty(1 );
+            int x = 1;
+            makeEmpty(root,x );
             root = clone( rhs.root );
         }
         return *this;
@@ -184,9 +186,13 @@ class AvlTree
      */
     void insert( const Comparable & x,int& pages, IndexAVLNode * & t )
     {
-        if( t == NULL )
+        if( t == NULL ){
             //the sent object is now stored in the tree
             t = new IndexAVLNode(pages, x, NULL, NULL);
+            for(int i = 0; t->pageNumbers->size();i++){
+                cout<<"t's "<<i<<"th element is"<<t->pageNumbers->at(i)<<endl;
+            }
+        }
         else if( x < t->element )
         {
             //cout<<x<<" less than = "<<t->element<<endl;
@@ -302,8 +308,9 @@ class AvlTree
             return true;    // Match
     }
 
-    vector<int>* findWord( const Comparable & x, IndexAVLNode *t ) const
+    vector<int>* findWord( const Comparable & x, IndexAVLNode *t )
     {
+        cout<<"findWord of AVL tree"<<endl;
         if( t == NULL )
             return NULL;
         else if( x < t->element )
@@ -311,7 +318,9 @@ class AvlTree
         else if( t->element < x )
             return findWord( x, t->right );
         else
+            cout<<"PageNumbers size is "<<t->pageNumbers->size()<<endl;
             return t->pageNumbers; // Match
+
     }
 /****** NONRECURSIVE VERSION*************************
     bool contains( const Comparable & x, IndexAVLNode *t ) const

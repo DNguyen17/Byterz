@@ -3,6 +3,8 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
+QMAKE_CXXFLAGS += -std=c++11
+
 SOURCES += main.cpp \
     XMLParser.cpp \
     IndexHandler.cpp \
@@ -12,11 +14,13 @@ SOURCES += main.cpp \
     MaintMode.cpp \
     InteractiveMode.cpp \
     StressMode.cpp \
-    wordParser.cpp \
     HashTable.cpp \
     IndexAVLNode.cpp \
     StopWordsHashTable.cpp \
-    Index.cpp
+    Index.cpp \
+    WordParser.cpp \
+    WordParser.cpp \
+    WordParser2.cpp
 
 HEADERS += \
     rapidxml.hpp\
@@ -32,10 +36,13 @@ HEADERS += \
     MaintMode.h \
     InteractiveMode.h \
     StressMode.h \
-    wordParser.h \
     HashTable.h \
     AvlTree.h \
     IndexAVLNode.h \
     StopWordsHashTable.h \
-    StopWordsAvlTree.h
+    StopWordsAvlTree.h \
+    WordParser.h \
+    Random.h \
+    WordParser.h \
+    WordParser2.h
 

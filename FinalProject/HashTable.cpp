@@ -40,7 +40,7 @@ int nextPrime( int n )
 /**
  * A hash routine for string objects.
  */
-int hash( const string & key )
+/*int hash( const string & key )
 {
     int hashVal = 0;
 
@@ -53,7 +53,8 @@ int hash( const string & key )
 /**
  * A hash routine for ints.
  */
-int hash( int key )
+/*int hash( int key )
 {
     return key;
 }
+*/
