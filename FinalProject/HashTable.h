@@ -32,9 +32,14 @@ class HashTable
 public:
     vector<int>* findWord(HashedObj & word)  {
         AvlTree<HashedObj>* whichList = theLists[ myhash(word)];
-        cout<<"HashTable find word function"<<endl;
+        //cout<<"HashTable find word function"<<endl;
+        //cout<<whichList->findWord(word)->size();
         //uses iterator to find --> change to AVL tree
-        return whichList->findWord(word);
+        //return NULL;
+        vector<int>* newVector= whichList->findWord(word);
+        //cout<<"Returned to findWord in Hash"<<endl;
+        //cout<<"newVector "<<newVector<<endl;
+        return newVector;
 
     }
 

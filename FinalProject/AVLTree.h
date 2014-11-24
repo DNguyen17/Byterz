@@ -130,8 +130,8 @@ class AvlTree
     }
 */
     void insert(const Comparable &x, int &pages ){
-        cout<<"X = "<<x<<endl;
-        cout<<"Pages = "<<pages<<endl;
+        //cout<<"X = "<<x<<endl;
+        //cout<<"Pages = "<<pages<<endl;
         insert( x, pages, root );
 
     }
@@ -189,8 +189,9 @@ class AvlTree
         if( t == NULL ){
             //the sent object is now stored in the tree
             t = new IndexAVLNode(pages, x, NULL, NULL);
-            for(int i = 0; t->pageNumbers->size();i++){
-                cout<<"t's "<<i<<"th element is"<<t->pageNumbers->at(i)<<endl;
+
+            for(int i = 0;i< t->pageNumbers->size();i++){
+                //cout<<"t's "<<i<<"th element is"<<t->pageNumbers->at(i)<<endl;
             }
         }
         else if( x < t->element )
@@ -311,8 +312,9 @@ class AvlTree
     vector<int>* findWord( const Comparable & x, IndexAVLNode *t )
     {
         cout<<"findWord of AVL tree"<<endl;
-        if( t == NULL )
-            return NULL;
+        if( t == NULL ){
+            cout<<"\nwas found as NULL"<<endl;
+            return NULL;}
         else if( x < t->element )
             return findWord( x, t->left );
         else if( t->element < x )

@@ -64,11 +64,11 @@ void XMLParser::storeOffXMLData(char * DumpName){
    //open XML file from XMLDumpFile
 
     ofstream ofs(DumpName);
-    int i = 1;
+    int i = 100;
     //ofstream fout("splitWords.txt");
 
     //loop through all files
-    while (i <= 1){
+    while (i <= 179){
 
         string fileName = "WikiDumpPart";
         fileName += to_string(i);

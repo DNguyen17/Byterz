@@ -66,13 +66,23 @@ void IndexHandler::findUserWords(void){
     cout<<endl;
     cout<<"Pages with "<<userWord<<":"<<endl;
 
+    //cout<<"myIndex->findWord(user) size = "<<myIndex->findWord(userWord)->size();
     vector<int>* userWordPages = myIndex->findWord(userWord);
-    cout<<"userWordPages is "<<(userWordPages == NULL? "is null": "is not null")<<endl;
-    //cycle through vector and print out all words
-    for(int i = 0;userWordPages->size();i++){
-        cout<<userWordPages->at(i)<<endl;
-    }
+    //cout<<"Made it to Index Handler"<<endl;
+    if(userWordPages != NULL){
+        //cout<<"right under"<<userWordPages->size();
 
+        //cout<<"userWordPages is "<<(userWordPages == NULL? "is null": "is not null")<<endl;
+        //cycle through vector and print out all words
+        //cout<<"Size = "<<userWordPages->size()<<endl;
+        //cout<<userWordPages->at(0)<<endl;
+        for(int i = 0;i<userWordPages->size();i++){
+            cout<<userWordPages->at(i)<<endl;
+        }
+    }
+    else{
+        cout<<"There are no pages with "<<userWord<<endl<<endl;
+    }
     //Ask user if wants to keep searching for word
     int choice;
     cout<<"Enter 1 to continue or 0 to exit:";
