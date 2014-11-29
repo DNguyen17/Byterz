@@ -498,6 +498,7 @@ void WordParser2::setSourceFile(char* file){
 }
 
 string WordParser2::stopAndStem(string& word){
+    //cout<<"WordParser passed Word: "<< word<<endl;
     int length = word.size();
     string stemmed;
     if(length > 70){
@@ -507,13 +508,16 @@ string WordParser2::stopAndStem(string& word){
 
     //if it is not longer than 70 characters check and see if
     //stop word
-    if(stopWordList->contains(word)){
+    string buffer2 = stemWord(word);
+    if(stopWordList->contains(buffer2)){
+
         stemmed = "";
         return stemmed;
     }
 
     //if not stop word then return stemmed word;
-    return stemWord(word);
+    //cout<<"Stemmed word = "<<stemWord(word)<<endl;
+    return buffer2;
 
 
 
@@ -533,16 +537,14 @@ void WordParser2::loadStopList(){
 */
 
     string buffer;
-    inputFile>>buffer;
     if(!inputFile){
         //cout<<"stop words list file did not open"<<endl;
         exit(1);
     }
 
-    while(inputFile ){
+    while(inputFile>>buffer ){
        stopWordList->insert(buffer);
        //cout<<buffer<<endl;
-       inputFile>>buffer;
     }
 
 

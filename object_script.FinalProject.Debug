@@ -15,4 +15,5 @@ INPUT(
 ./debug/WordParser.o
 ./debug/WordParser.o
 ./debug/WordParser2.o
+./debug/FakeXMLParser.o
 );

@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     Index.cpp \
     WordParser.cpp \
     WordParser.cpp \
-    WordParser2.cpp
+    WordParser2.cpp \
+    FakeXMLParser.cpp
 
 HEADERS += \
     rapidxml.hpp\
@@ -44,5 +45,6 @@ HEADERS += \
     WordParser.h \
     Random.h \
     WordParser.h \
-    WordParser2.h
+    WordParser2.h \
+    FakeXMLParser.h
 

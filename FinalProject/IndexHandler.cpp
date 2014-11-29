@@ -64,24 +64,39 @@ void IndexHandler::findUserWords(void){
     cout<<"Please Enter Word: ";
     cin>>userWord;
     cout<<endl;
+    cout<<"User Word collected was "<<userWord<<endl;
+
     cout<<"Pages with "<<userWord<<":"<<endl;
 
-    //cout<<"myIndex->findWord(user) size = "<<myIndex->findWord(userWord)->size();
-    vector<int>* userWordPages = myIndex->findWord(userWord);
-    //cout<<"Made it to Index Handler"<<endl;
-    if(userWordPages != NULL){
-        //cout<<"right under"<<userWordPages->size();
+    //convert first letter of word to lowercase
+    userWord[0] = tolower(userWord[0]);
+    //need to stem word before searching for it:
 
-        //cout<<"userWordPages is "<<(userWordPages == NULL? "is null": "is not null")<<endl;
-        //cycle through vector and print out all words
-        //cout<<"Size = "<<userWordPages->size()<<endl;
-        //cout<<userWordPages->at(0)<<endl;
-        for(int i = 0;i<userWordPages->size();i++){
-            cout<<userWordPages->at(i)<<endl;
+    string userStemmed = myWordParser->stopAndStem(userWord);
+    if(!userStemmed.empty()){
+
+
+        //cout<<"myIndex->findWord(user) size = "<<myIndex->findWord(userWord)->size();
+        vector<int>* userWordPages = myIndex->findWord(userStemmed);
+        //cout<<"Made it to Index Handler"<<endl;
+        if(userWordPages != NULL){
+            //cout<<"right under"<<userWordPages->size();
+
+            //cout<<"userWordPages is "<<(userWordPages == NULL? "is null": "is not null")<<endl;
+            //cycle through vector and print out all words
+            //cout<<"Size = "<<userWordPages->size()<<endl;
+            //cout<<userWordPages->at(0)<<endl;
+            for(int i = 0;i<userWordPages->size();i++){
+                cout<<userWordPages->at(i)<<endl;
+            }
+        }
+        else{
+            cout<<"There are no pages with "<<userWord<<endl<<endl;
         }
     }
     else{
-        cout<<"There are no pages with "<<userWord<<endl<<endl;
+        cout<<"Input is a stop word, there are no pages with "<<userWord<<endl<<endl;
+
     }
     //Ask user if wants to keep searching for word
     int choice;
@@ -102,7 +117,8 @@ void IndexHandler::findUserWords(void){
 //words done
 
 void IndexHandler::indexBodyOfText(char *body, int pageID){
-
+    //cout<<endl;
+    //cout<<endl;
     stringstream ss;
     string buffer;
     int length = strlen(body);
@@ -117,12 +133,17 @@ void IndexHandler::indexBodyOfText(char *body, int pageID){
 
     ss << body;
     while (ss >> buffer ){
-
-        string stemmed = myWordParser->stopAndStem(buffer);
+        //conver the first letter of the string to lower case
+        buffer[0] = tolower(buffer[0]);
+        string stemmed = myWordParser->stopAndStem((buffer));
 
         //if did not send empty string then insert in index
         if(!stemmed.empty()){
             myIndex->insert(stemmed,pageID);
+        }
+        else{
+            //cout<<"Word was stop word"<<endl;
+
         }
 
     }

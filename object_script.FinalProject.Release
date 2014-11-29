@@ -15,4 +15,5 @@ INPUT(
 ./release/WordParser.o
 ./release/WordParser.o
 ./release/WordParser2.o
+./release/FakeXMLParser.o
 );

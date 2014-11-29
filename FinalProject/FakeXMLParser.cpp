@@ -1,24 +1,22 @@
-#include "XMLParser.h"
-using namespace std;
+#include "FakeXMLParser.h"
+#include<string>
+#include<vector>
+#include<iostream>
+#include<fstream>
 
-XMLParser::XMLParser()
+FakeXMLParser::FakeXMLParser()
 {
     myHandler = new IndexHandler();
     myLookUpTable = new LookUpTable();
 
-    XMLDumpFile = nullptr;
     title = nullptr;
     id = 0;
     text = nullptr;
 }
 
-XMLParser::~XMLParser(){
+FakeXMLParser::~FakeXMLParser(){
     delete myHandler;
     delete myLookUpTable;
-
-    if (XMLDumpFile != nullptr)
-        delete[] XMLDumpFile;
-    XMLDumpFile = nullptr;
 
     if (title != nullptr)
         delete[] title;
@@ -28,47 +26,57 @@ XMLParser::~XMLParser(){
         delete[] text;
     text = nullptr;
 
-    myParser.~XMLFileParser();
-    doc.clear(); //deallocate memory pool of rapidxml class
+    //myParser.~XMLFileParser();
+    //doc.clear(); //deallocate memory pool of rapidxml class
 
 }
 
-void XMLParser::setXMLDumpFile(string& passedFile){
-    if (XMLDumpFile != nullptr){
-        delete[] XMLDumpFile;
-        XMLDumpFile = nullptr;
-    }
+void FakeXMLParser::loadStopTable(){
+    myHandler->loadStopTable();
+}
 
-    ifstream ifs(passedFile);
+void FakeXMLParser::findUserWords(){
+    myHandler->findUserWords();
+}
 
-    if (!ifs){
 
-        cerr << "unable to open dump file " << passedFile << " " << endl;
+void FakeXMLParser::storeOffXMLData(){
+    //will just read from file and store
+    //off words
+    ifstream inputFile;
+    inputFile.open("FakeParserWords.txt");
+
+    string buffer;
+
+    inputFile>>buffer;
+    if(!inputFile){
+        //cout<<"stop words list file did not open"<<endl;
         exit(1);
     }
 
-    ifs.seekg(0, ifs.end);
-    int length = ifs.tellg();
-    ifs.seekg(0, ifs.beg);
+    while(inputFile>>buffer ){
+        cout<<buffer<<endl;
+        char* myChar = new char[buffer.size()+1];
+        for(int i = 0;i<buffer.size();i++){
+            myChar[i] = buffer.at(i);
+        }
+        myChar[buffer.size()] = '\0';
 
-    XMLDumpFile = new char[length];
+        myHandler->indexBodyOfText(myChar,1);
+       //cout<<buffer<<endl;
+    }
 
-    ifs.read (XMLDumpFile,length);
-    ifs.close();
 }
 
-//will cycle through all of XML documents in XML dump and index
-//all of the words at first into a data structure. The data
-//structure will then be saved off to hard memory for persistance
-void XMLParser::storeOffXMLData(char * DumpName){
-   //open XML file from XMLDumpFile
+/*
+    //open XML file from XMLDumpFile
 
     ofstream ofs(DumpName);
-    int i = 1;
+    int i = 100;
     //ofstream fout("splitWords.txt");
 
     //loop through all files
-    while (i <= 2){
+    while (i <= 179){
 
         string fileName = "WikiDumpPart";
         fileName += to_string(i);
@@ -114,25 +122,7 @@ void XMLParser::storeOffXMLData(char * DumpName){
     ofs.close();
     //fout.close();
 
+*/
 
-}
 
-//function stores all words in page into data structure index
 
-//will store off author, title, ID, and XML file name in hard memory
-//Not for 24th Due date
-void XMLParser::addPagesToLookup(){
-
-}
-
-void XMLParser::addSinglePageToLookup(){
-
-}
-
-void XMLParser::loadStopTable(){
-    myHandler->loadStopTable();
-}
-
-void XMLParser::findUserWords(){
-    myHandler->findUserWords();
-}
