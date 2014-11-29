@@ -27,10 +27,10 @@ int nextPrime( int n );
 // int hash( string str ) --> Global method to hash strings
 
 template <typename HashedObj>
-class HashTable
+class HashTable:public Index
 {
 public:
-    vector<int>* findWord(HashedObj & word)  {
+    vector<int>* findWord(HashedObj & word) override  {
         AvlTree<HashedObj>* whichList = theLists[ myhash(word)];
         //cout<<"HashTable find word function"<<endl;
         //cout<<whichList->findWord(word)->size();
@@ -57,7 +57,7 @@ public:
 
     //ructor that sets initial size to 101 by default
     explicit HashTable( int size = 50000 )
-      :currentSize( 0 )
+      :Index(),currentSize( 0 )
       { theLists.resize( size );
         //cout<<"TheLists ructor called"<<endl;
         //initialize tree objects
@@ -66,7 +66,7 @@ public:
         }
       }
 
-    bool contains(  HashedObj & x )
+    bool contains(  HashedObj & x ) override
     {
         //creates alias for list that is used as seperate chaining
 
@@ -80,7 +80,7 @@ public:
     }
 
     //makes the entire data structure empty
-    void makeEmpty( )
+    void makeEmpty( ) override
     {
         //calls clear funcion on all of the
         for( int i = 0; i < theLists.size( ); i++ ){
@@ -93,7 +93,7 @@ public:
     //finds hashing index and then checks that the value is not already in the list
     //If it is not hten it adds it to the list, increments, and then rehashes if
     //size is too large
-    bool insert( HashedObj & x , int &page)
+    bool insert( HashedObj & x , int &page) override
     {
         ////cout<<"Size = "<<theLists.size()<<endl;
         ////cout<<x<<" Hashed to "<<myhash(x)<<endl;

@@ -5,6 +5,7 @@
 #include"IndexAVLNode.h"
 //#include "dsexceptions.h"
 #include <iostream>    // For NULL
+#include"Index.h"
 using namespace std;
 
 // AvlTree class
@@ -24,16 +25,16 @@ using namespace std;
 // Throws UnderflowException as warranted
 
 template <typename Comparable>
-class AvlTree
+class AvlTree:public Index
 {
   public:
-    AvlTree( ) : root( NULL )
+    AvlTree( ) : Index(),root( NULL )
       {
         //cout<<"Root = "<<root<<endl;
     }
-   //copy constructor
+   //copy ructor
 
-    AvlTree( const AvlTree & rhs ) : root( NULL )
+    AvlTree(  AvlTree & rhs ) : root( NULL )
     {
         *this = rhs;
     }
@@ -43,7 +44,7 @@ class AvlTree
         makeEmpty(1);
     }
 
-    vector<int>* findWord(Comparable & word){
+    vector<int>* findWord(Comparable & word) override {
         return findWord(word,root);
     }
 
@@ -53,7 +54,7 @@ class AvlTree
 /*    /**
      * Find the smallest item in the tree.
      * Throw UnderflowException if empty.
-    const Comparable & findMin( ) const
+     Comparable & findMin( )
     {
         if( isEmpty( ) )
             throw UnderflowException( );
@@ -63,7 +64,7 @@ class AvlTree
     /**
      * Find the largest item in the tree.
      * Throw UnderflowException if empty.
-    const Comparable & findMax( ) const
+     Comparable & findMax( )
     {
         if( isEmpty( ) )
             throw UnderflowException( );
@@ -74,7 +75,7 @@ class AvlTree
      * Returns true if x is found in the tree.
      */
 
-    bool contains( const Comparable & x ) const
+    bool contains(  Comparable & x )  override
     {
         return contains( x, root );
     }
@@ -83,7 +84,7 @@ class AvlTree
      * Test if the tree is logically empty.
      * Return true if empty, false otherwise.
      */
-    bool isEmpty( ) const
+    bool isEmpty( )
     {
         return root == NULL;
     }
@@ -91,7 +92,7 @@ class AvlTree
     /**
      * Print the tree contents in sorted order.
      */
-    void printTree( ) const
+    void printTree( )
     {
         if( isEmpty( ) ){
             cout << "Empty tree" << endl;
@@ -115,7 +116,7 @@ class AvlTree
      * int x will signal that it is the destructor that is calling the makeEmpty
      * So the word lists can be deleted
      */
-    void makeEmpty( )
+    void makeEmpty() override
     {
         int x = 0;
         makeEmpty(root,x );
@@ -124,12 +125,12 @@ class AvlTree
     /**
      * Insert x into the tree; duplicates are ignored.
      */
-/*    void insert( const Comparable & x )
+/*    void insert(  Comparable & x )
     {
         insert( x, root );
     }
 */
-    void insert(const Comparable &x, int &pages ){
+     bool insert( Comparable &x, int &pages ) override{
         //cout<<"X = "<<x<<endl;
         //cout<<"Pages = "<<pages<<endl;
         insert( x, pages, root );
@@ -137,20 +138,23 @@ class AvlTree
     }
 
     //overloaded insert for rehashing
-    void insert(const Comparable &x, vector<int>* &pages ){
+    bool insert( Comparable &x, vector<int>* &pages ){
 
         insert( x, pages, root );
+
+
+        return true;
     }
 
  /* Code when I thought I needed function that just inserted node
-  *    void insert(const IndexAVLNode* &x){
+  *    void insert( IndexAVLNode* &x){
         insert(x,root);
     }
 */
     /**
      * Deep copy.
      */
-    const AvlTree & operator=( const AvlTree & rhs )
+     AvlTree & operator=(  AvlTree & rhs )
     {
         if( this != &rhs )
         {
@@ -169,7 +173,7 @@ class AvlTree
         IndexAVLNode   *right;
         int       height;
 
-        IndexAVLNode( const Comparable & theElement, IndexAVLNode *lt,
+        IndexAVLNode(  Comparable & theElement, IndexAVLNode *lt,
                                                 IndexAVLNode *rt, int h = 0 )
           : element( theElement ), left( lt ), right( rt ), height( h ) { }
     };
@@ -184,7 +188,7 @@ class AvlTree
      * t is the node that roots the subtree.
      * Set the new root of the subtree.
      */
-    void insert( const Comparable & x,int& pages, IndexAVLNode * & t )
+    void insert(  Comparable & x,int& pages, IndexAVLNode * & t )
     {
         if( t == NULL ){
             //the sent object is now stored in the tree
@@ -229,7 +233,7 @@ class AvlTree
     }
 
   //overloaded insert for rehashing
-    void insert( const Comparable & x,vector<int>* pages, IndexAVLNode * & t )
+    void insert(  Comparable & x,vector<int>* pages, IndexAVLNode * & t )
     {
         if( t == NULL )
             //the sent object is now stored in the tree
@@ -272,7 +276,7 @@ class AvlTree
     /**
      * Internal method to find the smallest item in a subtree t.
      * Return node containing the smallest item.
-    IndexAVLNode * findMin( IndexAVLNode *t ) const
+    IndexAVLNode * findMin( IndexAVLNode *t )
     {
         if( t == NULL )
             return NULL;
@@ -283,7 +287,7 @@ class AvlTree
     /**
      * Internal method to find the largest item in a subtree t.
      * Return node containing the largest item.
-    IndexAVLNode * findMax( IndexAVLNode *t ) const
+    IndexAVLNode * findMax( IndexAVLNode *t )
     {
         if( t != NULL )
             while( t->right != NULL )
@@ -297,7 +301,7 @@ class AvlTree
      * x is item to search for.
      * t is the node that roots the tree.
      */
-    bool contains( const Comparable & x, IndexAVLNode *t ) const
+    bool contains(  Comparable & x, IndexAVLNode *t )
     {
         if( t == NULL )
             return false;
@@ -309,7 +313,7 @@ class AvlTree
             return true;    // Match
     }
 
-    vector<int>* findWord( const Comparable & x, IndexAVLNode *t )
+    vector<int>* findWord(  Comparable & x, IndexAVLNode *t )
     {
         cout<<"findWord of AVL tree"<<endl;
         if( t == NULL ){
@@ -325,7 +329,7 @@ class AvlTree
 
     }
 /****** NONRECURSIVE VERSION*************************
-    bool contains( const Comparable & x, IndexAVLNode *t ) const
+    bool contains(  Comparable & x, IndexAVLNode *t )
     {
         while( t != NULL )
             if( x < t->element )
@@ -366,7 +370,7 @@ class AvlTree
     /**
      * Internal method to print a subtree rooted at t in sorted order.
      */
-    void printTree( IndexAVLNode *t ) const
+    void printTree( IndexAVLNode *t )
     {
         if( t != NULL )
         {
@@ -396,7 +400,7 @@ class AvlTree
     /**
      * Internal method to clone subtree.
      */
-    IndexAVLNode * clone( IndexAVLNode *t ) const
+    IndexAVLNode * clone( IndexAVLNode *t )
     {
         if( t == NULL )
             return NULL;
@@ -408,7 +412,7 @@ class AvlTree
     /**
      * Return the height of node t or -1 if NULL.
      */
-    int height( IndexAVLNode *t ) const
+    int height( IndexAVLNode *t )
     {
         return t == NULL ? -1 : t->height;
     }
