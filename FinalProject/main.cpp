@@ -2,7 +2,7 @@
 #include"XMLParser.h"
 #include"FakeXMLParser.h"
 using namespace std;
-
+/*
 int main()
 {
     XMLParser myXMLParser;
@@ -10,7 +10,7 @@ int main()
     myXMLParser.storeOffXMLData("output.txt");
     myXMLParser.findUserWords();
 }
-/*
+*/
 int main()
 {
     FakeXMLParser myXMLParser;
@@ -18,5 +18,3 @@ int main()
     myXMLParser.storeOffXMLData();
     myXMLParser.findUserWords();
 }
-
-*/

@@ -56,6 +56,34 @@ void IndexHandler::storeOffIndexToMemory(void){
     //Finished after 24th Deadline
 }
 
+void IndexHandler::insertionSort(vector<int>* passedVec, int start, int end){
+      int i, j;
+     int tempPage;
+     int tempCount;
+     int length = end - start + 1;
+
+     for (i = start + 2; i < start + length; i++) {
+         //cout<<"i is "<<i<<endl;
+         //cout<<"j is "<<j<<endl;
+         j = i;
+         i++;
+         while (j > start && (passedVec->at(j-1)<passedVec->at(j+1))){
+             tempPage = passedVec->at(j);
+             tempCount = passedVec->at(j+1);
+             passedVec->at(j) = passedVec->at(j-2);
+             passedVec->at(j+1) = passedVec->at(j-1);
+             passedVec->at(j-2) = tempPage;
+             passedVec->at(j-1) = tempCount;
+
+             j = j-2;
+         }//end of while loop
+
+    }
+
+
+}
+
+
 //Will ask user for input and then will go and print out page numbers
 //of the word request
 void IndexHandler::findUserWords(void){
@@ -86,8 +114,16 @@ void IndexHandler::findUserWords(void){
             //cycle through vector and print out all words
             //cout<<"Size = "<<userWordPages->size()<<endl;
             //cout<<userWordPages->at(0)<<endl;
+
+            //sort the vecotr received
+            insertionSort(userWordPages,0,userWordPages->size()-1);
+
+
+
             for(int i = 0;i<userWordPages->size();i++){
                 cout<<userWordPages->at(i)<<endl;
+                cout<<"Frequency: "<<userWordPages->at(i+1)<<endl;
+                i++;
             }
         }
         else{
@@ -173,6 +209,7 @@ void IndexHandler::indexBodyOfText(char *body, int pageID){
 
 //returns all page numbers that word appeared on as stored in
 //index
+
 std::vector<int>* IndexHandler::findWord(string& passedWord){
     cout<<"Index Handler Find Word"<<endl;
     return myIndex->findWord(passedWord);

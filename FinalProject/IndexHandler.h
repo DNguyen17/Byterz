@@ -28,6 +28,7 @@ public:
 
     void findUserWords(void);
 
+    void insertionSort(vector<int>* passedVec, int start, int end);
     void loadStopTable();
 
 private:

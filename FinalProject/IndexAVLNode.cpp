@@ -11,7 +11,7 @@ IndexAVLNode::IndexAVLNode(std::string word, IndexAVLNode* l,
     left = l;
     right = r;
     element = word;
-    pageNumbers = new vector<int>();
+    pageNumbers = new PagesAvlTree<int>();
 }
 
 IndexAVLNode::IndexAVLNode(int Pages,std::string word, IndexAVLNode* l,
@@ -20,12 +20,23 @@ IndexAVLNode::IndexAVLNode(int Pages,std::string word, IndexAVLNode* l,
     height = h;
     left = l;
     right = r;
-    this->pageNumbers = new vector<int>();
-    pageNumbers->push_back(Pages);
+    this->pageNumbers = new PagesAvlTree<int>();
+    pageNumbers->insert(Pages);
     element = word;
 
 }
+//constructor for clone function
+IndexAVLNode::IndexAVLNode( string word, IndexAVLNode* l,IndexAVLNode* r
+                                 ,PagesAvlTree<int>* newTree,int h){
+    height = h;
+    left = l;
+    right = r;
+    //delete existing pagenumbers
+    delete pageNumbers;
+    pageNumbers = newTree;
+    element= word;
 
+}
 
 //copy constructor
 /*IndexAVLNode::IndexAVLNode(IndexAVLNode y, IndexAVLNode* l, IndexAVLNode* r){

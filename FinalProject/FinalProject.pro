@@ -21,7 +21,9 @@ SOURCES += main.cpp \
     WordParser.cpp \
     WordParser.cpp \
     WordParser2.cpp \
-    FakeXMLParser.cpp
+    FakeXMLParser.cpp \
+    PagesAvlTree.cpp \
+    PagesAVLNode.cpp
 
 HEADERS += \
     rapidxml.hpp\
@@ -46,5 +48,7 @@ HEADERS += \
     Random.h \
     WordParser.h \
     WordParser2.h \
-    FakeXMLParser.h
+    FakeXMLParser.h \
+    PagesAvlTree.h \
+    PagesAVLNode.h
 
