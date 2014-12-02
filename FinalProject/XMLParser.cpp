@@ -99,7 +99,7 @@ void XMLParser::storeOffXMLData(char * DumpName){
 
             pageNode = pageNode->next_sibling("page");
 
-
+			//still need to get Author and date
 
             delete[] title;
             title = nullptr;
@@ -118,7 +118,6 @@ void XMLParser::storeOffXMLData(char * DumpName){
 }
 
 //function stores all words in page into data structure index
-
 //will store off author, title, ID, and XML file name in hard memory
 //Not for 24th Due date
 void XMLParser::addPagesToLookup(){

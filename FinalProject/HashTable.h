@@ -50,13 +50,21 @@ public:
             //cout<<endl;
         }
     }
+    //functions for storing index to hard memory
+    void printToFile(char* output){
+         for(int u = 0;u<theLists.size();u++){
+            //cout<<"Tree "<<u<<endl;
+            theLists[u]->printToFile(output);
+            //cout<<endl;
+        }
+    }
 
     int getSize(void){
         return currentSize;
     }
 
     //ructor that sets initial size to 101 by default
-    explicit HashTable( int size = 50000 )
+    explicit HashTable( int size = 10 )
       :Index(),currentSize( 0 )
       { theLists.resize( size );
         //cout<<"TheLists ructor called"<<endl;
@@ -102,6 +110,31 @@ public:
         /*if( find( whichList.begin( ), whichList.end( ), x ) != whichList.end( ) )
             return false;*/
         whichList->insert(x, page);
+        //inserting in linked list-->change to AVL tree insert(x)
+        //whichList.push_back( x );
+
+        //////currently not using rehashing functoin////
+            // Rehash; see Section 5.5
+        /*if( ++currentSize > theLists.size( ) )
+            rehash( );*/
+
+        return true;
+    }
+
+
+
+
+
+    //insert function that accepts frequency as well
+    bool insert( HashedObj & x , vector<int>* pageList) override
+    {
+        ////cout<<"Size = "<<theLists.size()<<endl;
+        ////cout<<x<<" Hashed to "<<myhash(x)<<endl;
+        //list<HashedObj> & whichList = theLists[ myhash( x ) ];
+        AvlTree<HashedObj>* & whichList = theLists[myhash(x)];
+        /*if( find( whichList.begin( ), whichList.end( ), x ) != whichList.end( ) )
+            return false;*/
+        whichList->insert(x, pageList);
         //inserting in linked list-->change to AVL tree insert(x)
         //whichList.push_back( x );
 

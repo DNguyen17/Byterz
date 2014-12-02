@@ -39,6 +39,10 @@ void FakeXMLParser::findUserWords(){
     myHandler->findUserWords();
 }
 
+void FakeXMLParser::storeOffIndex(char* output){
+    myHandler->setOutputFile(output);
+    myHandler->storeOffIndexToMemory();
+}
 
 void FakeXMLParser::storeOffXMLData(){
     //will just read from file and store

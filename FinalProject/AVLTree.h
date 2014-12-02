@@ -6,6 +6,7 @@
 //#include "dsexceptions.h"
 #include <iostream>    // For NULL
 #include"Index.h"
+#include<fstream>
 using namespace std;
 
 // AvlTree class
@@ -102,6 +103,21 @@ class AvlTree:public Index
             printTree( root );
     }
 
+    void printToFile(char* output )
+    {
+        ofstream out;
+        out.open(output,std::fstream::app);
+
+        if( isEmpty( ) ){
+            //cout << "Tried to Store Empty tree to hard memory" << endl;
+            //cout<<endl;
+            return;
+        }
+        else{
+            printToFile(out, root );
+        }
+        out.close();
+    }
 /*    vector<IndexAVLNode*>* giveBackNodes(){
         if(isEmpty())
              return NULL;
@@ -137,15 +153,15 @@ class AvlTree:public Index
 
     }
 
-/*    //overloaded insert for rehashing
-    bool insert( Comparable &x, vector<int>* &pages ){
+    //overloaded insert for building index from hard memory
+    bool insert( Comparable &x, vector<int>* pages ){
 
         insert( x, pages, root );
 
 
         return true;
     }
-*/
+
  /* Code when I thought I needed function that just inserted node
   *    void insert( IndexAVLNode* &x){
         insert(x,root);
@@ -224,18 +240,25 @@ class AvlTree:public Index
              //cout<<"X = "<<x<<endl;
              //cout<<"The same word was encountered"<<endl;
              //cout<<"Page Number pushed back:"<<endl;
-             //if(t->pageNumbers->at(t->pageNumbers->size()-1) != pages){
+             if(t->pageNumbers->at(t->pageNumbers->size()-2) != pages){
+                t->pageNumbers->push_back(pages);
+                //if page has never been encountered then set frequency as 1
+                t->pageNumbers->push_back(1);
 
-            //Should insert page no matter what so that will record
-            //duplicate
-            t->pageNumbers->insert(pages);
-             //}
+                t->totalCount = t->totalCount +1;
+              }
+              else{
+                 //if page number has already been encountered then increment frequency
+                (*(t->pageNumbers))[t->pageNumbers->size()-1]+= 1;
+                 t->totalCount = t->totalCount +1;
+             }
+
         }
              // Duplicates, add pageNumbers to list
         t->height = max( height( t->left ), height( t->right ) ) + 1;
     }
 
-/*  //overloaded insert for rehashing
+    //overloaded insert for building index form hard memory
     void insert(  Comparable & x,vector<int>* pages, IndexAVLNode * & t )
     {
         if( t == NULL )
@@ -263,18 +286,13 @@ class AvlTree:public Index
                     doubleWithRightChild( t );
         }
         else if(t->element == x){
-             // Duplicates, add pageNumbers to list
-             //cout<<"X = "<<x<<endl;
-             //cout<<"The same word was encountered"<<endl;
-             //cout<<"Page Number pushed back:"<<endl;
-             for(int j = 0;j<pages->size();j++){
-                 t->pageNumbers->push_back((*pages)[j]);
-             }
+            cerr<<"When building from Index tried to insert the same word!"<<endl;
+
         }
              // Duplicates, add pageNumbers to list
         t->height = max( height( t->left ), height( t->right ) ) + 1;
     }
-*/
+
 /*
     /**
      * Internal method to find the smallest item in a subtree t.
@@ -330,10 +348,12 @@ class AvlTree:public Index
             cout<<"PageNumbers size is "<<t->pageNumbers->size()<<endl;
             //make new vector that has page number followed
             //by term freuquency in a vector
-            vector<int>* newVector = new vector<int>();
+
+            //vector<int>* newVector = new vector<int>();
             //call recursive function that will populate new vector
-            fillPageVector(newVector,t->pageNumbers->getRoot());
-            return newVector;
+            //fillPageVector(newVector,t->pageNumbers->getRoot());
+
+            return t->pageNumbers;
     }
 
     void fillPageVector(vector<int>* passedVector,PagesAVLNode* t){
@@ -399,11 +419,38 @@ class AvlTree:public Index
             cout << t->element << endl;
             //print out all page numbers
             cout<<"Page Numbers:"<<endl;
-            t->pageNumbers->printTree();
+            //t->pageNumbers->printTree();
+
+            for(int i = 0;i<t->pageNumbers->size();i++){
+                cout<<t->pageNumbers->at(i)<<endl;
+                cout<<"Frequency: "<<t->pageNumbers->at(i+1)<<endl;
+                i++;
+            }
+
 
             cout<<endl;
 
             printTree( t->right );
+        }
+    }
+
+    void printToFile(ofstream& output, IndexAVLNode *t){
+        if( t != NULL )
+        {
+            printToFile(output, t->left );
+            output << t->element<<" ";
+            //print out all page numbers
+            //cout<<"Page Numbers:"<<endl;
+            //t->pageNumbers->printTree();
+
+            for(int i = 0;i<t->pageNumbers->size();i++){
+                output<<t->pageNumbers->at(i)<<" ";
+
+            }
+
+            output<<"-1"<<endl;
+
+            printToFile(output, t->right );
         }
     }
 

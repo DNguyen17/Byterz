@@ -24,6 +24,7 @@ public:
     ~FakeXMLParser();
 
     void loadStopTable();
+    void storeOffIndex(char*);
     void storeOffXMLData();
     void  setXMLDumpFile(string&);
     void findUserWords();

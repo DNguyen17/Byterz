@@ -6,7 +6,7 @@
 #include"SeparateChaining.h"
 #include"StopWordsAvlTree.h"
 #include"StopWordsHashTable.h"
-
+#include<fstream>
 
 //Code From Stemmer
 #include<string>
@@ -663,7 +663,7 @@ int hash( const string & key , int size)
 
 }
 */
-
+/*
 string stemWord(string f);
 
 int main(){
@@ -681,7 +681,7 @@ int main(){
         myVec.push_back(myArray[i]);
     }*/
     //get all words from input file
-    string buffer;
+/*    string buffer;
     inputFile>>buffer;
     if(!inputFile){
         cout<<"file did not open"<<endl;
@@ -706,3 +706,35 @@ int main(){
 
    cout<<"Contains subway? "<<myTable->contains(stemWord("subway"))<<endl;
 }
+*/
+
+int main(){
+    ifstream input;
+    input.open("IndexInputTest.txt");
+
+    string word;
+    char dummy[400];
+    int page;
+    int freq;
+
+    while(input>>word){
+        cout<<word<<endl;
+        while(1){
+            input>>page;
+            if(page == -1){
+                //go to next line
+                //input.getline(dummy,390);
+                break;
+            }
+            //if not hit end of page, frequency list
+            input>>freq;
+            cout<<page<<" : "<<freq<<endl;
+
+        }
+
+    }
+
+}
+
+
+

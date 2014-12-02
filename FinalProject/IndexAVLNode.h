@@ -17,15 +17,17 @@ public:
     //constructor accepts:word, left pointer, right pointer, height and vector pointer
     IndexAVLNode(int Pages,std::string word, IndexAVLNode* l,
                            IndexAVLNode* r, int h = 0);
-    IndexAVLNode( std::string, IndexAVLNode*,IndexAVLNode*, PagesAvlTree<int>*,int);
+    IndexAVLNode( std::string, IndexAVLNode*,IndexAVLNode*,
+                  vector<int>*,int = 0);
 
     string element;
     int height;
+    int totalCount;
     IndexAVLNode* right;
     IndexAVLNode* left;
     //data structure to hold page numbers --> will be changed
     //to tree after 24th Demo
-    PagesAvlTree<int>* pageNumbers;
+    vector<int>* pageNumbers;
 
     //To be included after 24th deadline: pages sorted in AVL tree
     //by term frequency relevance with relevancy info in their nodes
