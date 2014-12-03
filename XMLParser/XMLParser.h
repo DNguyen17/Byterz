@@ -31,7 +31,7 @@ private:
     xml_document<> doc;
     xml_node<>* docNode;
 
-    char* title;
+    //char* title;
     int id;
     char* text;
     //char* author;
@@ -44,9 +44,7 @@ public:
 
     void storeOffXMLData(const char *DumpName);
     void setXMLDumpFile(string&);
-    void storeOffNewData(string& fileName);
-    //char *getAuthor();
-
+    void storeOffNewData(string& fileName, ofstream &fout);
 };
 
 #endif // XMLPARSER_H

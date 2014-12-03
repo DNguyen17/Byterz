@@ -3,7 +3,7 @@
 XMLParser::XMLParser()
 {
     XMLDumpFile = nullptr;
-    title = nullptr;
+    //title = nullptr;
     id = 0;
     text = nullptr;
 }
@@ -16,9 +16,9 @@ XMLParser::~XMLParser(){
         delete[] XMLDumpFile;
     XMLDumpFile = nullptr;
 
-    if (title != nullptr)
+    /*if (title != nullptr)
         delete[] title;
-    title = nullptr;
+    title = nullptr;*/
 
     if (text != nullptr)
         delete[] text;
@@ -60,18 +60,18 @@ void XMLParser::setXMLDumpFile(string &passedFile){
 void XMLParser::storeOffXMLData(const char * DumpName){
 
     ofstream ofs(DumpName);
-    int i = 100;
+    int i = 1;
     ofstream fout("splitWords.txt");
-    string author;
 
     //loop through all files
-    while (i <= 100){
+    while (i <= 1){
 
         string fileName = "WikiDumpPart";
         fileName += to_string(i);
         fileName += ".xml";
+        storeOffNewData(fileName, fout);
 
-        setXMLDumpFile(fileName);
+        /*setXMLDumpFile(fileName);
         doc.clear();
         doc.parse<0>(XMLDumpFile);
         docNode = doc.first_node("mediawiki");
@@ -82,38 +82,31 @@ void XMLParser::storeOffXMLData(const char * DumpName){
 
             myParser.setNodes(pageNode);
 
-            title = new char[strlen(myParser.findTitle())+1];
-            strcpy(title, myParser.findTitle());
-            ofs << "title: " << title << "\t";
+            //title = new char[strlen(myParser.findTitle())+1];
+            //strcpy(title, myParser.findTitle());
+            //ofs << "title: " << title << "\t";
 
             id = myParser.findPageID();
-            ofs << "id: " << id << endl;
+            //ofs << "id: " << id << endl;
 
-            if (myParser.findAuthor() != nullptr){
-                author = myParser.findAuthor();
-                ofs << "\tauthor: " << author << endl;
-            }
+            //if (myParser.findAuthor() != nullptr){
+             //   author = myParser.findAuthor();
+              //  ofs << "\tauthor: " << author << endl;
+            //}
 
             text = new char[strlen(myParser.findBodyText())+1];
             strcpy(text, myParser.findBodyText());
-
-            //indexBodyOfText(text, id, fout);
+            indexBodyOfText(text, id, fout);
 
             pageNode = pageNode->next_sibling("page");
 
-
-            delete[] title;
-            title = nullptr;
+            //delete[] title;
+            //title = nullptr;
 
             delete[] text;
             text = nullptr;
 
-           /* if (author != nullptr){
-                delete[] author;
-                author = nullptr;
-            }*/
-
-        }
+        }*/
 
         ++i;
     }
@@ -215,50 +208,38 @@ void XMLParser::indexBodyOfText(char *body, int pageID, ofstream &fout){
     //return author;
 }*/
 
-void XMLParser::storeOffNewData(string &fileName)
+void XMLParser::storeOffNewData(string &fileName, ofstream& fout)
 {
     setXMLDumpFile(fileName);
 
-    //doc.clear();
+    doc.clear();
     doc.parse<0>(XMLDumpFile);
     docNode = doc.first_node("mediawiki");
     xml_node<>* pageNode = docNode->first_node("page");
-    ofstream ofs("output.txt");
+    //ofstream ofs("output.txt");
 
+    //myParser.setNodes(pageNode);
+    //fout << myParser.findPageID() << ", ";
     //loop through all pages in one file
     while(pageNode !=0 ){
 
         myParser.setNodes(pageNode);
 
-        title = new char[strlen(myParser.findTitle())+1];
-        strcpy(title, myParser.findTitle());
-        ofs << "title: " << title << "\t";
-
         id = myParser.findPageID();
-        ofs << "id: " << id << endl;
-
         text = new char[strlen(myParser.findBodyText())+1];
         strcpy(text, myParser.findBodyText());
 
-        //indexBodyOfText(text, id, fout);
-        /*if (myParser.findAuthor() != nullptr){
-            author = new char[strlen(myParser.findAuthor()+1)];
-            strcpy(author, myParser.findAuthor());
-            ofs << "\tauthor: " << author << endl;
-        }*/
-        //getAuthor();
+        indexBodyOfText(text, id, fout);
 
+        /*if (pageNode->next_sibling("page") == 0)
+            fout << myParser.findPageID() << endl;*/ //finding page ranges
         pageNode = pageNode->next_sibling("page");
-
-
-
-        delete[] title;
-        title = nullptr;
 
         delete[] text;
         text = nullptr;
     }
-    ofs.close();
+
+    //fout.close();
 
 
 }

@@ -46,7 +46,7 @@ char* XMLFileParser::findAuthor()
         return nullptr;
     }
 
-    cout << authorNode << endl;
+    //cout << authorNode << endl;
     //cout << authorNode->value() << endl;
     return authorNode->value();
 }

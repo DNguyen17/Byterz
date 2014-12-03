@@ -85,9 +85,9 @@ void XMLParser::storeOffXMLData(char * DumpName){
 
             myParser.setNodes(pageNode);
 
-            title = new char[strlen(myParser.findTitle())+1];
+            /*title = new char[strlen(myParser.findTitle())+1];
             strcpy(title, myParser.findTitle());
-            //ofs << "title: " << title << "\t";
+            //ofs << "title: " << title << "\t";*/
 
             id = myParser.findPageID();
             //ofs << "id: " << id << endl;
@@ -101,8 +101,8 @@ void XMLParser::storeOffXMLData(char * DumpName){
 
 			//still need to get Author and date
 
-            delete[] title;
-            title = nullptr;
+            //delete[] title;
+            //title = nullptr;
 
             delete[] text;
             text = nullptr;
@@ -113,6 +113,34 @@ void XMLParser::storeOffXMLData(char * DumpName){
 
     ofs.close();
     //fout.close();
+
+
+}
+void XMLParser::storeOffNewData(string &fileName)
+{
+    setXMLDumpFile(fileName);
+
+    doc.clear();
+    doc.parse<0>(XMLDumpFile);
+    docNode = doc.first_node("mediawiki");
+    xml_node<>* pageNode = docNode->first_node("page");
+
+    while(pageNode !=0 ){
+
+        myParser.setNodes(pageNode);
+
+        id = myParser.findPageID();
+        text = new char[strlen(myParser.findBodyText())+1];
+        strcpy(text, myParser.findBodyText());
+
+        myHandler->indexBodyOfText(text, id);
+
+        //increment pageNode
+        pageNode = pageNode->next_sibling("page");
+
+        delete[] text;
+        text = nullptr;
+    }
 
 
 }

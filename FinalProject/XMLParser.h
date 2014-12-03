@@ -25,7 +25,8 @@ public:
 
     void loadStopTable();
     void storeOffXMLData(char * DumpName);
-    void  setXMLDumpFile(string&);
+    void storeOffNewData(string&);
+    void setXMLDumpFile(string&);
     void findUserWords();
 
 private:
