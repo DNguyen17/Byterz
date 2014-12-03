@@ -60,14 +60,14 @@ void XMLParser::setXMLDumpFile(string passedFile){
 void XMLParser::storeOffXMLData(const char * DumpName){
 
     ofstream ofs(DumpName);
-    int i = 1;
+    int i = 100;
     ofstream fout("splitWords.txt");
 
     //loop through all files
-    while (i <= 1){
+    while (i <= 100){
 
         string fileName = "WikiDumpPart";
-        //fileName += to_string(i);
+        fileName += to_string(i);
         fileName += ".xml";
 
         setXMLDumpFile(fileName);
