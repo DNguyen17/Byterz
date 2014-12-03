@@ -34,6 +34,7 @@ private:
     char* title;
     int id;
     char* text;
+    //char* author;
 
 
 public:
@@ -42,7 +43,9 @@ public:
     ~XMLParser();
 
     void storeOffXMLData(const char *DumpName);
-    void  setXMLDumpFile(string);
+    void setXMLDumpFile(string&);
+    void storeOffNewData(string& fileName);
+    //char *getAuthor();
 
 };
 

@@ -16,8 +16,10 @@ int main()
     //http://stackoverflow.com/questions/2912520/read-file-contents-into-a-string-in-c
 
     XMLParser parser;
-    //parser.setXMLDumpFile("WikiDumpPart1.xml");
+    //string name = "WikiDumpPart.xml";
+    //parser.setXMLDumpFile(name);
     parser.storeOffXMLData("output.txt");
+    //parser.storeOffNewData(name);
 
     return 0;
 }
