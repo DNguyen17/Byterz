@@ -6,6 +6,8 @@
 #include<vector>
 #include<sstream>
 #include"HashTable.h"
+#include"Index.h"
+
 class IndexHandler
 {
 public:
@@ -28,11 +30,12 @@ public:
 
     void findUserWords(void);
 
+    void insertionSort(vector<int>* passedVec, int start, int end);
     void loadStopTable();
 
 private:
     WordParser2* myWordParser;
-    HashTable<string>* myIndex;
+    Index* myIndex;
     char* memoryInputFile;
     char* memoryOutputFile;
 };

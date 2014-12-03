@@ -16,4 +16,6 @@ INPUT(
 ./debug/WordParser.o
 ./debug/WordParser2.o
 ./debug/FakeXMLParser.o
+./debug/PagesAvlTree.o
+./debug/PagesAVLNode.o
 );

@@ -118,6 +118,7 @@ void XMLParser::storeOffXMLData(char * DumpName){
 }
 
 //function stores all words in page into data structure index
+t
 //will store off author, title, ID, and XML file name in hard memory
 //Not for 24th Due date
 void XMLParser::addPagesToLookup(){

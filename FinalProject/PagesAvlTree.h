@@ -1,15 +1,15 @@
 /***********Code used from weiss*************/
 /****http://users.cis.fiu.edu/~weiss/dsaa_c++3/code/********/
-#ifndef AVL_TREE_H
-#define AVL_TREE_H
-#include"IndexAVLNode.h"
+#ifndef PAGESAVLTREE_H
+#define PAGESAVLTREE_H
+
 //#include "dsexceptions.h"
 #include <iostream>    // For NULL
 #include"Index.h"
-#include<fstream>
+#include"PagesAVLNode.h"
 using namespace std;
 
-// AvlTree class
+// PagesAvlTree class
 //
 // CONSTRUCTION: with ITEM_NOT_FOUND object used to signal failed finds
 //
@@ -26,28 +26,40 @@ using namespace std;
 // Throws UnderflowException as warranted
 
 template <typename Comparable>
-class AvlTree:public Index
+class PagesAvlTree
 {
   public:
-    AvlTree( ) : Index(),root( NULL )
+    int size(){
+        return elementCount;
+    }
+
+    PagesAVLNode* getRoot(){
+        return root;
+    }
+
+    PagesAvlTree( ) : root( NULL )
     {
+        elementCount = 0;
         //cout<<"Root = "<<root<<endl;
     }
    //copy ructor
 
-    AvlTree(  AvlTree & rhs ) : root( NULL )
+    PagesAvlTree(  PagesAvlTree & rhs ) : root( NULL )
     {
         *this = rhs;
     }
     //destructor
-    ~AvlTree( )
+    ~PagesAvlTree( )
     {
-        makeEmpty(1);
+        makeEmpty();
     }
-
-    vector<int>* findWord(Comparable & word) override {
+/*
+    vector<int>* findWord(Comparable & word)  {
         return findWord(word,root);
     }
+*/
+
+    //********* Maybe find page number?********//
 
     //return the element and page numbers pointer of the nth
     //element in the tree where starting numbering from
@@ -76,7 +88,7 @@ class AvlTree:public Index
      * Returns true if x is found in the tree.
      */
 
-    bool contains(  Comparable & x )  override
+    bool contains(  Comparable & x )
     {
         return contains( x, root );
     }
@@ -103,39 +115,23 @@ class AvlTree:public Index
             printTree( root );
     }
 
-    void printToFile(char* output )
-    {
-        ofstream out;
-        out.open(output,std::fstream::app);
-
-        if( isEmpty( ) ){
-            //cout << "Tried to Store Empty tree to hard memory" << endl;
-            //cout<<endl;
-            return;
-        }
-        else{
-            printToFile(out, root );
-        }
-        out.close();
-    }
-/*    vector<IndexAVLNode*>* giveBackNodes(){
+/*    vector<PagesAvlTree*>* giveBackNodes(){
         if(isEmpty())
              return NULL;
         else{
-            vector<IndexAVLNode*>* listOfNodes = new vector<IndexAVLNode*>();
+            vector<PagesAvlTree*>* listOfNodes = new vector<PagesAvlTree*>();
             giveBackNodes(root, listOfNodes);
         }
-    }*/
-
+    }
+*/
     /*,*
      * Make the tree logically empty.
      * int x will signal that it is the destructor that is calling the makeEmpty
      * So the word lists can be deleted
      */
-    void makeEmpty() override
+    void makeEmpty()
     {
-        int x = 0;
-        makeEmpty(root,x );
+        makeEmpty(root);
     }
 
     /**
@@ -146,56 +142,55 @@ class AvlTree:public Index
         insert( x, root );
     }
 */
-     bool insert( Comparable &x, int &pages ) override{
+     bool insert( Comparable &x ) {
         //cout<<"X = "<<x<<endl;
         //cout<<"Pages = "<<pages<<endl;
-        insert( x, pages, root );
+        insert( x, root );
 
     }
 
-    //overloaded insert for building index from hard memory
-    bool insert( Comparable &x, vector<int>* pages ){
+/*    //overloaded insert for rehashing
+    bool insert( Comparable &x, vector<int>* &pages ){
 
         insert( x, pages, root );
 
 
         return true;
     }
-
+*/
  /* Code when I thought I needed function that just inserted node
-  *    void insert( IndexAVLNode* &x){
+  *    void insert( PagesAvlTree* &x){
         insert(x,root);
     }
 */
     /**
      * Deep copy.
      */
-     AvlTree & operator=(  AvlTree & rhs )
+     PagesAvlTree & operator=(  PagesAvlTree & rhs )
     {
         if( this != &rhs )
         {
-            int x = 1;
-            makeEmpty(root,x );
+            makeEmpty(root);
             root = clone( rhs.root );
         }
         return *this;
     }
 
   private:
-    /*struct IndexAVLNode
+    /*struct PagesAvlTree
     {
         Comparable element;
-        IndexAVLNode   *left;
-        IndexAVLNode   *right;
+        PagesAvlTree   *left;
+        PagesAvlTree   *right;
         int       height;
 
-        IndexAVLNode(  Comparable & theElement, IndexAVLNode *lt,
-                                                IndexAVLNode *rt, int h = 0 )
+        PagesAvlTree(  Comparable & theElement, PagesAvlTree *lt,
+                                                PagesAvlTree *rt, int h = 0 )
           : element( theElement ), left( lt ), right( rt ), height( h ) { }
     };
 */
     //only data memober which is root
-    IndexAVLNode *root;
+    PagesAVLNode *root;
     int elementCount;
 
     /**
@@ -204,16 +199,64 @@ class AvlTree:public Index
      * t is the node that roots the subtree.
      * Set the new root of the subtree.
      */
-    void insert(  Comparable & x,int& pages, IndexAVLNode * & t )
+    void insert(  Comparable & x, PagesAVLNode * & t )
     {
         if( t == NULL ){
             //the sent object is now stored in the tree
-            t = new IndexAVLNode(pages, x, NULL, NULL);
+            t = new PagesAVLNode(x, NULL, NULL);
+            elementCount++;
 
-            //for(int i = 0;i< t->pageNumbers->size();i++){
-                //cout<<"t's "<<i<<"th element is"<<t->pageNumbers->at(i)<<endl;
-            //}
         }
+
+        else if(t->element == x){
+             // Duplicates, add pageNumbers to list
+             //cout<<"X = "<<x<<endl;
+             //cout<<"The same word was encountered"<<endl;
+             //cout<<"Page Number pushed back:"<<endl;
+
+                t->incrementCount();
+
+        }
+        else if( x < t->element )
+        {
+            //cout<<x<<" less than = "<<t->element<<endl;
+            insert( x, t->left );
+            if( height( t->left ) - height( t->right ) == 2 )
+                if( x < t->left->element )
+                    rotateWithLeftChild( t );
+                else
+                    doubleWithLeftChild( t );
+        }
+        else if( t->element < x )
+        {
+
+            //cout<<x<<" greater than = "<<t->element;
+            insert( x, t->right );
+            if( height( t->right ) - height( t->left ) == 2 )
+                if( t->right->element < x )
+                    rotateWithRightChild( t );
+                else
+                    doubleWithRightChild( t );
+        }
+        else if(t->element == x){
+             // Duplicates, add pageNumbers to list
+             //cout<<"X = "<<x<<endl;
+             //cout<<"The same word was encountered"<<endl;
+             //cout<<"Page Number pushed back:"<<endl;
+
+                t->incrementCount();
+
+        }
+             // Duplicates, add pageNumbers to list
+        t->height = max( height( t->left ), height( t->right ) ) + 1;
+    }
+
+/*  //overloaded insert for rehashing
+    void insert(  Comparable & x,vector<int>* pages, PagesAvlTree * & t )
+    {
+        if( t == NULL )
+            //the sent object is now stored in the tree
+            t = new PagesAvlTree( x, NULL, NULL,pages );
         else if( x < t->element )
         {
             //cout<<x<<" less than = "<<t->element<<endl;
@@ -240,64 +283,19 @@ class AvlTree:public Index
              //cout<<"X = "<<x<<endl;
              //cout<<"The same word was encountered"<<endl;
              //cout<<"Page Number pushed back:"<<endl;
-             if(t->pageNumbers->at(t->pageNumbers->size()-2) != pages){
-                t->pageNumbers->push_back(pages);
-                //if page has never been encountered then set frequency as 1
-                t->pageNumbers->push_back(1);
-
-                t->totalCount = t->totalCount +1;
-              }
-              else{
-                 //if page number has already been encountered then increment frequency
-                (*(t->pageNumbers))[t->pageNumbers->size()-1]+= 1;
-                 t->totalCount = t->totalCount +1;
+             for(int j = 0;j<pages->size();j++){
+                 t->pageNumbers->push_back((*pages)[j]);
              }
-
         }
              // Duplicates, add pageNumbers to list
         t->height = max( height( t->left ), height( t->right ) ) + 1;
     }
-
-    //overloaded insert for building index form hard memory
-    void insert(  Comparable & x,vector<int>* pages, IndexAVLNode * & t )
-    {
-        if( t == NULL )
-            //the sent object is now stored in the tree
-            t = new IndexAVLNode( x, NULL, NULL,pages );
-        else if( x < t->element )
-        {
-            //cout<<x<<" less than = "<<t->element<<endl;
-            insert( x,pages, t->left );
-            if( height( t->left ) - height( t->right ) == 2 )
-                if( x < t->left->element )
-                    rotateWithLeftChild( t );
-                else
-                    doubleWithLeftChild( t );
-        }
-        else if( t->element < x )
-        {
-
-            //cout<<x<<" greater than = "<<t->element;
-            insert( x,pages, t->right );
-            if( height( t->right ) - height( t->left ) == 2 )
-                if( t->right->element < x )
-                    rotateWithRightChild( t );
-                else
-                    doubleWithRightChild( t );
-        }
-        else if(t->element == x){
-            cerr<<"When building from Index tried to insert the same word!"<<endl;
-
-        }
-             // Duplicates, add pageNumbers to list
-        t->height = max( height( t->left ), height( t->right ) ) + 1;
-    }
-
+*/
 /*
     /**
      * Internal method to find the smallest item in a subtree t.
      * Return node containing the smallest item.
-    IndexAVLNode * findMin( IndexAVLNode *t )
+    PagesAvlTree * findMin( PagesAvlTree *t )
     {
         if( t == NULL )
             return NULL;
@@ -308,7 +306,7 @@ class AvlTree:public Index
     /**
      * Internal method to find the largest item in a subtree t.
      * Return node containing the largest item.
-    IndexAVLNode * findMax( IndexAVLNode *t )
+    PagesAvlTree * findMax( PagesAvlTree *t )
     {
         if( t != NULL )
             while( t->right != NULL )
@@ -322,7 +320,7 @@ class AvlTree:public Index
      * x is item to search for.
      * t is the node that roots the tree.
      */
-    bool contains(  Comparable & x, IndexAVLNode *t )
+    bool contains(  Comparable & x, PagesAVLNode *t )
     {
         if( t == NULL )
             return false;
@@ -333,8 +331,8 @@ class AvlTree:public Index
         else
             return true;    // Match
     }
-
-    vector<int>* findWord(  Comparable & x, IndexAVLNode *t )
+/*
+    vector<int>* findWord(  Comparable & x, PagesAvlTree *t )
     {
         cout<<"findWord of AVL tree"<<endl;
         if( t == NULL ){
@@ -346,31 +344,12 @@ class AvlTree:public Index
             return findWord( x, t->right );
         else
             cout<<"PageNumbers size is "<<t->pageNumbers->size()<<endl;
-            //make new vector that has page number followed
-            //by term freuquency in a vector
+            return t->pageNumbers; // Match
 
-            //vector<int>* newVector = new vector<int>();
-            //call recursive function that will populate new vector
-            //fillPageVector(newVector,t->pageNumbers->getRoot());
-
-            return t->pageNumbers;
     }
-
-    void fillPageVector(vector<int>* passedVector,PagesAVLNode* t){
-        if(t != NULL){
-
-            fillPageVector(passedVector,t->right);
-
-            //fill vector with page number then count
-            passedVector->push_back(t->element);
-            passedVector->push_back(t->count);
-
-            fillPageVector(passedVector,t->left);
-        }
-    }
-
+*/
 /****** NONRECURSIVE VERSION*************************
-    bool contains(  Comparable & x, IndexAVLNode *t )
+    bool contains(  Comparable & x, PagesAvlTree *t )
     {
         while( t != NULL )
             if( x < t->element )
@@ -389,19 +368,17 @@ class AvlTree:public Index
      *  int will tell if the function has been called form the rehashing funtion
      * which in that case should not delete the vector list
      */
-    void makeEmpty( IndexAVLNode * & t, int &x )
+    void makeEmpty( PagesAVLNode * & t )
     {
         if( t != NULL )
         {
-            makeEmpty( t->left,x );
-            makeEmpty( t->right,x );
+            makeEmpty( t->left);
+            makeEmpty( t->right);
             //release dynmaic memory allocated to vector
             //but if for the rehashing don't want to free memory of vecotrs
             //because reuse that dynamically allocated memory on the new nodes
             //in the new hash table
-            if(x!=0 ){
-                delete t->pageNumbers;
-            }
+
 
             delete t;
         }
@@ -411,50 +388,23 @@ class AvlTree:public Index
     /**
      * Internal method to print a subtree rooted at t in sorted order.
      */
-    void printTree( IndexAVLNode *t )
+    void printTree( PagesAVLNode *t )
     {
         if( t != NULL )
         {
-            printTree( t->left );
+            printTree(t->right);
             cout << t->element << endl;
             //print out all page numbers
-            cout<<"Page Numbers:"<<endl;
-            //t->pageNumbers->printTree();
-
-            for(int i = 0;i<t->pageNumbers->size();i++){
-                cout<<t->pageNumbers->at(i)<<endl;
-                cout<<"Frequency: "<<t->pageNumbers->at(i+1)<<endl;
-                i++;
-            }
-
+            cout<<"Frequency:"<<t->count<<endl;
 
             cout<<endl;
 
-            printTree( t->right );
+            printTree( t->left );
+
         }
     }
 
-    void printToFile(ofstream& output, IndexAVLNode *t){
-        if( t != NULL )
-        {
-            printToFile(output, t->left );
-            output << t->element<<" ";
-            //print out all page numbers
-            //cout<<"Page Numbers:"<<endl;
-            //t->pageNumbers->printTree();
-
-            for(int i = 0;i<t->pageNumbers->size();i++){
-                output<<t->pageNumbers->at(i)<<" ";
-
-            }
-
-            output<<"-1"<<endl;
-
-            printToFile(output, t->right );
-        }
-    }
-
-    void giveBackNodes(IndexAVLNode *t, vector<IndexAVLNode* >* list ){
+/*    void giveBackNodes(PagesAvlTree *t, vector<PagesAvlTree* >* list ){
          if( t != NULL )
         {
             giveBackNodes( t->left );
@@ -463,23 +413,23 @@ class AvlTree:public Index
             printTree( t->right );
         }
     }
-
+*/
     /**
      * Internal method to clone subtree.
      */
-    IndexAVLNode * clone( IndexAVLNode *t )
+    PagesAVLNode * clone( PagesAVLNode *t )
     {
         if( t == NULL )
             return NULL;
         else
-            return new IndexAVLNode( t->element, clone( t->left ), clone( t->right )
-                                     ,t->pageNumbers,t->height );
+            return new PagesAVLNode( t->element, clone( t->left ), clone( t->right )
+                                     ,t->count,t->height );
     }
         // Avl manipulations
     /**
      * Return the height of node t or -1 if NULL.
      */
-    int height( IndexAVLNode *t )
+    int height( PagesAVLNode *t )
     {
         return t == NULL ? -1 : t->height;
     }
@@ -494,9 +444,9 @@ class AvlTree:public Index
      * For AVL trees, this is a single rotation for case 1.
      * Update heights, then set new root.
      */
-    void rotateWithLeftChild( IndexAVLNode * & k2 )
+    void rotateWithLeftChild( PagesAVLNode * & k2 )
     {
-        IndexAVLNode *k1 = k2->left;
+        PagesAVLNode *k1 = k2->left;
         k2->left = k1->right;
         k1->right = k2;
         k2->height = max( height( k2->left ), height( k2->right ) ) + 1;
@@ -509,9 +459,9 @@ class AvlTree:public Index
      * For AVL trees, this is a single rotation for case 4.
      * Update heights, then set new root.
      */
-    void rotateWithRightChild( IndexAVLNode * & k1 )
+    void rotateWithRightChild( PagesAVLNode * & k1 )
     {
-        IndexAVLNode *k2 = k1->right;
+        PagesAVLNode *k2 = k1->right;
         k1->right = k2->left;
         k2->left = k1;
         k1->height = max( height( k1->left ), height( k1->right ) ) + 1;
@@ -525,7 +475,7 @@ class AvlTree:public Index
      * For AVL trees, this is a double rotation for case 2.
      * Update heights, then set new root.
      */
-    void doubleWithLeftChild( IndexAVLNode * & k3 )
+    void doubleWithLeftChild( PagesAVLNode * & k3 )
     {
         rotateWithRightChild( k3->left );
         rotateWithLeftChild( k3 );
@@ -537,11 +487,11 @@ class AvlTree:public Index
      * For AVL trees, this is a double rotation for case 3.
      * Update heights, then set new root.
      */
-    void doubleWithRightChild( IndexAVLNode * & k1 )
+    void doubleWithRightChild( PagesAVLNode * & k1 )
     {
         rotateWithLeftChild( k1->right );
         rotateWithRightChild( k1 );
     }
 };
 
-#endif
+#endif // PAGESAVLTREE_H

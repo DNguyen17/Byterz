@@ -39,6 +39,10 @@ void FakeXMLParser::findUserWords(){
     myHandler->findUserWords();
 }
 
+void FakeXMLParser::storeOffIndex(char* output){
+    myHandler->setOutputFile(output);
+    myHandler->storeOffIndexToMemory();
+}
 
 void FakeXMLParser::storeOffXMLData(){
     //will just read from file and store
@@ -54,15 +58,20 @@ void FakeXMLParser::storeOffXMLData(){
         exit(1);
     }
 
+    int pageNumber = 1;
     while(inputFile>>buffer ){
         cout<<buffer<<endl;
+        if(buffer.size()<=1){
+            pageNumber++;
+            continue;
+        }
         char* myChar = new char[buffer.size()+1];
         for(int i = 0;i<buffer.size();i++){
             myChar[i] = buffer.at(i);
         }
         myChar[buffer.size()] = '\0';
 
-        myHandler->indexBodyOfText(myChar,1);
+        myHandler->indexBodyOfText(myChar,pageNumber);
        //cout<<buffer<<endl;
     }
 

@@ -2,6 +2,7 @@
 #include "index.h"
 #include"HashTable.h"
 #include<cstring>
+#include<fstream>
 using namespace std;
 
 
@@ -47,14 +48,79 @@ char* IndexHandler::getInputfile(void){
 //function reads formatted saved data into whatever data structure
 //indicated by argument
 void IndexHandler::buildIndexFromMemory(int choice){
-    //Finished after 24th Deadline
+     //open input file
+    ifstream input;
+    input.open(memoryInputFile);
+
+    string word;
+    int page;
+    int freq;
+
+    while(input>>word){
+        cout<<word<<endl;
+        //need new vector for each page
+        vector<int>* pageList = new vector<int>();
+        while(1){
+            input>>page;
+            cout<<"Page = "<<page<<endl;
+            if(page == -1){
+                //go to next line
+                //input.getline(dummy,390);
+                myIndex->insert(word,pageList);
+                break;
+            }
+            //if not hit end of page, frequency list
+            input>>freq;
+            pageList->push_back(page);
+            pageList->push_back(freq);
+            cout<<page<<" : "<<freq<<endl;
+
+        }
+
+    }
 }
 
 //writes index to hard memory specified by output file
 void IndexHandler::storeOffIndexToMemory(void){
 
+    //clear output file
+    ofstream out;
+    out.open(memoryOutputFile);
+    out.close();
+
+    myIndex->printToFile(memoryOutputFile);
+
+
     //Finished after 24th Deadline
 }
+
+void IndexHandler::insertionSort(vector<int>* passedVec, int start, int end){
+      int i, j;
+     int tempPage;
+     int tempCount;
+     int length = end - start + 1;
+
+     for (i = start + 2; i < start + length; i++) {
+         //cout<<"i is "<<i<<endl;
+         //cout<<"j is "<<j<<endl;
+         j = i;
+         i++;
+         while (j > start && (passedVec->at(j-1)<passedVec->at(j+1))){
+             tempPage = passedVec->at(j);
+             tempCount = passedVec->at(j+1);
+             passedVec->at(j) = passedVec->at(j-2);
+             passedVec->at(j+1) = passedVec->at(j-1);
+             passedVec->at(j-2) = tempPage;
+             passedVec->at(j-1) = tempCount;
+
+             j = j-2;
+         }//end of while loop
+
+    }
+
+
+}
+
 
 //Will ask user for input and then will go and print out page numbers
 //of the word request
@@ -86,8 +152,23 @@ void IndexHandler::findUserWords(void){
             //cycle through vector and print out all words
             //cout<<"Size = "<<userWordPages->size()<<endl;
             //cout<<userWordPages->at(0)<<endl;
+
+            //sort the vecotr received
+            insertionSort(userWordPages,0,userWordPages->size()-1);
+
+            int totalCount = 0;
+
+            for(int i = 0;i<userWordPages->size();i++){
+               totalCount += userWordPages->at(i+1);
+               i++;
+            }
+
+
+            cout<<"Total Occurances = "<<totalCount<<endl;
             for(int i = 0;i<userWordPages->size();i++){
                 cout<<userWordPages->at(i)<<endl;
+                cout<<"Frequency: "<<userWordPages->at(i+1)<<endl;
+                i++;
             }
         }
         else{
@@ -136,6 +217,7 @@ void IndexHandler::indexBodyOfText(char *body, int pageID){
         //conver the first letter of the string to lower case
         buffer[0] = tolower(buffer[0]);
         string stemmed = myWordParser->stopAndStem((buffer));
+        cout<<"Stemmed Word "<<stemmed<<endl;
 
         //if did not send empty string then insert in index
         if(!stemmed.empty()){
@@ -173,6 +255,7 @@ void IndexHandler::indexBodyOfText(char *body, int pageID){
 
 //returns all page numbers that word appeared on as stored in
 //index
+
 std::vector<int>* IndexHandler::findWord(string& passedWord){
     cout<<"Index Handler Find Word"<<endl;
     return myIndex->findWord(passedWord);
