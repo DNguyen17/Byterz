@@ -157,3 +157,7 @@ void XMLParser::findUserWords(){
 void XMLParser::clearIndex(){
     myHandler->clearIndex();
 }
+
+void XMLParser::buildIndexFromMemory(int choice){
+    myHandler->buildIndexFromMemory(choice);
+}
