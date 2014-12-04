@@ -155,7 +155,7 @@ void IndexHandler::findUserWords(void){
 
             //sort the vecotr received
             insertionSort(userWordPages,0,userWordPages->size()-1);
-
+        //have sorted vector according to relavancy
             int totalCount = 0;
 
             for(int i = 0;i<userWordPages->size();i++){
@@ -192,6 +192,95 @@ void IndexHandler::findUserWords(void){
    }
 
 }
+
+
+void IndexHandler::findMultipleUserWords(void){
+    int numberWords;
+    string* userWords = new string[10];
+  while(1){
+    cout<<"Please Enter Number of Words to And"<<;
+    cin>>numberWords;
+    cout<<"Please Enter All words: ";
+    for( int j = 0;j<numberWords;j++){
+        cin>>userWords[j];
+        userWords[j][0] = tolower(userWords[j][0]);
+
+    }
+
+    //loop through and convert all first letters to lowerCase
+    //cin>>userWord;
+    cout<<endl;
+
+    cout<<"User Words collected were: "<<endl;
+    for( int j = 0;j<numberWords;j++){
+
+        cout<<userWords[j];
+    }
+
+    cout<<"Pages with "<<userWord<<":"<<endl;
+
+    //convert first letter of word to lowercase
+    //userWord[0] = tolower(userWord[0]);
+    //need to stem word before searching for it:
+    for (int j = 0;j<numberWords;j++){
+        userWords[j] = myWordParser->stopAndStem(userWords[j]);
+
+    }
+    //string userStemmed = myWordParser->stopAndStem(userWord);
+    if(!userStemmed.empty()){
+
+
+        //cout<<"myIndex->findWord(user) size = "<<myIndex->findWord(userWord)->size();
+        vector<int>* userWordPages = myIndex->findWord(userStemmed);
+        //cout<<"Made it to Index Handler"<<endl;
+        if(userWordPages != NULL){
+            //cout<<"right under"<<userWordPages->size();
+
+            //cout<<"userWordPages is "<<(userWordPages == NULL? "is null": "is not null")<<endl;
+            //cycle through vector and print out all words
+            //cout<<"Size = "<<userWordPages->size()<<endl;
+            //cout<<userWordPages->at(0)<<endl;
+
+            //sort the vecotr received
+            insertionSort(userWordPages,0,userWordPages->size()-1);
+        //have sorted vector according to relavancy
+            int totalCount = 0;
+
+            for(int i = 0;i<userWordPages->size();i++){
+               totalCount += userWordPages->at(i+1);
+               i++;
+            }
+
+
+            cout<<"Total Occurances = "<<totalCount<<endl;
+            for(int i = 0;i<userWordPages->size();i++){
+                cout<<userWordPages->at(i)<<endl;
+                cout<<"Frequency: "<<userWordPages->at(i+1)<<endl;
+                i++;
+            }
+        }
+        else{
+            cout<<"There are no pages with "<<userWord<<endl<<endl;
+        }
+    }
+    else{
+        cout<<"Input is a stop word, there are no pages with "<<userWord<<endl<<endl;
+
+    }
+    //Ask user if wants to keep searching for word
+    int choice;
+    cout<<"Enter 1 to continue or 0 to exit:";
+    cin>>choice;
+    if(choice==0){
+        break;
+    }else{
+        cout<<endl;
+    }
+
+   }
+
+}
+
 
 
 //functions to add or find words form index after stemming and stop
