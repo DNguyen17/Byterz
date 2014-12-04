@@ -217,7 +217,7 @@ void IndexHandler::indexBodyOfText(char *body, int pageID){
         //conver the first letter of the string to lower case
         buffer[0] = tolower(buffer[0]);
         string stemmed = myWordParser->stopAndStem((buffer));
-        cout<<"Stemmed Word "<<stemmed<<endl;
+        //cout<<"Stemmed Word "<<stemmed<<endl;
 
         //if did not send empty string then insert in index
         if(!stemmed.empty()){
@@ -233,6 +233,41 @@ void IndexHandler::indexBodyOfText(char *body, int pageID){
     ss.flush();
 }
 
+void IndexHandler::indexBodyOfText(string& body, int pageID){
+    //cout<<endl;
+    //cout<<endl;
+    stringstream ss;
+    string buffer;
+    //int length = strlen(body.c_str());
+
+    //change punctuation to whitspace
+    for (int i = 0; i < body.length(); ++i){
+
+        if ( (body[i]!=39) && !(body[i]>=48 && body[i]<=57) //if character is not ', 0-9, A-Z, or a-z
+             && !(body[i]>=65 && body[i]<=90) && !(body[i]>=97 && body[i]<=122))
+            body[i] = ' '; //change to whitespace
+    }
+
+    ss << body;
+    while (ss >> buffer ){
+        //conver the first letter of the string to lower case
+        buffer[0] = tolower(buffer[0]);
+        string stemmed = myWordParser->stopAndStem((buffer));
+        //cout<<"Stemmed Word "<<stemmed<<endl;
+
+        //if did not send empty string then insert in index
+        if(!stemmed.empty()){
+            myIndex->insert(stemmed,pageID);
+        }
+        else{
+            //cout<<"Word was stop word"<<endl;
+
+        }
+
+    }
+
+    ss.flush();
+}
 
 /*void IndexHandler::addWord(string &singleWord, int pageID){
     //check if word is stop word

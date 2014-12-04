@@ -4,29 +4,29 @@ using namespace std;
 XMLParser::XMLParser()
 {
     myHandler = new IndexHandler();
-    myLookUpTable = new LookUpTable();
+    //myLookUpTable = new LookUpTable();
 
     XMLDumpFile = nullptr;
-    title = nullptr;
+    //title = nullptr;
     id = 0;
-    text = nullptr;
+    //text = nullptr;
 }
 
 XMLParser::~XMLParser(){
     delete myHandler;
-    delete myLookUpTable;
+    //delete myLookUpTable;
 
     if (XMLDumpFile != nullptr)
         delete[] XMLDumpFile;
     XMLDumpFile = nullptr;
 
-    if (title != nullptr)
+    /*if (title != nullptr)
         delete[] title;
-    title = nullptr;
+    title = nullptr;*/
 
-    if (text != nullptr)
+    /*if (text != nullptr)
         delete[] text;
-    text = nullptr;
+    text = nullptr;*/
 
     myParser.~XMLFileParser();
     doc.clear(); //deallocate memory pool of rapidxml class
@@ -34,6 +34,7 @@ XMLParser::~XMLParser(){
 }
 
 void XMLParser::setXMLDumpFile(string& passedFile){
+    //delete old XMLDumpFile if hasn't already
     if (XMLDumpFile != nullptr){
         delete[] XMLDumpFile;
         XMLDumpFile = nullptr;
@@ -60,21 +61,20 @@ void XMLParser::setXMLDumpFile(string& passedFile){
 //will cycle through all of XML documents in XML dump and index
 //all of the words at first into a data structure. The data
 //structure will then be saved off to hard memory for persistance
-void XMLParser::storeOffXMLData(char * DumpName){
+void XMLParser::storeOffXMLData(){
    //open XML file from XMLDumpFile
-
-    ofstream ofs(DumpName);
     int i = 1;
-    //ofstream fout("splitWords.txt");
+    //string text1;
 
     //loop through all files
-    while (i <= 2){
+    while (i <= 170){
 
         string fileName = "WikiDumpPart";
         fileName += to_string(i);
         fileName += ".xml";
 
-        setXMLDumpFile(fileName);
+        storeOffNewData(fileName);
+        /*setXMLDumpFile(fileName);
         doc.clear();
         doc.parse<0>(XMLDumpFile);
         docNode = doc.first_node("mediawiki");
@@ -84,38 +84,30 @@ void XMLParser::storeOffXMLData(char * DumpName){
         while(pageNode !=0 ){
 
             myParser.setNodes(pageNode);
-
-            /*title = new char[strlen(myParser.findTitle())+1];
-            strcpy(title, myParser.findTitle());
-            //ofs << "title: " << title << "\t";*/
-
             id = myParser.findPageID();
-            //ofs << "id: " << id << endl;
 
-            text = new char[strlen(myParser.findBodyText())+1];
-            strcpy(text, myParser.findBodyText());
+            //text = new char[strlen(myParser.findBodyText())+1];
+            //strcpy(text, myParser.findBodyText());
+            text1 = myParser.findBodyText();
 
-            myHandler->indexBodyOfText(text, id);
+            myHandler->indexBodyOfText(text1, id);
 
             pageNode = pageNode->next_sibling("page");
 
-			//still need to get Author and date
-
-            //delete[] title;
-            //title = nullptr;
-
-            delete[] text;
-            text = nullptr;
-        }
+            //delete[] text;
+            //text = nullptr;
+        }*/
+        delete[] XMLDumpFile;
+        XMLDumpFile = nullptr;
 
         ++i;
     }
 
-    ofs.close();
-    //fout.close();
 
 
 }
+
+//store off new file added on
 void XMLParser::storeOffNewData(string &fileName)
 {
     setXMLDumpFile(fileName);
@@ -124,22 +116,20 @@ void XMLParser::storeOffNewData(string &fileName)
     doc.parse<0>(XMLDumpFile);
     docNode = doc.first_node("mediawiki");
     xml_node<>* pageNode = docNode->first_node("page");
+    string text;
 
+    //loop through all pages in one file
     while(pageNode !=0 ){
 
         myParser.setNodes(pageNode);
 
         id = myParser.findPageID();
-        text = new char[strlen(myParser.findBodyText())+1];
-        strcpy(text, myParser.findBodyText());
+        text=myParser.findBodyText();
 
         myHandler->indexBodyOfText(text, id);
 
-        //increment pageNode
         pageNode = pageNode->next_sibling("page");
 
-        delete[] text;
-        text = nullptr;
     }
 
 
@@ -162,4 +152,8 @@ void XMLParser::loadStopTable(){
 
 void XMLParser::findUserWords(){
     myHandler->findUserWords();
+}
+
+void XMLParser::clearIndex(){
+    myHandler->clearIndex();
 }
