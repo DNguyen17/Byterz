@@ -48,3 +48,11 @@ char* XMLFileParser::findAuthor()
 
     return authorNode->value();
 }
+
+char* XMLFileParser::findDate()
+{
+    dateNode = pageNode->first_node("revision")->first_node("timestamp");
+    return dateNode->value();
+
+}
+

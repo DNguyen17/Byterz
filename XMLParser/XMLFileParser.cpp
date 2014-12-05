@@ -6,6 +6,7 @@ XMLFileParser::XMLFileParser(){
     pageNode = nullptr;
     textNode = nullptr;
     authorNode = nullptr;
+    dateNode = nullptr;
 
 }
 
@@ -14,6 +15,8 @@ XMLFileParser::~XMLFileParser(){
     pageNode = nullptr;
     textNode = nullptr;
     authorNode = nullptr;
+    dateNode = nullptr;
+
 
 }
 
@@ -49,4 +52,11 @@ char* XMLFileParser::findAuthor()
     //cout << authorNode << endl;
     //cout << authorNode->value() << endl;
     return authorNode->value();
+}
+
+char* XMLFileParser::findDate()
+{
+    dateNode = pageNode->first_node("revision")->first_node("timestamp");
+    return dateNode->value();
+
 }

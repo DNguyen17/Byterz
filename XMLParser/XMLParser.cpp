@@ -216,7 +216,7 @@ void XMLParser::storeOffNewData(string &fileName, ofstream& fout)
     doc.parse<0>(XMLDumpFile);
     docNode = doc.first_node("mediawiki");
     xml_node<>* pageNode = docNode->first_node("page");
-    //ofstream ofs("output.txt");
+    ofstream ofs("output.txt");
 
     //myParser.setNodes(pageNode);
     //fout << myParser.findPageID() << ", ";
@@ -229,7 +229,11 @@ void XMLParser::storeOffNewData(string &fileName, ofstream& fout)
         text = new char[strlen(myParser.findBodyText())+1];
         strcpy(text, myParser.findBodyText());
 
-        indexBodyOfText(text, id, fout);
+        string date = myParser.findDate();
+        ofs << date << endl;
+
+
+        //indexBodyOfText(text, id, fout);
 
         /*if (pageNode->next_sibling("page") == 0)
             fout << myParser.findPageID() << endl;*/ //finding page ranges
@@ -239,6 +243,7 @@ void XMLParser::storeOffNewData(string &fileName, ofstream& fout)
         text = nullptr;
     }
 
+    ofs.close();
     //fout.close();
 
 
