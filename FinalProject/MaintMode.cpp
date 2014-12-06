@@ -25,10 +25,8 @@ void MaintMode::getUserCommand()
 
     cout << "Building Index from Memory" << endl;
 
-    //change to buildIndexFromMemory when pushing
     myXMLParser.buildIndexFromMemory(1);
-    //myXMLParser.loadStopTable();
-    //myXMLParser.storeOffXMLData(1);
+
     cout << "Done\n" << endl;
 
     while (loopChoice == 1){
@@ -59,5 +57,10 @@ void MaintMode::getUserCommand()
         cout << "\nPress 1 to continue or 0 to exit: ";
         cin >> loopChoice;
     }
+
+    cout << "Re-store index" << endl;
+    char* out = "Index.txt\0";
+    myXMLParser.storeOffIndex(out);
+    delete[] out;
 
 }

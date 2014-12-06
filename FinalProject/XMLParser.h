@@ -33,6 +33,10 @@ public:
     void buildIndexFromMemory(int choice);
     void storeOffIndex(char* output);
     bool navigateToPage(int page);
+    string getAuthor();
+    string getText();
+    string getDate();
+    string getTitle();
 
 private:
     //private helper function
