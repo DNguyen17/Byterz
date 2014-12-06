@@ -199,13 +199,10 @@ bool XMLParser::navigateToPage(int page)
     {
         myParser.setNodes(pageNode);
         if (myParser.findPageID() == page){
-            cout << "true " << myParser.findPageID() << endl;
             return true;
         }
         pageNode = pageNode->next_sibling("page");
     }
-
-    cout << "false " << myParser.findPageID() << endl;
     return false;
 
 }
@@ -219,4 +216,28 @@ size_t XMLParser::binarySearch(size_t begin, size_t end, int page)
         return binarySearch(mid, end, page);
     else
         return binarySearch(begin, mid, page);
+}
+
+string XMLParser::getAuthor()
+{
+    string author = myParser.findAuthor();
+    return author;
+}
+
+string XMLParser::getText()
+{
+    string text = myParser.findBodyText();
+    return text;
+}
+
+string XMLParser::getDate()
+{
+    string date = myParser.findDate();
+    return date;
+}
+
+string XMLParser::getTitle()
+{
+    string title = myParser.findTitle();
+    return title;
 }

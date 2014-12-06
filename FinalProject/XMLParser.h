@@ -25,7 +25,7 @@ public:
 
     void loadStopTable();
     void loadPageRange();
-    void storeOffXMLData(int fileNumber);
+    void storeOffXMLData();
     void  setXMLDumpFile(string&);
     void findUserWords();
     void storeOffNewData(string& fileName);
@@ -33,6 +33,10 @@ public:
     void buildIndexFromMemory(int choice);
     void storeOffIndex(char* output);
     bool navigateToPage(int page);
+    string getAuthor();
+    string getText();
+    string getDate();
+    string getTitle();
 
 private:
     //private helper function
