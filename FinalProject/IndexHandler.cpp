@@ -135,7 +135,7 @@ void IndexHandler::insertionSort(vector<int>* passedVec, int start, int end){
 
 //Will ask user for input and then will go and print out page numbers
 //of the word request
-void IndexHandler::findUserWords(void){
+void IndexHandler::findUserWordsInteractive(void){
     string userWord;
   while(1){
     cout<<"Please Enter Word: ";
@@ -205,11 +205,57 @@ void IndexHandler::findUserWords(void){
 }
 
 
-void IndexHandler::findMultipleUserWords(void){
+vector<int>* IndexHandler::findUserWord(string userWord){
+
+    //convert first letter of word to lowercase
+    userWord[0] = tolower(userWord[0]);
+    //need to stem word before searching for it:
+    vector<int>* userWordPages;
+    string userStemmed = myWordParser->stopAndStem(userWord);
+    if(!userStemmed.empty()){
+
+        //cout<<"myIndex->findWord(user) size = "<<myIndex->findWord(userWord)->size();
+        userWordPages = myIndex->findWord(userStemmed);
+        //cout<<"Made it to Index Handler"<<endl;
+        if(userWordPages != NULL){
+/*
+            //sort the vecotr received
+            insertionSort(userWordPages,0,userWordPages->size()-1);
+            //have sorted vector according to relavancy
+            int totalCount = 0;
+
+            for(int i = 0;i<userWordPages->size();i++){
+               totalCount += userWordPages->at(i+1);
+               i++;
+            }
+
+
+            cout<<"Total Occurances = "<<totalCount<<endl;
+            for(int i = 0;i<userWordPages->size();i++){
+                cout<<userWordPages->at(i)<<endl;
+                cout<<"Frequency: "<<userWordPages->at(i+1)<<endl;
+                i++;
+            }*/
+        }
+        else{
+            cout<<"There are no pages with "<<userWord<<endl<<endl;
+        }
+    }
+    else{
+        cout<<"Input is a stop word, there are no pages with "<<userWord<<endl<<endl;
+
+    }
+
+    return userWordPages;
+}
+
+
+
+/*void IndexHandler::findMultipleUserWords(void){
     int numberWords;
     string* userWords = new string[10];
   while(1){
-    cout<<"Please Enter Number of Words to And"<<;
+    cout<<"Please Enter Number of Words to And";
     cin>>numberWords;
     cout<<"Please Enter All words: ";
     for( int j = 0;j<numberWords;j++){
@@ -292,7 +338,7 @@ void IndexHandler::findMultipleUserWords(void){
 
 }
 
-
+*/
 
 //functions to add or find words form index after stemming and stop
 //words done

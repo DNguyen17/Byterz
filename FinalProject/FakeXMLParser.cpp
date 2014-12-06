@@ -36,7 +36,7 @@ void FakeXMLParser::loadStopTable(){
 }
 
 void FakeXMLParser::findUserWords(){
-    myHandler->findUserWords();
+    myHandler->findUserWordsInteractive();
 }
 
 void FakeXMLParser::storeOffIndex(char* output){

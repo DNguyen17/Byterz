@@ -25,7 +25,7 @@ public:
 
     void loadStopTable();
     void loadPageRange();
-    void storeOffXMLData(int fileNumber);
+    void storeOffXMLData();
     void  setXMLDumpFile(string&);
     void findUserWords();
     void storeOffNewData(string& fileName);

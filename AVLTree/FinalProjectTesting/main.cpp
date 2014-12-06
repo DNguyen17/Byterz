@@ -7,7 +7,7 @@
 #include"StopWordsAvlTree.h"
 #include"StopWordsHashTable.h"
 #include<fstream>
-
+#include<iterator>
 //Code From Stemmer
 #include<string>
 #include<cstring>
@@ -792,7 +792,7 @@ void usernameFunction(vector<string>& nextWords){
         }
 }
 
-int main(){
+/*int main(){
     while(1){
         //get user input
 
@@ -960,4 +960,63 @@ int main(){
         }
 
     }
+}
+
+*/
+
+
+/*int containsPage(vector<int>* list, int page){
+    int counter = 0;
+    vector<int>::iterator it;
+    while(1){
+        it = find(list->begin() + counter,list->end(),page);
+        if(it != list->end()){
+            if(*it%2 == 0){
+
+                return (it-list->begin());
+            }
+            else{
+                counter = *it;
+            }
+        }
+        else{
+            return -1;
+        }
+
+    }
+
+}
+*/
+int containsPage(vector<int>* myList,int page){
+    for(int i = 0;i<myList->size();i++){
+        if(myList->at(i) == page){
+            return i;
+        }
+
+        i++;
+    }
+
+    //if didn't find it
+    return -1;
+}
+
+
+int main(){
+    vector<int>* newVec = new vector<int>();
+//    newVec->push_back(5);
+
+    newVec->push_back(6);
+    newVec->push_back(5);
+    newVec->push_back(10);
+    newVec->push_back(11);
+    newVec->push_back(13);
+    newVec->push_back(14);
+    newVec->push_back(19);
+    newVec->push_back(20);
+
+    newVec->push_back(24);
+    newVec->push_back(27);
+    int page = 24;
+    int answer = containsPage(newVec,page);
+    cout<<"Index of page "<<page<<" is "<<answer<<endl;
 }

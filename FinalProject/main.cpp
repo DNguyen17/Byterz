@@ -1,6 +1,7 @@
 #include <iostream>
 #include"XMLParser.h"
 #include"FakeXMLParser.h"
+#include"InteractiveMode.h"
 using namespace std;
 /*
 int main()
@@ -22,7 +23,7 @@ int main()
 
 }
 */
-int main(){
+/*int main(){
     IndexHandler newHandler;
     char newFile[] = "FakeParserIndex.txt";
 
@@ -30,6 +31,11 @@ int main(){
     newHandler.loadStopTable();
     newHandler.buildIndexFromMemory(0);
     newHandler.findUserWords();
+}*/
+
+int main(){
+    InteractiveMode IM;
+    IM.interactiveUI();
 }
 
 
