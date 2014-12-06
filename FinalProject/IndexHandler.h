@@ -36,11 +36,15 @@ public:
     void insertionSort(vector<int>* passedVec, int start, int end);
     void loadStopTable();
 
+    //need to keep track of total number of documents
+    int getTotalDocs();
+
 private:
     WordParser2* myWordParser;
     Index* myIndex;
     char* memoryInputFile;
     char* memoryOutputFile;
+    int totalDocCount;
 };
 
 #endif // INDEXHANDLER_H

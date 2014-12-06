@@ -2,6 +2,7 @@
 using namespace std;
 #include<vector>
 #include<iterator>
+#include<cmath>
 void andFunction(vector<string>& nextWords);
 void orFunction(vector<string>& nextWords);
 void ltFunction(vector<string>& nextWords);
@@ -231,14 +232,24 @@ bool InteractiveMode::processQuery(string userQuery){
 
             //call the keyword function
             if(currKeyWord.compare("AND") == 0){
-                andFunction(nextWords);
+                //create vectors to pass by reference
+                vector<int>* andPagesList;
+                vector<double>* andTFIDFLIst;
+                andPages(nextWords,andPagesList,andTFIDFList);
+                totalPages = *(pagesAndTF->at(0));
+                totalTF = *(pagesAndTF->at(1));
 
             }
             else if(currKeyWord.compare("OR") == 0){
-                orFunction(nextWords);
+                vector< vector<int>* >* pagesAndTF = orPages(nextWords);
+                totalPages = *(pagesAndTF->at(0));
+                totalTF = *(pagesAndTF->at(1));
             }
             else if(currKeyWord.compare("NOT") == 0){
-                notFunction(nextWords);
+                vector< vector<int>* >* pagesAndTF = notPages(nextWords);
+                totalPages = *(pagesAndTF->at(0));
+                totalTF = *(pagesAndTF->at(1));
+
 
             }else if(currKeyWord.compare("DATEGT") == 0){
                 gtFunction(nextWords);
@@ -328,30 +339,64 @@ void usernameFunction(vector<string>& nextWords){
             cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
         }
 }
+/*
+//will loop through and add up all frequencies of all pages
+int getTotalOccurances(std::vector<int> & passedList){
+    int total = 0;
+    for(int i = 0;i<passedList.size();i++){
+        total = total + passsedList(i+1);
+        i++;
+    }
 
+    return total;
+}
+*/
 /**************NEED to Calculate Term frequency before combine*********/
-void InteractiveMode::orPages(std::vector<string> & passedWords){
+void InteractiveMode::orPages(std::vector<string> & passedWords,
+                              vector<int>* & orPageList,
+                              vector<double>*& orTFList){
+    //create vectors to hold pages and TFIDF
+    orPageList = new vector<int>();
+    orTFList = new vector<double>();
+
+    double totalDocs =  IMHandler->getTotalDocs();
     for(int i = 0;i<passedWords.size();i++){
 
         //get list of pages for word
         vector<int>* pageList = IMHandler->findUserWord(passedWords.at(i));
+        //calculate IDF for word
+        double numberDocs = (pageList->size())/2;
+        double IDF = log(totalDocs/(1+numberDocs));
         //for each page in list, add to total list or add frequency
         //to already existing index of page
+
         for(int j = 0;j<pageList->size();j++){
+            //get total time word occured in whole corpus
+
+            //calculate TF/IDF for specific page
+            double TF = pageList->at(j+1);
+            double TFIDF =  TF*IDF;
+
             //check if page already exist
-            int index = totalContainsPage(pageList->at(j));
+            int index = totalContainsPage(orPageList,pageList->at(j));
             if(index > 0){
                 //add term frequency if already exists
-                totalTF.at(index) = totalTF.at(index) + pageList->at(j+1);
+                orTFList->at(index) = orTFList->at(index) + TFIDF;
             }
             else{
-                totalPages.push_back(pageList->at(j));
-                totalTF.push_back(pageList->at(j+1));
-            }
+                orPageList->push_back(pageList->at(j));
+                orTFList->push_back(TFIDF);
 
+            }
+            //increment so go to next even index
+            j++;
         }
 
     }
+
+    //once processed all words the vectors have already been changed
+    //by reference so not need to return anything
+
 }
 /**************NEED to Calculate Term frequency before combine*********/
 vector<int>* InteractiveMode::orPagesAndReturn(std::vector<vector<int>*>* allList){
@@ -379,7 +424,12 @@ vector<int>* InteractiveMode::orPagesAndReturn(std::vector<vector<int>*>* allLis
 }
 
 
-void InteractiveMode::andPages(std::vector<string> & passedWords){
+void InteractiveMode::andPages(std::vector<string> & passedWords,
+                               vector<int>* & andPageList,
+                               vector<double>* &andTFIDFList ){
+
+
+
     //assemble vector of page numbers of all words
     vector<vector<int>*>* allLists = new vector<vector<int>*>();
     for(int i = 0;i<passedWords.size();i++){
@@ -395,13 +445,12 @@ void InteractiveMode::andPages(std::vector<string> & passedWords){
 }
 
 
-int InteractiveMode::totalContainsPage(int page){
-    for(int i = 0;i<totalPages.size();i++){
-        if(totalPages.at(i) == page){
+int InteractiveMode::totalContainsPage(vector<int>* passedPages,int page){
+    for(int i = 0;i<passedPages->size();i++){
+        if(passedPages->at(i) == page){
             return i;
         }
 
-        i++;
     }
 
     //if didn't find it

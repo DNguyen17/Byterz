@@ -23,10 +23,10 @@ private:
     XMLParser* myXMLParser;
     std::vector<int> finalPages;
     std::vector<string> finalTitles;
-    std::vector<int> finalTF;
+    std::vector<double> finalTF;
     std::vector<int> totalPages;
     std::vector<string> totalTitles;
-    std::vector<int> totalTF;
+    std::vector<double> totalTF;
 
     string currAuthor;
     string currMaxDate;
