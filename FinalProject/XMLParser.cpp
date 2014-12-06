@@ -4,12 +4,11 @@ using namespace std;
 XMLParser::XMLParser()
 {
     myHandler = new IndexHandler();
-    //myLookUpTable = new LookUpTable();
+    loadPageRange();
+    loadStopTable();
 
     XMLDumpFile = nullptr;
-    //title = nullptr;
     id = 0;
-    //text = nullptr;
 }
 
 XMLParser::~XMLParser(){
@@ -163,4 +162,61 @@ void XMLParser::buildIndexFromMemory(int choice){
     myHandler->setInputFile(input);
     myHandler->buildIndexFromMemory(choice);
     delete input;
+}
+
+void XMLParser::loadPageRange(){
+    ifstream rangeDoc;
+    rangeDoc.open("pageRange.txt");
+    if(!rangeDoc){
+        cerr << "cannot open page docs" << endl;
+        exit(1);
+    }
+
+    int min, max;
+    while (rangeDoc >> min){
+        rangeDoc.ignore();
+        pageMin.push_back(min);
+        rangeDoc >> max;
+        pageMax.push_back(max);
+    }
+    rangeDoc.close();
+}
+
+bool XMLParser::navigateToPage(int page)
+{
+    size_t fileNo = binarySearch(0, 179, page)+1;
+    string fileName = "WikiDumpPart";
+    fileName += to_string(fileNo);
+    fileName += ".xml";
+
+    setXMLDumpFile(fileName);
+    doc.clear();
+    doc.parse<0>(XMLDumpFile);
+    docNode = doc.first_node("mediawiki");
+    xml_node<>* pageNode = docNode->first_node("page");
+
+    while (pageNode != 0)
+    {
+        myParser.setNodes(pageNode);
+        if (myParser.findPageID() == page){
+            cout << "true " << myParser.findPageID() << endl;
+            return true;
+        }
+        pageNode = pageNode->next_sibling("page");
+    }
+
+    cout << "false " << myParser.findPageID() << endl;
+    return false;
+
+}
+
+size_t XMLParser::binarySearch(size_t begin, size_t end, int page)
+{
+    size_t mid = (begin+end)/2;
+    if (page >= pageMin.at(mid) && page <= pageMax.at(mid))
+        return mid;
+    else if (page > pageMax.at(mid))
+        return binarySearch(mid, end, page);
+    else
+        return binarySearch(begin, mid, page);
 }

@@ -24,18 +24,19 @@ public:
     ~XMLParser();
 
     void loadStopTable();
-    void storeOffXMLData();
-    void setXMLDumpFile(string&);
+    void loadPageRange();
+    void storeOffXMLData(int fileNumber);
+    void  setXMLDumpFile(string&);
     void findUserWords();
     void storeOffNewData(string& fileName);
     void clearIndex();
     void buildIndexFromMemory(int choice);
+    void storeOffIndex(char* output);
+    bool navigateToPage(int page);
 
 private:
     //private helper function
-    //void indexBodyOfText(std::string* body, std::string pageID);
-    void  addPagesToLookup();
-    void  addSinglePageToLookup();
+    size_t binarySearch(size_t begin, size_t end, int page);
 
     IndexHandler* myHandler;
     //LookUpTable* myLookUpTable;
@@ -44,9 +45,8 @@ private:
     xml_document<> doc;
     xml_node<>* docNode;
     int id;
-
-    //char* title;
-    //char* text;
+    vector<int> pageMin;
+    vector<int> pageMax;
 
 };
 
