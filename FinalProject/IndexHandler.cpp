@@ -6,8 +6,18 @@
 using namespace std;
 
 
-IndexHandler::IndexHandler()
+IndexHandler::IndexHandler(int structureChoice)
 {
+    if(structureChoice == 1){
+
+        myIndex = new AvlTree<string>();
+    }
+    else{
+
+        myIndex = new HashTable<string>();
+    }
+
+
     myWordParser = new WordParser2();
     myIndex = new HashTable<string>();
     //Want default data structure
@@ -20,6 +30,7 @@ IndexHandler::IndexHandler()
     strcpy(memoryInputFile,"input.txt");
     strcpy(memoryOutputFile,"output.txt");
 }
+
 
 IndexHandler::~IndexHandler(){
     delete myWordParser;

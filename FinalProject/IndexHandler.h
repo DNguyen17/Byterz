@@ -11,7 +11,7 @@
 class IndexHandler
 {
 public:
-    IndexHandler();
+    explicit IndexHandler(int = 0);
     ~IndexHandler();
 
     //functions to interface with hard memory storage

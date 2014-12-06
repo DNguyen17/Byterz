@@ -707,7 +707,7 @@ int main(){
    cout<<"Contains subway? "<<myTable->contains(stemWord("subway"))<<endl;
 }
 */
-
+/*
 int main(){
     ifstream input;
     input.open("IndexInputTest.txt");
@@ -735,6 +735,229 @@ int main(){
     }
 
 }
+*/
+
+void andFunction(vector<string>& nextWords){
+        cout<<"AND function:"<<endl;
+        cout<<"Collected next words"<<endl;
+        //print out all following words
+        for(int y = 0;y<nextWords.size();y++){
+            cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
+        }
+}
+
+void orFunction(vector<string>& nextWords){
+        cout<<"OR function:"<<endl;
+        cout<<"Collected next words"<<endl;
+        //print out all following words
+        for(int y = 0;y<nextWords.size();y++){
+            cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
+        }
+}
+
+void notFunction(vector<string>& nextWords){
+        cout<<"NOT function:"<<endl;
+        cout<<"Collected next words"<<endl;
+        //print out all following words
+        for(int y = 0;y<nextWords.size();y++){
+
+            cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
+        }
+}
+
+void gtFunction(vector<string>& nextWords){
+        cout<<"DATEGT function:"<<endl;
+        cout<<"Collected next words"<<endl;
+        //print out all following words
+        for(int y = 0;y<nextWords.size();y++){
+            cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
+        }
+}
+
+void ltFunction(vector<string>& nextWords){
+        cout<<"DATELT function:"<<endl;
+        cout<<"Collected next words"<<endl;
+        //print out all following words
+        for(int y = 0;y<nextWords.size();y++){
+            cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
+        }
+}
+
+void usernameFunction(vector<string>& nextWords){
+        cout<<"USERNAME function:"<<endl;
+        cout<<"Collected next words"<<endl;
+        //print out all following words
+        for(int y = 0;y<nextWords.size();y++){
+            cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
+        }
+}
+
+int main(){
+    while(1){
+        //get user input
+
+        //beginning of loop that
+        cout<<"Please Enter Query (or END to Quit):";
+        string userQuery;
+        getline(cin,userQuery);
+        cout<<"User Query Before Parsing: "<<userQuery<<endl;
+        cout<<"size of User query: "<<userQuery.size()<<endl;
+        string delimiter = " ";
 
 
+        //eliminate any leading white space
+        while(1){
+           if(delimiter.compare(userQuery.substr(0,1)) == 0){
+               userQuery = userQuery.substr(1,userQuery.size()-1);
+           }
+           else{
+               break;
+           }
+        }
+        //get first string of user keyword
+        string firstCommand = userQuery.substr(0,userQuery.find(delimiter));
+        cout<<"find(delimiter) "<<userQuery.find(delimiter)<<endl;
+        cout<<"size of firstCommand "<<firstCommand.size()<<endl;
+        //reset user string to not include first command
 
+        //check that the first word is not END
+        if(firstCommand.compare("END") == 0){
+            cout<<"Selected to End program";
+            return 0;
+        }
+
+        vector<string> keyWords;
+        keyWords.push_back("AND");
+        keyWords.push_back("OR");
+        keyWords.push_back("NOT");
+        keyWords.push_back("DATEGT");
+        keyWords.push_back("DATELT");
+        keyWords.push_back("USERNAME");
+
+       //make sure first commmand is either AND or OR
+       //RULE must start wiht AND or OR!!!!
+        int commandFlag = 0;
+        for(int i = 0;i<2;i++){
+            if(firstCommand.compare(keyWords.at(i)) == 0){
+                 commandFlag= 1;
+                break;
+            }
+        }
+
+        if(commandFlag != 1){
+            cout<<"Need to Enter AND or OR as first word in Query!"<<endl;
+            continue;
+        }
+
+        //gets rid of first word from user string
+        userQuery = userQuery.substr(userQuery.find(delimiter)+1,userQuery.size());
+
+        //cout<<"NewUserQuery "<<userQuery<<endl;
+        //cout<<"size = "<<userQuery.size()<<endl;
+
+        cout<<"First Command"<<firstCommand;
+        string currKeyWord = firstCommand;
+
+        //get all words until next keyword
+        vector<string> nextWords;
+        string currWord;
+
+        //need loop that checks userQuery not empty
+        while(!currKeyWord.empty()){
+            cout<<"\nCurrKeyWord = "<<currKeyWord<<endl;
+            //while loop that collects all following words after keyword;
+            while(1){
+                //eliminate whitespace
+                while(1){
+                   if(delimiter.compare(userQuery.substr(0,1)) == 0){
+                       userQuery = userQuery.substr(1,userQuery.size()-1);
+                   }
+                   else{
+                       break;
+                   }
+                }
+                //check that userQuery string not empty
+                if(userQuery.empty()){
+                   currWord = "";
+                   break;
+                }
+                else{
+                    cout<<"UserQuery = "<<userQuery<<endl;
+                    //get next word
+                    currWord = userQuery.substr(0,userQuery.find(delimiter));
+                    cout<<"CurrWord collected = "<<currWord<<endl;
+                    //take off processed word from userQuery
+                    if(userQuery.size() <= currWord.size()+1){
+                        userQuery = "";
+                    }
+                    else{
+                     userQuery = userQuery.substr(userQuery.find(delimiter)+1,userQuery.size());
+                    cout<<"UserQuery after deletion = "<<userQuery<<endl;
+
+                    }
+                }
+
+                //cout<<"inside loop"<<endl;
+                bool breakFlag = 0;
+                //check nextWord not match any of key words
+                for(int i = 0;i<keyWords.size();i++){
+                    if(currWord.compare(keyWords.at(i)) == 0){
+                        breakFlag = 1;
+
+                        break;
+                    }
+                }
+
+
+                if(breakFlag == 1){
+                    break;
+                }
+
+                //haven't encountered keyword yet
+                nextWords.push_back(currWord);
+
+            }
+
+            //once break and have keyword
+
+            //verify that at least got one argument
+            if(nextWords.size()<1){
+                cout<<"Keyword was followed by no arguments so just ignoring"<<endl;
+                currKeyWord = currWord;
+                cout<<"currKeyWord inside empty list catcher = "<<currKeyWord;
+                continue;
+
+            }
+
+            //call the keyword function
+            if(currKeyWord.compare("AND") == 0){
+                andFunction(nextWords);
+
+            }
+            else if(currKeyWord.compare("OR") == 0){
+                orFunction(nextWords);
+            }
+            else if(currKeyWord.compare("NOT") == 0){
+                notFunction(nextWords);
+
+            }else if(currKeyWord.compare("DATEGT") == 0){
+                gtFunction(nextWords);
+
+            }
+            else if(currKeyWord.compare("DATELT") == 0){
+                ltFunction(nextWords);
+            }
+            else if(currKeyWord.compare("USERNAME") == 0){
+                usernameFunction(nextWords);
+            }
+
+
+            //set next key word to what was currently stored in currWord
+            currKeyWord = currWord;
+            cout<<currKeyWord<<endl;
+            //clear next words
+            nextWords.clear();
+        }
+
+    }
+}
