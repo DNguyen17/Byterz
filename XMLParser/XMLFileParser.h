@@ -20,7 +20,7 @@ private:
     ifstream ifs;
     char* file;
     xml_document<> doc;
-    xml_node<> *pageNode, *textNode, *authorNode;
+    xml_node<> *pageNode, *textNode, *authorNode, *dateNode;
 
 public:
     XMLFileParser();
@@ -30,6 +30,7 @@ public:
     char *findTitle();
     char *findBodyText();
     char *findAuthor();
+    char *findDate();
 
 };
 

@@ -25,10 +25,11 @@ public:
 
     void loadStopTable();
     void storeOffXMLData();
-    void  setXMLDumpFile(string&);
+    void setXMLDumpFile(string&);
     void findUserWords();
     void storeOffNewData(string& fileName);
     void clearIndex();
+    void buildIndexFromMemory(int choice);
 
 private:
     //private helper function
