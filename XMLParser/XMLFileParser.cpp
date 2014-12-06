@@ -41,10 +41,12 @@ char* XMLFileParser::findBodyText(){
 
 char* XMLFileParser::findAuthor()
 {
-    authorNode = pageNode->first_node("contributor")->first_node("username");
+    authorNode = pageNode->first_node("revision")->first_node("contributor")->first_node("username");
     if (authorNode == 0){ //no author specified
-        return 0;
+        return nullptr;
     }
 
+    //cout << authorNode << endl;
+    //cout << authorNode->value() << endl;
     return authorNode->value();
 }

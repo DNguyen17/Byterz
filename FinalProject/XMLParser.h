@@ -24,26 +24,28 @@ public:
     ~XMLParser();
 
     void loadStopTable();
-    void storeOffXMLData(char * DumpName);
+    void storeOffXMLData();
     void  setXMLDumpFile(string&);
     void findUserWords();
+    void storeOffNewData(string& fileName);
+    void clearIndex();
 
 private:
     //private helper function
-    void indexBodyOfText(std::string* body, std::string pageID);
+    //void indexBodyOfText(std::string* body, std::string pageID);
     void  addPagesToLookup();
     void  addSinglePageToLookup();
 
     IndexHandler* myHandler;
-    LookUpTable* myLookUpTable;
+    //LookUpTable* myLookUpTable;
     char* XMLDumpFile;
     XMLFileParser myParser;
     xml_document<> doc;
     xml_node<>* docNode;
-
-    char* title;
     int id;
-    char* text;
+
+    //char* title;
+    //char* text;
 
 };
 

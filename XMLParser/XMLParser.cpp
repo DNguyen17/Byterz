@@ -3,7 +3,7 @@
 XMLParser::XMLParser()
 {
     XMLDumpFile = nullptr;
-    title = nullptr;
+    //title = nullptr;
     id = 0;
     text = nullptr;
 }
@@ -16,9 +16,9 @@ XMLParser::~XMLParser(){
         delete[] XMLDumpFile;
     XMLDumpFile = nullptr;
 
-    if (title != nullptr)
+    /*if (title != nullptr)
         delete[] title;
-    title = nullptr;
+    title = nullptr;*/
 
     if (text != nullptr)
         delete[] text;
@@ -29,7 +29,7 @@ XMLParser::~XMLParser(){
 }
 
 //http://www.cplusplus.com/reference/istream/istream/read/
-void XMLParser::setXMLDumpFile(string passedFile){
+void XMLParser::setXMLDumpFile(string &passedFile){
 
     if (XMLDumpFile != nullptr){
         delete[] XMLDumpFile;
@@ -67,10 +67,11 @@ void XMLParser::storeOffXMLData(const char * DumpName){
     while (i <= 1){
 
         string fileName = "WikiDumpPart";
-        //fileName += to_string(i);
+        fileName += to_string(i);
         fileName += ".xml";
+        storeOffNewData(fileName, fout);
 
-        setXMLDumpFile(fileName);
+        /*setXMLDumpFile(fileName);
         doc.clear();
         doc.parse<0>(XMLDumpFile);
         docNode = doc.first_node("mediawiki");
@@ -81,28 +82,31 @@ void XMLParser::storeOffXMLData(const char * DumpName){
 
             myParser.setNodes(pageNode);
 
-            title = new char[strlen(myParser.findTitle())+1];
-            strcpy(title, myParser.findTitle());
+            //title = new char[strlen(myParser.findTitle())+1];
+            //strcpy(title, myParser.findTitle());
             //ofs << "title: " << title << "\t";
 
             id = myParser.findPageID();
             //ofs << "id: " << id << endl;
 
+            //if (myParser.findAuthor() != nullptr){
+             //   author = myParser.findAuthor();
+              //  ofs << "\tauthor: " << author << endl;
+            //}
+
             text = new char[strlen(myParser.findBodyText())+1];
             strcpy(text, myParser.findBodyText());
-
             indexBodyOfText(text, id, fout);
 
             pageNode = pageNode->next_sibling("page");
 
-
-
-            delete[] title;
-            title = nullptr;
+            //delete[] title;
+            //title = nullptr;
 
             delete[] text;
             text = nullptr;
-        }
+
+        }*/
 
         ++i;
     }
@@ -193,5 +197,49 @@ void XMLParser::indexBodyOfText(char *body, int pageID, ofstream &fout){
     fout << first << endl;*/
     //ss.flush();
     //delete[] buffer;
+
+}
+
+/*char* XMLParser::getAuthor()
+{
+    if (myParser.findAuthor() == nullptr)
+        return nullptr;
+
+    //return author;
+}*/
+
+void XMLParser::storeOffNewData(string &fileName, ofstream& fout)
+{
+    setXMLDumpFile(fileName);
+
+    doc.clear();
+    doc.parse<0>(XMLDumpFile);
+    docNode = doc.first_node("mediawiki");
+    xml_node<>* pageNode = docNode->first_node("page");
+    //ofstream ofs("output.txt");
+
+    //myParser.setNodes(pageNode);
+    //fout << myParser.findPageID() << ", ";
+    //loop through all pages in one file
+    while(pageNode !=0 ){
+
+        myParser.setNodes(pageNode);
+
+        id = myParser.findPageID();
+        text = new char[strlen(myParser.findBodyText())+1];
+        strcpy(text, myParser.findBodyText());
+
+        indexBodyOfText(text, id, fout);
+
+        /*if (pageNode->next_sibling("page") == 0)
+            fout << myParser.findPageID() << endl;*/ //finding page ranges
+        pageNode = pageNode->next_sibling("page");
+
+        delete[] text;
+        text = nullptr;
+    }
+
+    //fout.close();
+
 
 }
