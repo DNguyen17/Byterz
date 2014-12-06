@@ -137,20 +137,12 @@ void XMLParser::storeOffNewData(string &fileName)
 //function stores all words in page into data structure index
 //will store off author, title, ID, and XML file name in hard memory
 //Not for 24th Due date
-void XMLParser::addPagesToLookup(){
-
-}
-
-void XMLParser::addSinglePageToLookup(){
-
-}
-
 void XMLParser::loadStopTable(){
     myHandler->loadStopTable();
 }
 
 void XMLParser::findUserWords(){
-    myHandler->findUserWords();
+    myHandler->findUserWordsInteractive();
 }
 
 void XMLParser::clearIndex(){

@@ -28,9 +28,11 @@ public:
     //void  addWords(std::string* words, int pageID);
     std::vector<int>*  findWord(std::string & passedWord);
     void clearIndex(void);
+    void findMultipleUserWords(void);
 
-    void findUserWords(void);
-
+    std::vector<int>* findUserWord(std::string);
+    //function used for 24th demo
+    void findUserWordsInteractive(void);
     void insertionSort(vector<int>* passedVec, int start, int end);
     void loadStopTable();
 
