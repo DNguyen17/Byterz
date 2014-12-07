@@ -60,13 +60,13 @@ void XMLParser::setXMLDumpFile(string& passedFile){
 //will cycle through all of XML documents in XML dump and index
 //all of the words at first into a data structure. The data
 //structure will then be saved off to hard memory for persistance
-void XMLParser::storeOffXMLData(){
+void XMLParser::storeOffXMLData(int numberOfFiles){
    //open XML file from XMLDumpFile
     int i = 1;
     //string text1;
 
     //loop through all files
-    while (i <= 170){
+    while (i <= numberOfFiles){
 
         string fileName = "WikiDumpPart";
         fileName += to_string(i);
@@ -232,4 +232,9 @@ string XMLParser::getTitle()
 {
     string title = myParser.findTitle();
     return title;
+}
+
+void XMLParser::storeOffIndex(char* output){
+    myHandler->setOutputFile(output);
+    myHandler->storeOffIndexToMemory();
 }
