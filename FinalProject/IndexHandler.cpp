@@ -13,6 +13,10 @@ IndexHandler::IndexHandler(int structureChoice)
 
         myIndex = new AvlTree<string>();
     }
+    if(structureChoice == 2){
+        myIndex = NULL;
+        cout<<"Index of Handler set to NULL"<<endl;
+    }
     else{
 
         myIndex = new HashTable<string>();
@@ -20,7 +24,6 @@ IndexHandler::IndexHandler(int structureChoice)
 
 
     myWordParser = new WordParser2();
-    myIndex = new HashTable<string>();
     //Want default data structure
     //Index* myIndex = new AVLTree();
 
@@ -30,6 +33,29 @@ IndexHandler::IndexHandler(int structureChoice)
     //set default input and output files
     strcpy(memoryInputFile,"input.txt");
     strcpy(memoryOutputFile,"output.txt");
+}
+
+bool IndexHandler::isIndexNULL(){
+    if(myIndex == NULL){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+void IndexHandler::createIndex(int choice){
+    if(choice == 1){
+
+        myIndex = new AvlTree<string>();
+    }
+    else{
+
+        myIndex = new HashTable<string>();
+    }
+
+
+
 }
 
 
@@ -42,6 +68,10 @@ IndexHandler::~IndexHandler(){
 
 int IndexHandler::getTotalDocs(){
     return totalDocCount;
+}
+
+void IndexHandler::setTotalDocs(int newTotal){
+   totalDocCount = newTotal;
 }
 
 //functions to manage storing off index in hard memory
@@ -159,7 +189,8 @@ void IndexHandler::findUserWordsInteractive(void){
 
 
         //cout<<"myIndex->findWord(user) size = "<<myIndex->findWord(userWord)->size();
-        vector<int>* userWordPages = myIndex->findWord(userStemmed);
+        //vector<int>* userWordPages = myIndex->findWord(userStemmed);
+        vector<int>* userWordPages = myIndex->findWord(userWord);
         //cout<<"Made it to Index Handler"<<endl;
         if(userWordPages != NULL){
             //cout<<"right under"<<userWordPages->size();
@@ -216,11 +247,13 @@ vector<int>* IndexHandler::findUserWord(string userWord){
     userWord[0] = tolower(userWord[0]);
     //need to stem word before searching for it:
     vector<int>* userWordPages;
+    cout<<"User word searched for in findUserWord = "<<userWord;
     string userStemmed = myWordParser->stopAndStem(userWord);
     if(!userStemmed.empty()){
 
         //cout<<"myIndex->findWord(user) size = "<<myIndex->findWord(userWord)->size();
-        userWordPages = myIndex->findWord(userStemmed);
+        //*****userWordPages = myIndex->findWord(userStemmed)******//;
+        userWordPages = myIndex->findWord(userWord);
         //cout<<"Made it to Index Handler"<<endl;
         if(userWordPages != NULL){
 /*
@@ -454,4 +487,17 @@ void IndexHandler::clearIndex(void){
 
 void IndexHandler::loadStopTable(){
    myWordParser->loadStopList();
+}
+
+void IndexHandler::printIndex(){
+    char* newOutput = new char[80];
+    strcpy(newOutput,"InteractiveModeIndex.txt");
+
+    //clear output file
+    ofstream out;
+    out.open(newOutput);
+    out.close();
+
+
+    myIndex->printToFile(newOutput);
 }

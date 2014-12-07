@@ -13,10 +13,14 @@ class InteractiveMode
 public:
     InteractiveMode();
     ~InteractiveMode();
-
+    void setInputFileForIndex(char*);
     bool processQuery(string);
     void interactiveUI();
     void createIndex(int choice);
+    void setTotalDocs(int);
+    void clearAllCurrAndFinalMembers();
+    void displayText(int choice);
+
 private:
     //data members
     IndexHandler* IMHandler;
@@ -32,7 +36,10 @@ private:
     string currMaxDate;
     string currMinDate;
 
-    void insertionSort(vector<int>* passedVec, int start, int end);
+    void insertionSortStacked(vector<int>* passedVec, int start, int end);
+    void insertion_sort(vector<int>& passedPages,
+                                        vector<double>& passedTFs,
+                                        int start,int end);
 
     //std::vector<int>* printPages(std::string word);
 
@@ -62,6 +69,12 @@ private:
 
     int totalContainsPageStacked(vector<int>* passedPages,int page);
     int totalContainsPage(vector<int>* passedPages,int page);
+
+    //helper functions for interactive UI
+    void displayPagesToUser();
+
+    void pickTop15();
+
 
 
 };
