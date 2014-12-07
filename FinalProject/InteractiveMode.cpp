@@ -2,6 +2,7 @@
 using namespace std;
 #include<vector>
 #include<iterator>
+#include<cmath>
 void andFunction(vector<string>& nextWords);
 void orFunction(vector<string>& nextWords);
 void ltFunction(vector<string>& nextWords);
@@ -231,14 +232,27 @@ bool InteractiveMode::processQuery(string userQuery){
 
             //call the keyword function
             if(currKeyWord.compare("AND") == 0){
-                andFunction(nextWords);
+                //create vectors to pass by reference
+                vector<int>* andPagesList;
+                vector<double>* andTFIDFList;
+                andPages(nextWords,andPagesList,andTFIDFList);
+                totalPages = *(andPagesList);
+                totalTF = *(andTFIDFList);
 
             }
             else if(currKeyWord.compare("OR") == 0){
-                orFunction(nextWords);
+                vector<int>* orPagesList;
+                vector<double>* orTFIDFList;
+
+                orPages(nextWords,orPagesList,orTFIDFList);
+                totalPages = *(orPagesList);
+                totalTF = *(orTFIDFList);
+
             }
             else if(currKeyWord.compare("NOT") == 0){
-                notFunction(nextWords);
+                vector<int>* totalPagesPtr = &totalPages;
+                vector<double>* totalTFPtr = &totalTF;
+                notPages(nextWords,totalPagesPtr,totalTFPtr);
 
             }else if(currKeyWord.compare("DATEGT") == 0){
                 gtFunction(nextWords);
@@ -302,59 +316,124 @@ void notFunction(vector<string>& nextWords){
         }
 }
 
-void gtFunction(vector<string>& nextWords){
-        cout<<"DATEGT function:"<<endl;
-        cout<<"Collected next words"<<endl;
-        //print out all following words
-        for(int y = 0;y<nextWords.size();y++){
-            cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
-        }
+void InteractiveMode::gtFunction(vector<string>& nextWords){
+
+    /*cout<<"DATEGT function:"<<endl;
+    cout<<"Collected next words"<<endl;
+    //print out all following words
+    for(int y = 0;y<nextWords.size();y++){
+        cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
+    }*/
+    //set min date
+    if(nextWords.size() > 1){
+        cout<<"Error: more than one 'DATEGT' argument"<<endl;
+        cout<<"Will just use first argument"<<endl;
+    }
+
+    currMinDate = nextWords.at(0);
 }
 
-void ltFunction(vector<string>& nextWords){
-        cout<<"DATELT function:"<<endl;
-        cout<<"Collected next words"<<endl;
-        //print out all following words
-        for(int y = 0;y<nextWords.size();y++){
-            cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
-        }
+void InteractiveMode::ltFunction(vector<string>& nextWords){
+    /*cout<<"DATELT function:"<<endl;
+    cout<<"Collected next words"<<endl;
+    //print out all following words
+    for(int y = 0;y<nextWords.size();y++){
+        cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
+    }
+    */
+    if(nextWords.size() > 1){
+        cout<<"Error: more than one 'DATELT' argument"<<endl;
+        cout<<"Will just use first argument"<<endl;
+    }
+
+    currMaxDate = nextWords.at(0);
+
 }
 
-void usernameFunction(vector<string>& nextWords){
-        cout<<"USERNAME function:"<<endl;
-        cout<<"Collected next words"<<endl;
-        //print out all following words
-        for(int y = 0;y<nextWords.size();y++){
-            cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
-        }
-}
+void InteractiveMode::usernameFunction(vector<string>& nextWords){
 
+    /*cout<<"USERNAME function:"<<endl;
+    cout<<"Collected next words"<<endl;
+    //print out all following words
+    for(int y = 0;y<nextWords.size();y++){
+        cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
+    }*/
+
+    if(nextWords.size() > 1){
+        cout<<"Error: more than one 'Username' argument"<<endl;
+        cout<<"Will just use first argument"<<endl;
+    }
+
+    currAuthor = nextWords.at(0);
+
+
+}
+/*
+//will loop through and add up all frequencies of all pages
+int getTotalOccurances(std::vector<int> & passedList){
+    int total = 0;
+    for(int i = 0;i<passedList.size();i++){
+        total = total + passsedList(i+1);
+        i++;
+    }
+
+    return total;
+}
+*/
 /**************NEED to Calculate Term frequency before combine*********/
-void InteractiveMode::orPages(std::vector<string> & passedWords){
+void InteractiveMode::orPages(std::vector<string> & passedWords,
+                              vector<int>* & orPageList,
+                              vector<double>*& orTFList){
+    //create vectors to hold pages and TFIDF
+    orPageList = new vector<int>();
+    orTFList = new vector<double>();
+
+    double totalDocs =  IMHandler->getTotalDocs();
     for(int i = 0;i<passedWords.size();i++){
 
         //get list of pages for word
         vector<int>* pageList = IMHandler->findUserWord(passedWords.at(i));
+        //calculate IDF for word
+        double numberDocs = (pageList->size())/2;
+        double IDF = log(totalDocs/(1+numberDocs));
         //for each page in list, add to total list or add frequency
         //to already existing index of page
+
         for(int j = 0;j<pageList->size();j++){
+            //get total time word occured in whole corpus
+
+            //calculate TF/IDF for specific page
+            double TF = pageList->at(j+1);
+            double TFIDF =  TF*IDF;
+
             //check if page already exist
-            int index = totalContainsPage(pageList->at(j));
+            int index = totalContainsPage(orPageList,pageList->at(j));
             if(index > 0){
                 //add term frequency if already exists
-                totalTF.at(index) = totalTF.at(index) + pageList->at(j+1);
+                orTFList->at(index) = orTFList->at(index) + TFIDF;
             }
             else{
-                totalPages.push_back(pageList->at(j));
-                totalTF.push_back(pageList->at(j+1));
-            }
+                orPageList->push_back(pageList->at(j));
+                orTFList->push_back(TFIDF);
 
+            }
+            //increment so go to next even index
+            j++;
         }
 
     }
+
+    //once processed all words the vectors have already been changed
+    //by reference so not need to return anything
+
+    //verify that pageList and TFIDF list same size
+    if(orPageList->size() != orTFList->size()){
+        cout<<"ERROR: At end of orpages the TF and Pages list of different size"<<endl;
+    }
+
 }
 /**************NEED to Calculate Term frequency before combine*********/
-vector<int>* InteractiveMode::orPagesAndReturn(std::vector<vector<int>*>* allList){
+/*vector<int>* InteractiveMode::orPagesAndReturn(std::vector<vector<int>*>* allList){
     vector<int>* mytotalPages = new vector<int>();
     for(int i = 0;i<allList->size();i++){
         for(int j = 0;j<allList->at(i)->size();j++){
@@ -373,35 +452,70 @@ vector<int>* InteractiveMode::orPagesAndReturn(std::vector<vector<int>*>* allLis
                 totalTF.push_back(pageList->at(j+1));
             }
 
-        }*/
+        }
 
     }
-}
+}*/
 
 
-void InteractiveMode::andPages(std::vector<string> & passedWords){
+void InteractiveMode::andPages(std::vector<string> & passedWords,
+                               vector<int>* & andPageList,
+                               vector<double>* &andTFIDFList ){
+
+    //send words, pageLIst and TFIDF list to get or function
+    orPages(passedWords,andPageList,andTFIDFList);
+
     //assemble vector of page numbers of all words
-    vector<vector<int>*>* allLists = new vector<vector<int>*>();
+    //vector<vector<int>*>* allLists = new vector<vector<int>*>();
+
+    //cycle through all words in passed list
     for(int i = 0;i<passedWords.size();i++){
-        allLists->push_back(IMHandler->findUserWord(passedWords.at(i)));
+        //get page list and term frequency
+        vector<int>* currPageList = IMHandler->findUserWord(passedWords.at(i));
+        for(int pageIndex = 0;i<andPageList->size();pageIndex++){
+           //check if currPageList has number in andPageLIst
+            int result = totalContainsPageStacked(currPageList,andPageList->at(pageIndex));
+            if(result<0){
+                //remove index from vector if
+                andPageList->erase(andPageList->begin() + pageIndex);
+                andTFIDFList->erase(andTFIDFList->begin() + pageIndex);
+            }
+            //if it is contained then let the index remain
+        }
     }
-
-    //get complete list of all total words
-    vector<int>** andedPagesandTF = orPagesAndReturn(allLists);
-
-
-    //check and see if all page numbers have
 
 }
 
+//will remove page numbers from lists that were sent
+void InteractiveMode::notPages(std::vector<string> & passedWords,
+                               vector<int>* & notPageList,
+                               vector<double>* & notTFList){
+    //cycle through all words
+    for(int wordCounter = 0;wordCounter<passedWords.size();wordCounter++){
+        //get page list of each word
+        vector<int>* currPageList = IMHandler->findUserWord(passedWords.at(wordCounter));
+        //cycle through all pages of currPageList
+        for(int pageCounter = 0;pageCounter<currPageList->size();pageCounter){
+            //compare if large list has page numbers
+            int pageIndex = totalContainsPage(notPageList,currPageList->at(pageCounter));
+            //if page number in big list then remove
+            if(pageIndex>0){
+                notPageList->erase(notPageList->begin() + pageIndex);
+                notTFList->erase(notTFList->begin() + pageIndex);
+            }
+            //move to next even index
+            pageCounter++;
+        }
+    }
+}
 
-int InteractiveMode::totalContainsPage(int page){
-    for(int i = 0;i<totalPages.size();i++){
-        if(totalPages.at(i) == page){
+
+int InteractiveMode::totalContainsPage(vector<int>* passedPages,int page){
+    for(int i = 0;i<passedPages->size();i++){
+        if(passedPages->at(i) == page){
             return i;
         }
 
-        i++;
     }
 
     //if didn't find it
@@ -409,8 +523,21 @@ int InteractiveMode::totalContainsPage(int page){
 }
 
 
+int InteractiveMode::totalContainsPageStacked(vector<int>* passedPages,int page){
+    for(int i = 0;i<passedPages->size();i++){
+        if(passedPages->at(i) == page){
+            return i;
+        }
+        //increment so checks every even index
+        i++;
 
+    }
 
+    //if didn't find it
+    return -1;
+}
+
+/*
 int InteractiveMode::containsPageAnd(vector<int>* myList,int page){
     for(int i = 0;i<myList->size();i++){
         if(myList->at(i) == page){
@@ -422,5 +549,5 @@ int InteractiveMode::containsPageAnd(vector<int>* myList,int page){
     //if didn't find it
     return -1;
 }
-
+*/
 

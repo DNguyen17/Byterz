@@ -8,6 +8,7 @@ using namespace std;
 
 IndexHandler::IndexHandler(int structureChoice)
 {
+    totalDocCount = 160000;
     if(structureChoice == 1){
 
         myIndex = new AvlTree<string>();
@@ -37,6 +38,10 @@ IndexHandler::~IndexHandler(){
     delete myIndex;
     delete[] memoryInputFile;
     delete[] memoryOutputFile;
+}
+
+int IndexHandler::getTotalDocs(){
+    return totalDocCount;
 }
 
 //functions to manage storing off index in hard memory

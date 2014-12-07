@@ -23,10 +23,10 @@ private:
     XMLParser* myXMLParser;
     std::vector<int> finalPages;
     std::vector<string> finalTitles;
-    std::vector<int> finalTF;
+    std::vector<double> finalTF;
     std::vector<int> totalPages;
     std::vector<string> totalTitles;
-    std::vector<int> totalTF;
+    std::vector<double> totalTF;
 
     string currAuthor;
     string currMaxDate;
@@ -37,16 +37,31 @@ private:
     //std::vector<int>* printPages(std::string word);
 
    //boolean commands
-    void orPages(std::vector<string>&);
-    void andPages(std::vector<string>&);
-    void notPages(std::vector<string>&);
+
+    void orPages(std::vector<string> & passedWords,
+                 vector<int>* & orPageList,
+                 vector<double>*& orTFList);
+    void andPages(std::vector<string> & passedWords,
+                               vector<int>* & andPageList,
+                               vector<double>* &andTFIDFList );
+
+    void notPages(std::vector<string> & passedWords,
+                               vector<int>* & notPageList,
+                               vector<double>* & notTFList);
+
+    void ltFunction(vector<string>& nextWords);
+
+    void usernameFunction(vector<string>& nextWords);
+    void gtFunction(vector<string>& nextWords);
+
     bool compareDates(string);
 
     vector<int>* orPagesAndReturn(std::vector<vector<int>*>* allList);
     //real functions
     int containsPageStacked(vector<int>* myList,int page);
 
-    int totalContainsPage(int page);
+    int totalContainsPageStacked(vector<int>* passedPages,int page);
+    int totalContainsPage(vector<int>* passedPages,int page);
 
 
 };
