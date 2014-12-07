@@ -194,6 +194,10 @@ bool XMLParser::navigateToPage(int page)
     else
         fileNo = binarySearch(179, end, page)+1;
 
+    string fileName = "WikiDumpPart";
+    fileName += to_string(fileNo);
+    fileName += ".xml";
+
     setXMLDumpFile(fileName);
     doc.clear();
     doc.parse<0>(XMLDumpFile);
