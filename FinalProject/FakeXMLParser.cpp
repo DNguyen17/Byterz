@@ -31,6 +31,56 @@ FakeXMLParser::~FakeXMLParser(){
 
 }
 
+//functions for interactive mode
+string FakeXMLParser::getDate(){
+    vector<string> myDates = {"2009-10-01T3456",
+                              "2009-10-02T3456",
+                              "2009-10-03T456uj",
+                              "2009-10-04T456uj",
+                              "2009-10-05T456uj",
+                              "2009-10-06T456uj",
+                              "2009-10-07T456uj",
+                              "2009-10-08T456uj",
+                              "2009-10-09T456uj",
+                              "2009-10-10T456uj",
+                                };
+    return myDates.at(currPage);
+
+}
+
+string FakeXMLParser::getAuthor(){
+    vector<string> myAuthor = {"AuthorPage1",
+                               "AuthorPage2",
+                               "AuthorPage3",
+                               "AuthorPage4",
+                               "AuthorPage5",
+                               "AuthorPage6",
+                               "AuthorPage7",
+                               "AuthorPage8",
+                               "AuthorPage9",
+                               "AuthorPage10"};
+    return myAuthor.at(currPage);
+
+}
+
+string FakeXMLParser::getText(){
+    vector<string> myText = {"Text1",
+                             "Text2",
+                             "Text3",
+                             "Text4",
+                             "Text5",
+                             "Text6",
+                             "Text7",
+                             "Text8",
+                             "Text9",
+                             "Text10"};
+    return myText.at(currPage);
+}
+
+void FakeXMLParser::navigateToPage(int x){
+    currPage = x;
+}
+
 void FakeXMLParser::loadStopTable(){
     myHandler->loadStopTable();
 }

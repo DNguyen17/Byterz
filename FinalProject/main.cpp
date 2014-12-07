@@ -37,7 +37,7 @@ int main(){
 
     InteractiveMode IM;
     char* inputFile = new char[80];
-    strcpy(inputFile,"FakeParserIndex2.txt");
+    strcpy(inputFile,"FakeParserIndex3.txt");
     IM.setInputFileForIndex(inputFile);
     IM.setTotalDocs(18);
     IM.interactiveUI();

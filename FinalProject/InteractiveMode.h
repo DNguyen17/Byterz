@@ -6,7 +6,7 @@
 #include<iostream>
 #include<IndexHandler.h>
 #include<XMLParser.h>
-
+#include<FakeXMLParser.h>
 
 class InteractiveMode
 {
@@ -24,7 +24,7 @@ public:
 private:
     //data members
     IndexHandler* IMHandler;
-    XMLParser* myXMLParser;
+    FakeXMLParser* myXMLParser;
     std::vector<int> finalPages;
     std::vector<string> finalTitles;
     std::vector<double> finalTF;
