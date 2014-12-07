@@ -60,13 +60,15 @@ void XMLParser::setXMLDumpFile(string& passedFile){
 //will cycle through all of XML documents in XML dump and index
 //all of the words at first into a data structure. The data
 //structure will then be saved off to hard memory for persistance
-void XMLParser::storeOffXMLData(){
+void XMLParser::storeOffXMLData(int numberOfFiles){
    //open XML file from XMLDumpFile
     int i = 1;
-    //string text1;
+    //clear out existing page ranges
+    pageMin.clear();
+    pageMax.clear();
 
     //loop through all files
-    while (i <= 170){
+    while (i <= numberOfFiles){
 
         string fileName = "WikiDumpPart";
         fileName += to_string(i);
@@ -118,6 +120,11 @@ void XMLParser::storeOffNewData(string &fileName)
     string text;
 
     //loop through all pages in one file
+    myParser.setNodes(pageNode);
+    id = myParser.findPageID();
+    pageMin.push_back(id);
+
+    //loop through all pages in one file
     while(pageNode !=0 ){
 
         myParser.setNodes(pageNode);
@@ -126,6 +133,10 @@ void XMLParser::storeOffNewData(string &fileName)
         text=myParser.findBodyText();
 
         myHandler->indexBodyOfText(text, id);
+
+        if (pageNode->next_sibling("page") == 0)
+            pageMax.push_back(id);
+
 
         pageNode = pageNode->next_sibling("page");
 
@@ -176,10 +187,12 @@ void XMLParser::loadPageRange(){
 
 bool XMLParser::navigateToPage(int page)
 {
-    size_t fileNo = binarySearch(0, 179, page)+1;
-    string fileName = "WikiDumpPart";
-    fileName += to_string(fileNo);
-    fileName += ".xml";
+    size_t fileNo = 1;
+    size_t end = pageMin.size()-1;
+    if (page <= 305548)
+        fileNo = binarySearch(0, 179, page)+1;
+    else
+        fileNo = binarySearch(179, end, page)+1;
 
     setXMLDumpFile(fileName);
     doc.clear();
@@ -212,6 +225,9 @@ size_t XMLParser::binarySearch(size_t begin, size_t end, int page)
 
 string XMLParser::getAuthor()
 {
+    if (myParser.findAuthor()==nullptr)
+        return "";
+
     string author = myParser.findAuthor();
     return author;
 }
@@ -232,4 +248,9 @@ string XMLParser::getTitle()
 {
     string title = myParser.findTitle();
     return title;
+}
+
+void XMLParser::storeOffIndex(char* output){
+    myHandler->setOutputFile(output);
+    myHandler->storeOffIndexToMemory();
 }
