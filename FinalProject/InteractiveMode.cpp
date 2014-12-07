@@ -12,7 +12,7 @@ void gtFunction(vector<string>& nextWords);
 
 InteractiveMode::InteractiveMode()
 {
-    myXMLParser = new XMLParser();
+    myXMLParser = new FakeXMLParser();
     IMHandler = new IndexHandler(2);
     finalPages.clear();
     finalTF.clear();
@@ -116,7 +116,7 @@ void InteractiveMode::interactiveUI(){
         }
 
         //sort the pages according to frequency
-        insertion_sort(totalPages,totalTF,0,totalPages.size()-1);
+        //insertion_sort(totalPages,totalTF,0,totalPages.size()-1);
         //print out the total page numbers
         cout<<"Total Pages after query:"<<endl;
         for(int i = 0;i<totalPages.size();i++){
@@ -166,6 +166,9 @@ void InteractiveMode::clearAllCurrAndFinalMembers(){
 }
 
 void InteractiveMode::displayPagesToUser(){
+    cout<<"size of finalPages = "<<finalPages.size()<<endl;
+    cout<<"size of finalTF = "<<finalPages.size()<<endl;
+
     if(finalPages.size() <= 0){
         cout<<"Unfortunately there were not pages with those filters"<<endl;
         return;
@@ -176,7 +179,7 @@ void InteractiveMode::displayPagesToUser(){
 
     //loop through and print out title, TF, and page number
     for(int i = 0;i<finalPages.size();i++){
-        cout<<"\n"<<i<<") Page "<<finalPages.at(i)<<endl;
+        cout<<"\n"<<i+1<<") Page "<<finalPages.at(i)<<endl;
         cout<<"Title = "<<finalTitles.at(i)<<endl;
         cout<<"TF/IDF = "<<finalTF.at(i)<<endl;
     }
@@ -201,7 +204,7 @@ void InteractiveMode::displayPagesToUser(){
 }
 
 void InteractiveMode::displayText(int choice){
-    int pageNumber = finalPages.at(choice);
+    int pageNumber = finalPages.at(choice-1);
     myXMLParser->navigateToPage(pageNumber);
 
     //get text of that page
@@ -209,7 +212,7 @@ void InteractiveMode::displayText(int choice){
 
     //print out
     cout<<"Page Number: "<<pageNumber<<endl;
-    cout<<"Title: "<<finalTitles.at(choice)<<endl;
+    cout<<"Title: "<<finalTitles.at(choice-1)<<endl;
     cout<<pageText<<endl;
 }
 

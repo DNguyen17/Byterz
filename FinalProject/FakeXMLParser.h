@@ -29,11 +29,20 @@ public:
     void  setXMLDumpFile(string&);
     void findUserWords();
 
+    //for interactive mode
+    string getDate();
+    string getText();
+    string getAuthor();
+    void navigateToPage(int);
+
 private:
+    //data members
+    int currPage;
     //private helper function
     void indexBodyOfText(std::string* body, std::string pageID);
     void  addPagesToLookup();
     void  addSinglePageToLookup();
+
 
     IndexHandler* myHandler;
     LookUpTable* myLookUpTable;

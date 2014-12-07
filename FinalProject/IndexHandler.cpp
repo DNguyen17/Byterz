@@ -248,12 +248,13 @@ vector<int>* IndexHandler::findUserWord(string userWord){
     //need to stem word before searching for it:
     vector<int>* userWordPages;
     cout<<"User word searched for in findUserWord = "<<userWord;
-    string userStemmed = myWordParser->stopAndStem(userWord);
+    //string userStemmed = myWordParser->stopAndStem(userWord);
+    string userStemmed = userWord;
     if(!userStemmed.empty()){
 
         //cout<<"myIndex->findWord(user) size = "<<myIndex->findWord(userWord)->size();
-        //*****userWordPages = myIndex->findWord(userStemmed)******//;
-        userWordPages = myIndex->findWord(userWord);
+        userWordPages = myIndex->findWord(userStemmed);
+        //userWordPages = myIndex->findWord(userWord);
         //cout<<"Made it to Index Handler"<<endl;
         if(userWordPages != NULL){
 /*
