@@ -358,7 +358,7 @@ void IndexHandler::indexBodyOfText(char *body, int pageID){
     //change punctuation to whitspace
     for (int i = 0; i < length; ++i){
 
-        if ( (body[i]!=39) && !(body[i]>=48 && body[i]<=57) //if character is not ', 0-9, A-Z, or a-z
+        if (!(body[i]>=48 && body[i]<=57) //if character is not 0-9, A-Z, or a-z
              && !(body[i]>=65 && body[i]<=90) && !(body[i]>=97 && body[i]<=122))
             body[i] = ' '; //change to whitespace
     }
