@@ -13,7 +13,7 @@ void gtFunction(vector<string>& nextWords);
 InteractiveMode::InteractiveMode()
 {
     myXMLParser = new XMLParser();
-    IMHandler = NULL;
+    IMHandler = new IndexHandler(2);
     finalPages.clear();
     finalTF.clear();
     finalTitles.clear();
@@ -26,7 +26,314 @@ InteractiveMode::~InteractiveMode(){
     delete myXMLParser;
 }
 
-void InteractiveMode::insertionSort(vector<int>* passedVec, int start, int end){
+void InteractiveMode::setTotalDocs(int x ){
+    IMHandler->setTotalDocs(x);
+}
+
+void InteractiveMode::setInputFileForIndex(char* input){
+   IMHandler->setInputFile(input);
+}
+
+/*void InteractiveMode::insertionSort(vector<int>* passedVec, int start, int end){
+      int i, j;
+     int tempPage;
+     int tempCount;
+     int length = end - start + 1;
+
+     for (i = start + 2; i < start + length; i++) {
+         //cout<<"i is "<<i<<endl;
+         //cout<<"j is "<<j<<endl;
+         j = i;
+         i++;
+         while (j > start && (passedVec->at(j-1)<passedVec->at(j+1))){
+             tempPage = passedVec->at(j);
+             tempCount = passedVec->at(j+1);
+             passedVec->at(j) = passedVec->at(j-2);
+             passedVec->at(j+1) = passedVec->at(j-1);
+             passedVec->at(j-2) = tempPage;
+             passedVec->at(j-1) = tempCount;
+
+             j = j-2;
+         }//end of while loop
+
+    }
+
+
+}*/
+
+//will create Index of Avl or Hash Table
+void InteractiveMode::createIndex(int choice){
+    if(choice == 1){
+        IMHandler->createIndex(1);
+    }
+    else{
+
+        IMHandler->createIndex(0);
+
+    }
+
+    IMHandler->buildIndexFromMemory(0);
+    cout<<"builtIndexFromMemory"<<endl;
+    IMHandler->printIndex();
+}
+
+void InteractiveMode::interactiveUI(){
+    //big loop that keeps going until user enters end
+    while(1){
+        int userChoice;
+        cout<<"Output file is"<<IMHandler->getInputfile()<<endl;
+        if(IMHandler->isIndexNULL()){
+            while(1){
+
+                cout<<"Pick Which Data Structure to Load index into:"<<endl;
+                cout<<"Enter 0 for Hash Table"<<endl;
+                cout<<"Enter 1 for AVL Tree"<<endl;
+
+                cout<<"User Choice: ";
+                cin>>userChoice;
+                if(userChoice != 1 && userChoice != 0){
+                    cout<<"Invalid Number!"<<endl;
+                    cout<<endl;
+                    continue;
+                }
+                else{
+                    createIndex(userChoice);
+                    cin.ignore();
+                    break;
+                }
+            }
+        }
+
+
+        //beginning of loop that
+        cout<<"Please Enter Query (or END to Quit):";
+        string userQuery;
+        getline(cin,userQuery);
+
+        bool end = processQuery(userQuery);
+        if(end == true){
+            break;
+        }
+
+        //sort the pages according to frequency
+        insertion_sort(totalPages,totalTF,0,totalPages.size()-1);
+        //print out the total page numbers
+        cout<<"Total Pages after query:"<<endl;
+        for(int i = 0;i<totalPages.size();i++){
+            cout<<totalPages.at(i)<<endl;
+        }
+
+        cout<<"TFIDF after query:"<<endl;
+        for(int i = 0;i<totalTF.size();i++){
+            cout<<totalTF.at(i)<<endl;
+        }
+
+        cout<<"DATEGT after query: "<<currMinDate<<endl;
+        cout<<"DATELT after query: "<<currMaxDate<<endl;
+        cout<<"USERNAME after query: "<<currAuthor<<endl;
+        //after query need to clear all of vectors
+
+        while(1){
+
+            displayPagesToUser();
+            //ask user if wants to see another page from same search
+            cout<<"Enter 1 to continue viewing pages from this search: ";
+            int keepSeeing;
+            cin>>keepSeeing;
+            if(keepSeeing != 1){
+                break;
+            }
+
+        }
+        clearAllCurrAndFinalMembers();
+
+    }
+
+}
+
+void InteractiveMode::clearAllCurrAndFinalMembers(){
+    //need to reset the curr and total data members
+    finalTitles.clear();
+    finalPages.clear();
+    finalTF.clear();
+    totalPages.clear();
+    totalTF.clear();
+    totalTitles.clear();
+
+    currMinDate = "";
+    currMaxDate = "";
+    currAuthor = "";
+}
+
+void InteractiveMode::displayPagesToUser(){
+    if(finalPages.size() <= 0){
+        cout<<"Unfortunately there were not pages with those filters"<<endl;
+        return;
+    }
+    cout<<"Please Enter a number between 1 and "
+       <<finalPages.size()<<" to return the full text of"
+         <<" one of the following pages"<<endl;
+
+    //loop through and print out title, TF, and page number
+    for(int i = 0;i<finalPages.size();i++){
+        cout<<"\n"<<i<<") Page "<<finalPages.at(i)<<endl;
+        cout<<"Title = "<<finalTitles.at(i)<<endl;
+        cout<<"TF/IDF = "<<finalTF.at(i)<<endl;
+    }
+
+    int userChoice;
+    while(1){
+        cout<<"Please Enter Page Choice: ";
+        cin>>userChoice;
+
+        //verify choice within range
+        if(userChoice>=1 && userChoice<= finalPages.size()){
+            break;
+        }
+        else{
+            cout<<"Invalid Page Rank!"<<endl;
+        }
+    }
+
+    //display the text, title, and page number for choice
+    displayText(userChoice);
+
+}
+
+void InteractiveMode::displayText(int choice){
+    int pageNumber = finalPages.at(choice);
+    myXMLParser->navigateToPage(pageNumber);
+
+    //get text of that page
+    string pageText = myXMLParser->getText();
+
+    //print out
+    cout<<"Page Number: "<<pageNumber<<endl;
+    cout<<"Title: "<<finalTitles.at(choice)<<endl;
+    cout<<pageText<<endl;
+}
+
+void InteractiveMode::pickTop15(){
+    //clear final vectors
+    finalPages.clear();
+    finalTF.clear();
+    finalTitles.clear();
+    int counter = 0;
+    while(finalPages.size()<15 && counter<totalPages.size()){
+        int currPage = totalPages.at(counter);
+
+        myXMLParser->navigateToPage(currPage);
+        //if there was a specified author check and see if it is the same
+
+        string delimiter = " ";
+        if(currAuthor.compare("") != 0){
+            string pageAuthor = myXMLParser->getAuthor();
+
+            //eliminate any leading white space
+            while(pageAuthor.size()>=1){
+               if(delimiter.compare(pageAuthor.substr(0,1)) == 0){
+                   pageAuthor= pageAuthor.substr(1,pageAuthor.size()-1);
+               }
+               else{
+                   break;
+               }
+            }
+
+            //eliminate trailing white space
+            while(pageAuthor.size()>=1){
+                if(delimiter.compare(pageAuthor.substr(pageAuthor.size()-1,
+                                                    1)) == 0){
+                    pageAuthor= pageAuthor.substr(0,pageAuthor.size()-1);
+                }
+                else{
+                    break;
+                }
+            }
+
+            //compare author requested and page author and if the same then
+            //keep checking
+            if(currAuthor.compare(pageAuthor) != 0){
+                counter++;
+                continue;
+            }
+
+        }
+        //get date of page
+        string pageDate = myXMLParser->getDate();
+        //eliminate any leading whitespace
+
+        //eliminate any leading white space
+        while(1){
+           if(delimiter.compare(pageDate.substr(0,1)) == 0){
+               pageDate= pageDate.substr(1,pageDate.size()-1);
+           }
+           else{
+               break;
+           }
+        }
+
+        //get the substring for t
+        int index = pageDate.find("T");
+
+        pageDate = pageDate.substr(0,index);
+
+        //check and see if Date specified is in date range
+        if(currMaxDate.compare("") != 0){
+            //check that maxDate is greater or equal
+            if(currMaxDate.compare(pageDate)<0){
+                counter++;
+                continue;
+            }
+        }
+        if(currMinDate.compare("") != 0){
+            //check that maxDate is greater or equal
+            if(currMinDate.compare(pageDate)>0){
+                counter++;
+                continue;
+            }
+        }
+
+        //if the username matches and the date of page
+        //is in date range then add to final page list
+        finalPages.push_back(totalPages.at(counter));
+        finalPages.push_back(totalTF.at(counter));
+
+        //getTitle of page
+        string pageTitle = myXMLParser->getText();
+        finalTitles.push_back(pageTitle);
+
+
+    }
+}
+
+//http://mycodinglab.com/insertion-sort-algorithm/
+void InteractiveMode::insertion_sort(vector<int>& passedPages,
+                                        vector<double>& passedTFs,
+                                        int start,int end){
+     cout<<"made it inside insertion_sort"<<endl;
+     int i, j;
+     int tempPage;
+     double tempTF;
+     int length = end - start + 1;
+
+     for (i = start + 1; i < start + length; i++) {
+         j = i;
+         while(j>start && (passedTFs.at(j-1)<passedTFs.at(j))){
+            tempPage = passedPages.at(j);
+            tempTF  = passedTFs.at(j);
+            passedPages.at(j) = passedPages.at(j-1);
+            passedTFs.at(j) = passedTFs.at(j-1);
+            passedPages.at(j-1) = tempPage;
+            passedTFs.at(j-1) = tempTF;
+
+             j--;
+         }//end of while loop
+
+    }
+
+}
+
+void InteractiveMode::insertionSortStacked(vector<int>* passedVec, int start, int end){
       int i, j;
      int tempPage;
      int tempCount;
@@ -53,55 +360,7 @@ void InteractiveMode::insertionSort(vector<int>* passedVec, int start, int end){
 
 }
 
-//will create Index of Avl or Hash Table
-void InteractiveMode::createIndex(int choice){
-    if(choice == 1){
-        IMHandler = new IndexHandler(1);
-    }
-    else{
 
-        IMHandler = new IndexHandler(0);
-    }
-}
-
-void InteractiveMode::interactiveUI(){
-    while(1){
-        if(IMHandler == NULL){
-            int userChoice;
-            while(1){
-
-                cout<<"Pick Which Data Structure to Load index into:"<<endl;
-                cout<<"Enter 0 for Hash Table"<<endl;
-                cout<<"Enter 1 for AVL Tree"<<endl;
-
-                cout<<"User Choice: ";
-                cin>>userChoice;
-                if(userChoice != 1 && userChoice != 0){
-                    cout<<"Invalid Number!"<<endl;
-                    cout<<endl;
-                    continue;
-                }
-                else{
-                    createIndex(userChoice);
-                    break;
-                }
-            }
-
-       }
-
-        //beginning of loop that
-        cout<<"Please Enter Query (or END to Quit):";
-        string userQuery;
-        cin.ignore();
-        getline(cin,userQuery);
-
-        bool end = processQuery(userQuery);
-        if(end == true){
-            break;
-        }
-
-    }
-}
 
 //will return true if user entered "EXIT" so loop will stop
 
@@ -233,16 +492,16 @@ bool InteractiveMode::processQuery(string userQuery){
             //call the keyword function
             if(currKeyWord.compare("AND") == 0){
                 //create vectors to pass by reference
-                vector<int>* andPagesList;
-                vector<double>* andTFIDFList;
+                vector<int>* andPagesList = NULL;
+                vector<double>* andTFIDFList = NULL;
                 andPages(nextWords,andPagesList,andTFIDFList);
                 totalPages = *(andPagesList);
                 totalTF = *(andTFIDFList);
 
             }
             else if(currKeyWord.compare("OR") == 0){
-                vector<int>* orPagesList;
-                vector<double>* orTFIDFList;
+                vector<int>* orPagesList = NULL;
+                vector<double>* orTFIDFList = NULL;
 
                 orPages(nextWords,orPagesList,orTFIDFList);
                 totalPages = *(orPagesList);
@@ -269,9 +528,24 @@ bool InteractiveMode::processQuery(string userQuery){
             //set next key word to what was currently stored in currWord
             currKeyWord = currWord;
             cout<<currKeyWord<<endl;
+
             //clear next words
             nextWords.clear();
+
+            cout<<"NextWords at end of Loop:"<<endl;
+            for(int i = 0;i<nextWords.size();i++){
+                cout<<nextWords.at(i);
+            }
+            cout<<"DoneNextWords"<<endl;
         }
+
+        //order the pages TFs
+
+        //sort the pages according to frequency
+        insertion_sort(totalPages,totalTF,0,totalPages.size()-1);
+
+        pickTop15();
+        return false;
 }
 
 /*
@@ -329,7 +603,10 @@ void InteractiveMode::gtFunction(vector<string>& nextWords){
         cout<<"Error: more than one 'DATEGT' argument"<<endl;
         cout<<"Will just use first argument"<<endl;
     }
-
+    if(nextWords.size()<1){
+        cout<<"ERROR: no arguments for DATEGT"<<endl;
+        return;
+    }
     currMinDate = nextWords.at(0);
 }
 
@@ -341,11 +618,14 @@ void InteractiveMode::ltFunction(vector<string>& nextWords){
         cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
     }
     */
+    if(nextWords.size()<1){
+        cout<<"ERROR: no arguments for DATELT"<<endl;
+        return;
+    }
     if(nextWords.size() > 1){
         cout<<"Error: more than one 'DATELT' argument"<<endl;
         cout<<"Will just use first argument"<<endl;
     }
-
     currMaxDate = nextWords.at(0);
 
 }
@@ -358,14 +638,21 @@ void InteractiveMode::usernameFunction(vector<string>& nextWords){
     for(int y = 0;y<nextWords.size();y++){
         cout<<nextWords.at(y)<<" size: "<<nextWords.at(y).size()<<endl;
     }*/
-
+    //check words passed are more 1 or more
+    if(nextWords.size()<1){
+        cout<<"ERROR: no arguments for username"<<endl;
+        return;
+    }
     if(nextWords.size() > 1){
-        cout<<"Error: more than one 'Username' argument"<<endl;
-        cout<<"Will just use first argument"<<endl;
+        cout<<"username was longer than 1 word, will concatenate"<<endl;
     }
 
-    currAuthor = nextWords.at(0);
 
+    string catString = nextWords.at(0);
+    for(int i = 1;i<nextWords.size();i++){
+        catString = " " + nextWords.at(i);
+    }
+    currAuthor = catString;
 
 }
 /*
@@ -384,41 +671,81 @@ int getTotalOccurances(std::vector<int> & passedList){
 void InteractiveMode::orPages(std::vector<string> & passedWords,
                               vector<int>* & orPageList,
                               vector<double>*& orTFList){
+    cout<<"WordsSentTo OrPages:"<<endl;
+    for(int y = 0;y<passedWords.size();y++){
+        cout<<passedWords.at(y)<<endl;
+    }
+    cout<<"DoneWithPassedWords\n\n"<<endl;
     //create vectors to hold pages and TFIDF
-    orPageList = new vector<int>();
-    orTFList = new vector<double>();
+    if(orPageList == NULL){
+        orPageList = new vector<int>();
+    }
+    else{
+        cout<<"Page List passed was not null in orPages"<<endl;
+    }
+    if(orTFList == NULL){
+        orTFList = new vector<double>();
+    }
+    else{
+        cout<<"TFIDF List passed was not null in orPages"<<endl;
+    }
 
     double totalDocs =  IMHandler->getTotalDocs();
     for(int i = 0;i<passedWords.size();i++){
 
         //get list of pages for word
         vector<int>* pageList = IMHandler->findUserWord(passedWords.at(i));
-        //calculate IDF for word
-        double numberDocs = (pageList->size())/2;
-        double IDF = log(totalDocs/(1+numberDocs));
-        //for each page in list, add to total list or add frequency
-        //to already existing index of page
 
-        for(int j = 0;j<pageList->size();j++){
-            //get total time word occured in whole corpus
+        //check that not NULL
 
-            //calculate TF/IDF for specific page
-            double TF = pageList->at(j+1);
-            double TFIDF =  TF*IDF;
+        if(pageList != NULL){
+            //calculate IDF for word
+            double numberDocs = (pageList->size())/2;
+            double IDF = log10(totalDocs/(1.0+numberDocs));
 
-            //check if page already exist
-            int index = totalContainsPage(orPageList,pageList->at(j));
-            if(index > 0){
-                //add term frequency if already exists
-                orTFList->at(index) = orTFList->at(index) + TFIDF;
+            //for each page in list, add to total list or add frequency
+            //to already existing index of page
+
+            for(int j = 0;j<pageList->size();j++){
+                //get total time word occured in whole corpus
+
+                //calculate TF/IDF for specific page
+                double TF = pageList->at(j+1);
+                double TFIDF =  TF*IDF;
+
+
+                cout<<"For word "<<passedWords.at(i)<<" and after page "<<pageList->at(j)<<endl;
+                cout<<"number Docs = "<<numberDocs<<endl;
+                cout<<"IDF = "<<IDF<<endl;
+
+                cout<<"TF = "<<TF<<endl;
+                cout<<"TFIDF = "<<TFIDF<<endl;
+
+                //check if page already exist
+                int index = totalContainsPage(orPageList,pageList->at(j));
+                if(index >= 0){
+                    //add term frequency if already exists
+                    orTFList->at(index) = orTFList->at(index) + TFIDF;
+                    cout<<"orTFList after combining "<<orTFList->at(index)<<endl;
+                }
+                else{
+                    orPageList->push_back(pageList->at(j));
+                    orTFList->push_back(TFIDF);
+
+                }
+
+                /*cout<<"For word "<<passedWords.at(i)<<" and after page "<<pageList->at(j)<<endl;
+                cout<<"AT END OF OR PAGES page list"<<endl;
+                for(int h = 0;h<orPageList->size();h++){
+                   cout<<orPageList->at(h)<<endl;
+                 }
+                */
+                //increment so go to next even index
+                j++;
             }
-            else{
-                orPageList->push_back(pageList->at(j));
-                orTFList->push_back(TFIDF);
-
-            }
-            //increment so go to next even index
-            j++;
+        }
+        else{
+            cout<<"NOT: empty list for = "<<passedWords.at(i)<<endl;
         }
 
     }
@@ -430,6 +757,12 @@ void InteractiveMode::orPages(std::vector<string> & passedWords,
     if(orPageList->size() != orTFList->size()){
         cout<<"ERROR: At end of orpages the TF and Pages list of different size"<<endl;
     }
+
+    cout<<"AT END OF OR PAGES page list"<<endl;
+    for(int h = 0;h<orPageList->size();h++){
+        cout<<orPageList->at(h)<<endl;
+    }
+    cout<<"END\n\n"<<endl;
 
 }
 /**************NEED to Calculate Term frequency before combine*********/
@@ -461,7 +794,11 @@ void InteractiveMode::orPages(std::vector<string> & passedWords,
 void InteractiveMode::andPages(std::vector<string> & passedWords,
                                vector<int>* & andPageList,
                                vector<double>* &andTFIDFList ){
-
+    cout<<"WordsSentToAndPages:"<<endl;
+    for(int y = 0;y<passedWords.size();y++){
+        cout<<passedWords.at(y)<<endl;
+    }
+    cout<<"DoneWithPassedWords\n\n"<<endl;
     //send words, pageLIst and TFIDF list to get or function
     orPages(passedWords,andPageList,andTFIDFList);
 
@@ -472,17 +809,50 @@ void InteractiveMode::andPages(std::vector<string> & passedWords,
     for(int i = 0;i<passedWords.size();i++){
         //get page list and term frequency
         vector<int>* currPageList = IMHandler->findUserWord(passedWords.at(i));
-        for(int pageIndex = 0;i<andPageList->size();pageIndex++){
-           //check if currPageList has number in andPageLIst
-            int result = totalContainsPageStacked(currPageList,andPageList->at(pageIndex));
-            if(result<0){
-                //remove index from vector if
-                andPageList->erase(andPageList->begin() + pageIndex);
-                andTFIDFList->erase(andTFIDFList->begin() + pageIndex);
+        //cycles through all pages in large index and checks it is
+        //in currPageList, and if not then deletes it
+
+        //check to see if currPageList is NULL
+        if(currPageList != NULL){
+            int vecSize = andPageList->size();
+            for(int pageIndex = 0;pageIndex<vecSize;pageIndex++){
+               //check if currPageList has number in andPageLIst
+                cout<<"For word "<<passedWords.at(i)<<" checking for "<<andPageList->at(pageIndex)<<endl;
+                int result = totalContainsPageStacked(currPageList,andPageList->at(pageIndex));
+                if(result<0){
+                    cout<<"was not found"<<endl;
+                    //remove index from vector if
+
+                    andPageList->erase(andPageList->begin() + pageIndex);
+                    andTFIDFList->erase(andTFIDFList->begin() + pageIndex);
+
+                    //adjust counters
+                    vecSize--;
+                    pageIndex--;
+
+                }
+                else{
+                    cout<<"WAS FOUND"<<endl;
+                }
+                //if it is contained then let the index remain
             }
-            //if it is contained then let the index remain
-        }
+         }
+         else{
+            cout<<"AND: Empty pages for "<<passedWords.at(i)<<endl;
+         }
+
+        cout<<"after looking at word <<"<<passedWords.at(i)<<" remaining pages are "<<endl;
+        for(int h = 0;h<andPageList->size();h++){
+           cout<<andPageList->at(h)<<endl;
+         }
+
     }
+
+    cout<<"AT END OF AND PAGES page list"<<endl;
+    for(int h = 0;h<andPageList->size();h++){
+        cout<<andPageList->at(h)<<endl;
+    }
+    cout<<"END\n\n"<<endl;
 
 }
 
@@ -490,30 +860,46 @@ void InteractiveMode::andPages(std::vector<string> & passedWords,
 void InteractiveMode::notPages(std::vector<string> & passedWords,
                                vector<int>* & notPageList,
                                vector<double>* & notTFList){
+
+    cout<<"WordsSentToNotPages:"<<endl;
+    for(int y = 0;y<passedWords.size();y++){
+        cout<<passedWords.at(y)<<endl;
+    }
+    cout<<"DoneWithPassedWords\n\n"<<endl;
     //cycle through all words
     for(int wordCounter = 0;wordCounter<passedWords.size();wordCounter++){
         //get page list of each word
         vector<int>* currPageList = IMHandler->findUserWord(passedWords.at(wordCounter));
         //cycle through all pages of currPageList
-        for(int pageCounter = 0;pageCounter<currPageList->size();pageCounter){
-            //compare if large list has page numbers
-            int pageIndex = totalContainsPage(notPageList,currPageList->at(pageCounter));
-            //if page number in big list then remove
-            if(pageIndex>0){
-                notPageList->erase(notPageList->begin() + pageIndex);
-                notTFList->erase(notTFList->begin() + pageIndex);
+
+        if(currPageList != NULL){
+            for(int pageCounter = 0;pageCounter<currPageList->size();pageCounter++){
+                //compare if large list has page numbers
+                int pageIndex = totalContainsPage(notPageList,currPageList->at(pageCounter));
+                //if page number in big list then remove
+                if(pageIndex>0){
+                    notPageList->erase(notPageList->begin() + pageIndex);
+                    notTFList->erase(notTFList->begin() + pageIndex);
+                }
+                //move to next even index
+                pageCounter++;
             }
-            //move to next even index
-            pageCounter++;
+        }
+        else{
+            cout<<"NOT: Empty pages for "<<passedWords.at(wordCounter)<<endl;
         }
     }
+
+
 }
 
 
 int InteractiveMode::totalContainsPage(vector<int>* passedPages,int page){
     for(int i = 0;i<passedPages->size();i++){
         if(passedPages->at(i) == page){
+            cout<<"\nReturnedIndex from totalContainsPage = "<<i<<endl;
             return i;
+
         }
 
     }
@@ -524,6 +910,7 @@ int InteractiveMode::totalContainsPage(vector<int>* passedPages,int page){
 
 
 int InteractiveMode::totalContainsPageStacked(vector<int>* passedPages,int page){
+
     for(int i = 0;i<passedPages->size();i++){
         if(passedPages->at(i) == page){
             return i;

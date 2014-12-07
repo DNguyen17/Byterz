@@ -12,6 +12,7 @@
 #include<string>
 #include<cstring>
 #include<iostream>
+#include<cmath>
 using namespace std;
 //Datastructres project:
 
@@ -1000,9 +1001,12 @@ int containsPage(vector<int>* myList,int page){
     return -1;
 }
 
+void insertion_sort(vector<int>& passedPages,
+                                        vector<int>& passedTFs,
+                                        int start,int end);
 
 int main(){
-    vector<int>* newVec = new vector<int>();
+/*    vector<int>* newVec = new vector<int>();
 //    newVec->push_back(5);
 
     newVec->push_back(6);
@@ -1019,4 +1023,134 @@ int main(){
     int page = 24;
     int answer = containsPage(newVec,page);
     cout<<"Index of page "<<page<<" is "<<answer<<endl;
+    //print out vector
+    cout<<"Printing out new vec before deletion:"<<endl;
+    for(int i = 0;i<newVec->size();i++){
+        cout<<newVec->at(i)<<endl;
+    }
+    cout<<endl;
+
+
+    newVec->erase(newVec->begin() + answer);
+
+    cout<<"Printing out new vec after deletion:"<<endl;
+    for(int i = 0;i<newVec->size();i++){
+        cout<<newVec->at(i)<<endl;
+    }
+    cout<<endl;
+
+    cout<<"Log(18/7) = "<<log10(18.0/7)<<endl;
+    cout<<"Log(18/8) = "<<log10(18.0/8)<<endl;
+*/
+/*    vector<int> firstVec,secondVec;
+    for(int i = 0;i<10;i++){
+        firstVec.push_back(i);
+        secondVec.push_back(i);
+        cout<<firstVec.at(i);
+    }
+
+    insertion_sort(firstVec,secondVec,0,firstVec.size()-1);
+    cout<<"FirstVec: "<<endl;
+    for(int j = 0;j<firstVec.size();j++){
+       cout<<firstVec.at(j)<<endl;
+    }
+
+    cout<<"SecondVec: "<<endl;
+    for(int j = 0;j<secondVec.size();j++){
+       cout<<secondVec.at(j)<<endl;
+    }
+
+*/
+
+    string string1 = "Danh";
+    string string2 = " Danh ";
+    string delimiter = " ";
+
+    cout<<"comparison after elim white space = "<<string2.compare(string1)<<endl;
+
+    //eliminate any leading white space
+    while(1){
+       if(delimiter.compare(string2.substr(0,1)) == 0){
+           string2= string2.substr(1,string2.size()-1);
+       }
+       else{
+           break;
+       }
+    }
+
+    cout<<"String2 = "<<string2<<" size = "<<string2.size()<<endl;
+
+    //eliminate trailing white space
+    while(string2.size()>=1){
+        cout<<"substring = "<<string2.substr(string2.size()-1,1);
+        cout<<" size = "<<(string2.substr(string2.size()-1,1)).size()<<endl;
+        if(delimiter.compare(string2.substr(string2.size()-1,
+                                            1)) == 0){
+            string2 = string2.substr(0,string2.size()-1);
+        }
+        else{
+            break;
+        }
+    }
+
+    cout<<"String2 = "<<string2<<" size = "<<string2.size()<<endl;
+    cout<<"comparison after elim white space = "<<string2.compare(string1)<<endl;
+
+
+
+    cout<<endl<<endl;
+    string string3 = "Hey";
+    string string4 = "there";
+    string string5 = string3 + " " + string4;
+    cout<<string5;
+
+    string2 = "  2009-10-09T3849578";
+    string1 = "2009-10-10";
+
+    //eliminate any leading white space
+    while(1){
+       if(delimiter.compare(string2.substr(0,1)) == 0){
+           string2= string2.substr(1,string2.size()-1);
+       }
+       else{
+           break;
+       }
+    }
+
+    //get the substring for t
+    int index = string2.find("T");
+
+    string2 = string2.substr(0,index);
+    cout<<"String 2 = "<<string2<<endl;
+    cout<<"Comparing "<<string1<< " vs. "<<string2<<endl;
+    cout<<string1.compare(string2);
+
+}
+
+
+//http://mycodinglab.com/insertion-sort-algorithm/
+void insertion_sort(vector<int>& passedPages,
+                                        vector<int>& passedTFs,
+                                        int start,int end){
+     cout<<"made it inside insertion_sort"<<endl;
+     int i, j;
+     int tempPage;
+     int tempTF;
+     int length = end - start + 1;
+
+     for (i = start + 1; i < start + length; i++) {
+         j = i;
+         while(j>start && (passedTFs.at(j-1)<passedTFs.at(j))){
+            tempPage = passedPages.at(j);
+            tempTF  = passedTFs.at(j);
+            passedPages.at(j) = passedPages.at(j-1);
+            passedTFs.at(j) = passedTFs.at(j-1);
+            passedPages.at(j-1) = tempPage;
+            passedTFs.at(j-1) = tempTF;
+
+             j--;
+         }//end of while loop
+
+    }
+
 }

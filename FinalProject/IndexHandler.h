@@ -14,13 +14,18 @@ public:
     explicit IndexHandler(int = 0);
     ~IndexHandler();
 
+    void createIndex(int choice);
+    bool isIndexNULL();
+
     //functions to interface with hard memory storage
     void  setOutputFile(char* passedFile);
     char*  getOutputFile(void);
     void  setInputFile(char* passedFile);
     char*  getInputfile(void);
-    void  buildIndexFromMemory(int choice);
+    void  buildIndexFromMemory(int);
     void  storeOffIndexToMemory(void);
+    void printIndex(void);
+
 
     void indexBodyOfText(char *body, int pageID);
     void indexBodyOfText(string& body, int pageID);
@@ -38,6 +43,7 @@ public:
 
     //need to keep track of total number of documents
     int getTotalDocs();
+    void setTotalDocs(int);
 
 private:
     WordParser2* myWordParser;
