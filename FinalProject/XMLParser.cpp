@@ -225,6 +225,9 @@ size_t XMLParser::binarySearch(size_t begin, size_t end, int page)
 
 string XMLParser::getAuthor()
 {
+    if (myParser.findAuthor()==nullptr)
+        return "";
+
     string author = myParser.findAuthor();
     return author;
 }
