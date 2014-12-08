@@ -9,22 +9,23 @@
 #include<fstream>
 using namespace std;
 
-// AvlTree class
-//
-// CONSTRUCTION: with ITEM_NOT_FOUND object used to signal failed finds
-//
-// ******************PUBLIC OPERATIONS*********************
-// void insert( x )       --> Insert x
-// void remove( x )       --> Remove x (unimplemented)
-// bool contains( x )     --> Return true if x is present
-// Comparable findMin( )  --> Return smallest item
-// Comparable findMax( )  --> Return largest item
-// boolean isEmpty( )     --> Return true if empty; else false
-// void makeEmpty( )      --> Remove all items
-// void printTree( )      --> Print tree in sorted order
-// ******************ERRORS********************************
-// Throws UnderflowException as warranted
+//! AvlTree class
+//!
+//! CONSTRUCTION: with ITEM_NOT_FOUND object used to signal failed finds
+//!
+//!******************PUBLIC OPERATIONS*********************
+//! void insert( x )       --> Insert x
+//! void remove( x )       --> Remove x (unimplemented)
+//! bool contains( x )     --> Return true if x is present
+//! Comparable findMin( )  --> Return smallest item
+//! Comparable findMax( )  --> Return largest item
+//! boolean isEmpty( )     --> Return true if empty; else false
+//! void makeEmpty( )      --> Remove all items
+//! void printTree( )      --> Print tree in sorted order
+//! ******************ERRORS********************************
+//! Throws UnderflowException as warranted
 
+//!
 template <typename Comparable>
 class AvlTree:public Index
 {
